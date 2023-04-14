@@ -1,22 +1,32 @@
 [
-  {
-    "avatar": "/avatars/2020605518.jpg",
-    "fullName": "Trương Thành Hưng",
-    "dateOfBirth": "23/05/2002",
-    "password": "2020605518",
-    "studentCode": "2020605518",
-    "className": "CNTT04",
-    "schoolYear": "15",
-    "clubYear": "12"
-  },
-  {
-    "avatar": "/avatars/2020605518.jpg",
-    "fullName": "Đinh Tấn Hưng",
-    "dateOfBirth": "31/02/2002",
-    "password": "2020605518",
-    "studentCode": "2020605518",
-    "className": "KTPM02",
-    "schoolYear": "15",
-    "clubYear": "12"
-  }
+    {
+        "avatar": "/avatars/2020605518.jpg",
+        "fullName": "Trương Thành Hưng",
+        "dateOfBirth": "23/05/2002",
+        "password": "2020605518",
+        "studentCode": "2020605518",
+        "className": "CNTT04",
+        "schoolYear": "15",
+        "clubYear": "12"
+    },
+    {
+        "avatar": "/avatars/2020605518.jpg",
+        "fullName": "Đinh Tấn Hưng",
+        "dateOfBirth": "31/02/2002",
+        "password": "2020605518",
+        "studentCode": "2020605518",
+        "className": "KTPM02",
+        "schoolYear": "15",
+        "clubYear": "12"
+    },
+    {
+        "avatar": "/avatars/2020607981.jpg",
+        "fullName": "Lại Hoàng Tùng",
+        "dateOfBirth": "27/12/2002",
+        "password": "271202",
+        "studentCode": "2020607981",
+        "className": "CNTT6",
+        "schoolYear": "15",
+        "clubYear": "12"
+    }
 ]

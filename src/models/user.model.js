@@ -32,7 +32,6 @@ class User {
     const usersJSON = JSON.stringify(users);
     // write file
     fs.writeFileSync(path.join(__dirname, "../data/users.json"), usersJSON);
-    console.log(usersJSON);
   }
 
   static find() {
@@ -55,23 +54,22 @@ class User {
   }
 
   static deleteById(id) {
-    let users = User.findById();
-    users = User.filter((user) => user.id != id);
-    users.save();
+    let users = User.find();
+    console.log(id);
+    users = users.filter((user) => user.id != id);
+    // console.log(users);
+    return users;
   }
 
   static updateById(id, newUser) {
-    let users = User.findById();
+    let users = User.find();
     users = users.map((user) => {
       if (user.id == id) {
         return newUser;
       }
       return user;
     });
-    users.save();
   }
 }
 
 module.exports = User;
-
-// encoding

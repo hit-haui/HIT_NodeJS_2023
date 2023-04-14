@@ -22,16 +22,14 @@
     "clubYear": "12"
   },
   {
-      "user": {
-        "id": "3",
-        "avatar": "/avatars/2020605518.jpg",
-        "fullName": "Trương Thành Hưng",
-        "dateOfBirth": "23/05/2002",
-        "password": "2020605518",
-        "studentCode": "2020605518",
-        "className": "CNTT04",
-        "schoolYear": "15",
-        "clubYear": "12"
-      }
+    "id": "3",
+    "avatar": "/avatars/2020605518.jpg",
+    "fullName": "Trương Thành Hưng",
+    "dateOfBirth": "23/05/2002",
+    "password": "2020605518",
+    "studentCode": "2020605518",
+    "className": "CNTT04",
+    "schoolYear": "15",
+    "clubYear": "12"
   }
 ]

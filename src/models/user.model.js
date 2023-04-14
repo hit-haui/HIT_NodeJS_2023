@@ -10,7 +10,8 @@ const save = users => {
 }
 
 class User {
-    constructor({ avatar, fullName, dateOfBirth, password, studentCode, className, schoolYear, clubYear }) {
+    constructor({ id, avatar, fullName, dateOfBirth, password, studentCode, className, schoolYear, clubYear }) {
+        this.id = id;
         this.avatar = avatar;
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
@@ -33,7 +34,7 @@ class User {
 
     static getById(id) {
         const users = User.find();
-        return users.find(user => user.studentCode == id);
+        return users.find(user => user.id == id);
     }
 
     add() {
@@ -46,7 +47,7 @@ class User {
     static updateById(id, update) {
         const users = User.find();
         const updatedUsers = users.map(user => {
-            if (user.studentCode == id) {
+            if (user.id == id) {
                 return {
                     ...user,
                     ...update
@@ -60,7 +61,7 @@ class User {
 
     static deleteById(id) {
         const users = User.find();
-        const deletedUsers = users.filter(user => user.studentCode != id);
+        const deletedUsers = users.filter(user => user.id != id);
 
         save(deletedUsers);
     }

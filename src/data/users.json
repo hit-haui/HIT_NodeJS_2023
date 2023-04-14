@@ -31,5 +31,16 @@
     "className": "KTPM01",
     "schoolYear": "16",
     "clubYear": "13"
+  },
+  {
+    "id": 4,
+    "avatar": "/avatars/2020605518.jpg",
+    "fullName": "Lưu Huyền Thương",
+    "dateOfBirth": "11/11/2003",
+    "password": "2021606058",
+    "studentCode": "2021606058",
+    "className": "KTPM01",
+    "schoolYear": "16",
+    "clubYear": "13"
   }
 ]

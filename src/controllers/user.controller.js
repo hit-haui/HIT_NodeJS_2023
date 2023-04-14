@@ -35,7 +35,6 @@ const updateUserById = (req, res) => {
   res.json({
     newUsers: users,
   });
-  // write file
   const usersJSON = JSON.stringify(user);
   fs.writeFileSync(path.join(__dirname, "../data/users.json"), usersJSON);
 };
@@ -48,7 +47,6 @@ const deleteUserById = (req, res) => {
     res.json({
       msg: "Delete successfully!!",
     });
-  // write file
   const usersJSON = JSON.stringify(users);
   fs.writeFileSync(path.join(__dirname, "../data/users.json"), usersJSON);
 };

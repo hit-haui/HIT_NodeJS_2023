@@ -57,7 +57,6 @@ class User {
     let users = User.find();
     console.log(id);
     users = users.filter((user) => user.id != id);
-    // console.log(users);
     return users;
   }
 

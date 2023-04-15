@@ -26,7 +26,7 @@ class User {
 
     static save(users) {
         const rawUsers = JSON.stringify(users);
-        fs.writeFile(path.join(__dirname, '../data/users.json'), rawUsers, (err) => {
+        fs.writeFile(path.join(__dirname, '../data/users.json'), rawUsers, err => {
             if (err) throw err;
             console.log('Write file successfully');
         });
@@ -39,7 +39,8 @@ class User {
 
     add() {
         const users = User.find();
-        users.push({ ...this });
+        const newUser = this;
+        users.push({ ...newUser });
 
         User.save(users);
     }

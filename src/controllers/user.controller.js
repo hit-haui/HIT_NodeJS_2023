@@ -28,24 +28,18 @@ const createUser = (req, res) => {
 const updateUserById = (req, res) => {
   const { id } = req.params;
   let newUsers = req.body;
-  let users = User.updateById(id, newUsers);
+  User.updateById(id, newUsers);
   res.json({
-    newUsers: users,
+    msg: "Update successfully!!",
   });
-
-  User.saveFile(newUsers);
 };
 
 const deleteUserById = (req, res) => {
   const { id } = req.params;
-  let users = User.deleteById(id);
-  if (!users) res.json({ msg: "Users not found!" });
-  else
-    res.json({
-      msg: "Delete successfully!!",
-    });
-
-  User.saveFile(users);
+  User.deleteById(id);
+  res.json({
+    msg: "Delete successfully!!",
+  });
 };
 
 module.exports = {

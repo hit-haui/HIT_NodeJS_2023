@@ -67,7 +67,7 @@ class User {
   static deleteById(id) {
     let users = User.find();
     users = users.filter((user) => user.id !== +id);
-    return users;
+    User.saveFile(users);
   }
 
   static updateById(id, newUser) {
@@ -78,6 +78,7 @@ class User {
       }
       return user;
     });
+    User.saveFile(users);
   }
 }
 

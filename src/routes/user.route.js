@@ -5,6 +5,7 @@ const userRouter = express.Router();
 userRouter.route('/')
     .get(getUsers)
     .post(addUser)
+
 userRouter.route('/:id')
     .get(getUserById)
     .put(updateUserById)

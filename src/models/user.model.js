@@ -1,14 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const save = users => {
-    const rawUsers = JSON.stringify(users);
-    fs.writeFile(path.join(__dirname, '../data/users.json'), rawUsers, (err) => {
-        if (err) throw err;
-        console.log('Write file successfully');
-    });
-}
-
 class User {
     constructor({ id, avatar, fullName, dateOfBirth, password, studentCode, className, schoolYear, clubYear }) {
         this.id = id;
@@ -32,6 +24,14 @@ class User {
         }
     }
 
+    static save(users) {
+        const rawUsers = JSON.stringify(users);
+        fs.writeFile(path.join(__dirname, '../data/users.json'), rawUsers, (err) => {
+            if (err) throw err;
+            console.log('Write file successfully');
+        });
+    }
+
     static getById(id) {
         const users = User.find();
         return users.find(user => user.id == id);
@@ -41,7 +41,7 @@ class User {
         const users = User.find();
         users.push({ ...this });
 
-        save(users);
+        User.save(users);
     }
 
     static updateById(id, update) {
@@ -56,14 +56,14 @@ class User {
             return user;
         });
 
-        save(updatedUsers);
+        User.save(updatedUsers);
     }
 
     static deleteById(id) {
         const users = User.find();
         const deletedUsers = users.filter(user => user.id != id);
 
-        save(deletedUsers);
+        User.save(deletedUsers);
     }
 }
 

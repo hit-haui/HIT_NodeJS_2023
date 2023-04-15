@@ -1,9 +1,11 @@
 const User = require('../models/user.model');
-const users = User.getAllUser();
 
 
 // get users
 const getUsers = (req, res) => {
+    // get all user
+    const users = User.getAllUser();
+    // return result
     res.status(200).json({
         users: users
     });
@@ -14,14 +16,14 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
     const userId = req.params.id;
     // check user
-    const index = users.findIndex((user) => user.id === userId);
+    const index = User.findIndexById(userId);
     if (index === -1) {
         return res.status(404).json({
             message: "User not found!"
         });
     }
-    // find user by id
-    const user = User.findUser(index);
+    // get user by index
+    const user = User.getUser(index);
     res.status(200).json({
         user: user
     });
@@ -45,7 +47,7 @@ const createUser = (req, res) => {
 const updateUserById = (req, res) => {
     const userId = req.params.id;
     // check user
-    const index = users.findIndex(user => user.id === userId);
+    const index = User.findIndexById(userId);
     if (index === -1) {
         return res.status(404).json({
             message: "User not found!"
@@ -64,7 +66,7 @@ const updateUserById = (req, res) => {
 const deleteUserById = (req, res) => {
     const userId = req.params.id;
     // check user
-    const index = users.findIndex((user) => user.id === userId);
+    const index = User.findIndexById(userId);
     if (index === -1) {
         return res.status(404).json({
             message: "User not found!"

@@ -32,8 +32,15 @@ class User {
         }
     }
 
-    // find user by id
-    static findUser(index) {
+    // find index by id
+    static findIndexById(userId) {
+        const users = User.getAllUser();
+        const index = users.findIndex(user => user.id === userId);
+        return index;
+    }
+
+    // find user
+    static getUser(index) {
         const users = User.getAllUser();
         const user = users[index];
         return user;

@@ -4,21 +4,27 @@ const uuid = require('uuid');
 
 // save data
 const saveData = users => {
-    usersJson = JSON.stringify(users);
-    fs.writeFileSync(path.join(__dirname, "../data/users.json"), usersJson);
-}
+    const usersJson = JSON.stringify(users);
+    fs.writeFile(path.join(__dirname, "../data/users.json"), usersJson, err => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log("Data has been saved to file");
+        }
+    });
+};
 
 class User {
     constructor({ id, avatar, fullName, dateOfBirth, password, studentCode, className, schoolYear, clubYear }) {
         this.id = id || uuid.v4();
-        this.avatar = avatar || "null";
-        this.fullName = fullName || "null";
-        this.dateOfBirth = dateOfBirth || "null";
-        this.password = password || "null";
-        this.studentCode = studentCode || "null";
-        this.className = className || "null";
-        this.schoolYear = schoolYear || "null";
-        this.clubYear = clubYear || "null";
+        this.avatar = avatar || null;
+        this.fullName = fullName || null;
+        this.dateOfBirth = dateOfBirth || null;
+        this.password = password || null;
+        this.studentCode = studentCode || null;
+        this.className = className || null;
+        this.schoolYear = schoolYear || null;
+        this.clubYear = clubYear || null;
     }
 
     // get all user
@@ -32,18 +38,11 @@ class User {
         }
     }
 
-    // find index by id
-    static findIndexById(userId) {
+    // find user by id
+    static findUserByID(userId) {
         const users = User.getAllUser();
-        const index = users.findIndex(user => user.id === userId);
-        return index;
-    }
-
-    // get user by index
-    static getUserByIndex(index) {
-        const users = User.getAllUser();
-        const user = users[index];
-        return user;
+        const user = users.filter(user => user.id == userId);
+        return user[0];
     }
 
     // add new user
@@ -55,8 +54,9 @@ class User {
     }
 
     // update user
-    static updateUser(index, userRaw) {
+    static updateUser(userId, userRaw) {
         const users = User.getAllUser();
+        const index = users.findIndex(user => user.id == userId);
         const user = users[index];
         const updatedUser = Object.assign({}, user, userRaw);
         users[index] = updatedUser;
@@ -64,10 +64,10 @@ class User {
     }
 
     // delete user
-    static deleteUser(index) {
+    static deleteUser(userId) {
         const users = User.getAllUser();
-        users.splice(index, 1);
-        saveData(users);
+        const deletedUsers = users.filter(user => user.id != userId);
+        saveData(deletedUsers);
     }
 }
 

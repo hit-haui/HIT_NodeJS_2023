@@ -16,14 +16,13 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
     const userId = req.params.id;
     // check user
-    const index = User.findIndexById(userId);
-    if (index === -1) {
+    const user = User.findUserByID(userId);
+    if (!user) {
         return res.status(404).json({
             message: "User not found!"
         });
     }
-    // get user by index
-    const user = User.getUserByIndex(index);
+    // return result
     res.status(200).json({
         user: user
     });
@@ -37,7 +36,7 @@ const createUser = (req, res) => {
     const newUser = new User(userRaw);
     // add new user to file
     newUser.addUser();
-    res.status(200).json({
+    res.status(201).json({
         message: "Successfully created user!"
     });
 };
@@ -47,15 +46,15 @@ const createUser = (req, res) => {
 const updateUserById = (req, res) => {
     const userId = req.params.id;
     // check user
-    const index = User.findIndexById(userId);
-    if (index === -1) {
+    const user = User.findUserByID(userId);
+    if (!user) {
         return res.status(404).json({
             message: "User not found!"
         });
     }
     // update user
     const userRaw = req.body;
-    User.updateUser(index, userRaw);
+    User.updateUser(userId, userRaw);
     res.status(200).json({
         message: "Successfully updated user information!"
     });
@@ -66,14 +65,14 @@ const updateUserById = (req, res) => {
 const deleteUserById = (req, res) => {
     const userId = req.params.id;
     // check user
-    const index = User.findIndexById(userId);
-    if (index === -1) {
+    const user = User.findUserByID(userId);
+    if (!user) {
         return res.status(404).json({
             message: "User not found!"
         });
     }
     // delete user
-    User.deleteUser(index);
+    User.deleteUser(userId);
     res.status(200).json({
         message: "Successfully delete user!"
     });

@@ -33,9 +33,9 @@ class User {
     }
 
     // find user by id
-    static findUserById(userId) {
+    static findUser(index) {
         const users = User.getAllUser();
-        const user = users.filter((user) => user.id === userId);
+        const user = users[index];
         return user;
     }
 
@@ -48,10 +48,10 @@ class User {
     }
 
     // update user
-    static updateUser(index, updatedFields) {
+    static updateUser(index, userRaw) {
         const users = User.getAllUser();
         const user = users[index];
-        const updatedUser = Object.assign({}, user, updatedFields);
+        const updatedUser = Object.assign({}, user, userRaw);
         users[index] = updatedUser;
         saveData(users);
     }

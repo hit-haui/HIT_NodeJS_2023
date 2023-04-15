@@ -14,14 +14,14 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
     const userId = req.params.id;
     // check user
-    let index = users.findIndex((user) => user.id === userId);
+    const index = users.findIndex((user) => user.id === userId);
     if (index === -1) {
         return res.status(404).json({
             message: "User not found!"
         });
     }
     // find user by id
-    let user = User.findUserById(userId);
+    const user = User.findUser(index);
     res.status(200).json({
         user: user
     });
@@ -33,7 +33,7 @@ const createUser = (req, res) => {
     // new user
     const userRaw = req.body;
     const newUser = new User(userRaw);
-    // add neư user on file
+    // add new user to file
     newUser.addUser();
     res.status(200).json({
         message: "Successfully created user!"
@@ -52,8 +52,8 @@ const updateUserById = (req, res) => {
         });
     }
     // update user
-    const updatedFields = req.body;
-    User.updateUser(index, updatedFields);
+    const userRaw = req.body;
+    User.updateUser(index, userRaw);
     res.status(200).json({
         message: "Successfully updated user information!"
     });

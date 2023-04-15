@@ -23,7 +23,7 @@ const getUserById = (req, res) => {
         });
     }
     // get user by index
-    const user = User.getUser(index);
+    const user = User.getUserByIndex(index);
     res.status(200).json({
         user: user
     });

@@ -39,8 +39,8 @@ class User {
         return index;
     }
 
-    // find user
-    static getUser(index) {
+    // get user by index
+    static getUserByIndex(index) {
         const users = User.getAllUser();
         const user = users[index];
         return user;

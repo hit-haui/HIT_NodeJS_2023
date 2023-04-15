@@ -26,7 +26,6 @@ class User {
   createUser() {
     const newUser = this;
     const users = User.find();
-    console.log(users);
     // convert instance class to object
     users.push({ ...newUser });
 

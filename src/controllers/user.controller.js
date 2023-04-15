@@ -1,6 +1,3 @@
-const fs = require("fs");
-const path = require("path");
-
 const User = require(".././models/user.model");
 
 const getUsers = (req, res, next) => {
@@ -22,21 +19,21 @@ const getUserbyId = (req, res) => {
 
 const createUser = (req, res) => {
   const user = new User(req.body);
-  user.save();
+  user.createUser();
   res.json({
     msg: "Create successfully!!",
   });
 };
 
 const updateUserById = (req, res) => {
-  const newUsers = req.body;
   const { id } = req.params;
+  let newUsers = req.body;
   let users = User.updateById(id, newUsers);
   res.json({
     newUsers: users,
   });
-  const usersJSON = JSON.stringify(user);
-  fs.writeFileSync(path.join(__dirname, "../data/users.json"), usersJSON);
+
+  User.saveFile(newUsers);
 };
 
 const deleteUserById = (req, res) => {
@@ -47,8 +44,8 @@ const deleteUserById = (req, res) => {
     res.json({
       msg: "Delete successfully!!",
     });
-  const usersJSON = JSON.stringify(users);
-  fs.writeFileSync(path.join(__dirname, "../data/users.json"), usersJSON);
+
+  User.saveFile(users);
 };
 
 module.exports = {
@@ -58,5 +55,3 @@ module.exports = {
   updateUserById,
   deleteUserById,
 };
-
-// Difference between req.query[] and req.params

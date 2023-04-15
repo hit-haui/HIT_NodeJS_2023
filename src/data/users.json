@@ -42,5 +42,16 @@
     "className": "KTPM01",
     "schoolYear": "16",
     "clubYear": "13"
+  },
+  {
+    "id": 5,
+    "avatar": "/avatars/2020605518.jpg",
+    "fullName": "Trương Thành Hưng",
+    "dateOfBirth": "23/05/2002",
+    "studentCode": "2020605518",
+    "password": "2020605518",
+    "className": "CNTT04",
+    "schoolYear": "15",
+    "clubYear": "15"
   }
 ]

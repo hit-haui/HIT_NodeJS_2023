@@ -23,15 +23,27 @@ class User {
     this.clubYear = clubYear;
   }
 
-  save() {
+  createUser() {
     const newUser = this;
     const users = User.find();
     console.log(users);
     // convert instance class to object
     users.push({ ...newUser });
+
+    User.saveFile(users);
+  }
+
+  static saveFile(users) {
     const usersJSON = JSON.stringify(users);
-    // write file
-    fs.writeFileSync(path.join(__dirname, "../data/users.json"), usersJSON);
+    fs.writeFile(
+      path.join(__dirname, "../data/users.json"),
+      usersJSON,
+      "utf8",
+      (error) => {
+        if (error) throw error;
+        console.log("Write successfully !!!");
+      }
+    );
   }
 
   static find() {
@@ -49,21 +61,20 @@ class User {
 
   static findById(id) {
     let users = User.find();
-    users = users.filter((user) => user.id == id);
+    users = users.find((user) => user.id === +id);
     return users;
   }
 
   static deleteById(id) {
     let users = User.find();
-    console.log(id);
-    users = users.filter((user) => user.id != id);
+    users = users.filter((user) => user.id !== +id);
     return users;
   }
 
   static updateById(id, newUser) {
     let users = User.find();
     users = users.map((user) => {
-      if (user.id == id) {
+      if (user.id === +id) {
         return newUser;
       }
       return user;

@@ -41,7 +41,7 @@ class User {
     // find user by id
     static findUserByID(userId) {
         const users = User.getAllUser();
-        const user = users.filter(user => user.id == userId);
+        const user = users.filter(user => user.id === userId);
         return user[0];
     }
 
@@ -56,7 +56,7 @@ class User {
     // update user
     static updateUser(userId, userRaw) {
         const users = User.getAllUser();
-        const index = users.findIndex(user => user.id == userId);
+        const index = users.findIndex(user => user.id === userId);
         const user = users[index];
         const updatedUser = Object.assign({}, user, userRaw);
         users[index] = updatedUser;
@@ -66,7 +66,7 @@ class User {
     // delete user
     static deleteUser(userId) {
         const users = User.getAllUser();
-        const deletedUsers = users.filter(user => user.id != userId);
+        const deletedUsers = users.filter(user => user.id !== userId);
         saveData(deletedUsers);
     }
 }

@@ -22,6 +22,7 @@ class User {
         fs.writeFileSync(
           path.join(__dirname, "../data/users.json"),userJson
         );
+        return users;
     }
     static find() {
         try {

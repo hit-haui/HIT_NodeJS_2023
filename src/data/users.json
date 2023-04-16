@@ -1,5 +1,6 @@
 [
-  {
+  { 
+    "id": "b224e34a-4f86-402b-a715-5eb2a1f0058f",
     "avatar": "/avatars/2020605518.jpg",
     "fullName": "Trương Thành Hưng",
     "dateOfBirth": "23/05/2002",
@@ -9,7 +10,8 @@
     "schoolYear": "15",
     "clubYear": "12"
   },
-  {
+  { 
+    "id": "8ea2cc27-6a3e-4b88-90b2-c24345aff436",
     "avatar": "/avatars/2020605518.jpg",
     "fullName": "Đinh Tấn Hưng",
     "dateOfBirth": "31/02/2002",

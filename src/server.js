@@ -1,15 +1,15 @@
-const express = require("express");
-const app = express();
-const port = 8080;
+const express = require('express')
+const app = express()
+const port = 8080
 
-const router = require('./routes/user.route');
+const userRouter = require('./routes/user.route')
 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }))
 
-app.use(express.json());
+app.use(express.json())
 
-app.use(router);
+app.use(userRouter)
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+  console.log(`Example app listening on port ${port}`)
+})

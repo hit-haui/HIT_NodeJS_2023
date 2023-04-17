@@ -43,6 +43,10 @@ class user {
     }
   }
 
+  static pushData(allUsers,newUser){
+    return allUsers.push({...newUser});
+  }
+
   static save() {
     try {
       fs.writeFileSync(
@@ -61,8 +65,7 @@ class user {
   }
 
   static findById(id) {
-    let findUser = allUsers.find((item) => item.id == id);
-
+    let findUser = allUsers.find((item) => Number(item.id) === Number(id));
     return findUser;
   }
 }

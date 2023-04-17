@@ -1,4 +1,4 @@
-const { allUser, findById } = require("../models/user.model");
+const { allUser, findById, pushData } = require("../models/user.model");
 const User = require("../models/user.model");
 const allUsers = User.getAllUser();
 
@@ -7,6 +7,10 @@ const getUserById = (req, res) => {
   const user = User.findById(userId);
   if (user) res.json(user);
   else res.json({ msg: "User not found!!" });
+};
+
+const getAllUser = (req, res) => {
+  res.json(User.getAllUser());
 };
 
 const createUser = (req, res) => {
@@ -22,19 +26,16 @@ const createUser = (req, res) => {
     data.schoolYear,
     data.clubYear
   );
-  allUsers.push({ ...newUser });
+  pushData(allUsers,newUser);
   User.save();
   res.json(allUsers);
 };
 
 const updateUserById = (req, res) => {
   const userId = req.params.id;
-
   const user = findById(userId);
-  console.log(user);
-  if (!user) res.json({ msg: "user not found!!!" });
+  if (!user) return res.json({ msg: "user not found!!!" });
   const data = req.body;
-
   const newUser = new User(
     data.id,
     data.avatar,
@@ -46,9 +47,8 @@ const updateUserById = (req, res) => {
     data.schoolYear,
     data.clubYear
   );
-  console.log(newUser);
   let index = allUsers.findIndex((item) => item.id == userId);
-  Object.assign(allUsers[index], newUser);
+  Object.assign(allUser[index], newUser);
   User.save();
   res.json(allUsers);
 };
@@ -57,7 +57,9 @@ const deleteUserById = (req, res) => {
   const userId = req.params.id;
   const user = findById(userId);
   if (!user) res.json({ msg: "user not found!!!!" });
-  const index = allUsers.findIndex((item) => item.id == userId);
+  const index = allUsers.findIndex(
+    (item) => Number(item.id) === Number(userId)
+  );
   allUsers.splice(index, 1);
   User.save();
   res.json(allUsers);
@@ -68,4 +70,5 @@ module.exports = {
   createUser,
   deleteUserById,
   updateUserById,
+  getAllUser,
 };

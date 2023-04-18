@@ -7,9 +7,10 @@ const {
   updateUserById,
   deleteUserById,
 } = require("../controllers/user.controller");
-router.get("/", getUsers);
-router.get("/:userId", getUserById);
-router.post("/user", createUser);
-router.put("/user/:userId", updateUserById);
-router.delete("/:productId", deleteUserById);
+router.route("/").get(getUsers).post(createUser);
+router
+  .route("/:userId")
+  .get(getUserById)
+  .put(updateUserById)
+  .delete(deleteUserById);
 module.exports = router;

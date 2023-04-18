@@ -21,5 +21,10 @@
   "bugs": {
     "url": "https://github.com/hit-haui/HIT_NodeJS_2023/issues"
   },
-  "homepage": "https://github.com/hit-haui/HIT_NodeJS_2023#readme"
+  "homepage": "https://github.com/hit-haui/HIT_NodeJS_2023#readme",
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
+    "prettier": "^2.8.7"
+  }
 }

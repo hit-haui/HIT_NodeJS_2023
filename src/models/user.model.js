@@ -59,26 +59,31 @@ class User {
   }
 
   static findById(id) {
-    let users = User.find();
-    users = users.find((user) => user.id === +id);
-    return users;
+    const users = User.find();
+    const user = users.find((user) => user.id === id);
+    return user;
   }
 
   static deleteById(id) {
-    let users = User.find();
-    users = users.filter((user) => user.id !== +id);
-    User.saveFile(users);
+    const users = User.find();
+    const filteredUsers = users.filter((user) => user.id !== id);
+    if (filteredUsers.length === users.length) {
+      throw new Error(`Cannot find user with id ${id}`);
+    }
+    User.saveFile(filteredUsers);
+    return filteredUsers;
   }
 
   static updateById(id, newUser) {
     let users = User.find();
     users = users.map((user) => {
-      if (user.id === +id) {
+      if (user.id === id) {
         return newUser;
       }
       return user;
     });
     User.saveFile(users);
+    return users;
   }
 }
 

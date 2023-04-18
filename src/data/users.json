@@ -44,12 +44,12 @@
     "clubYear": "13"
   },
   {
-    "id": 5,
+    "id": 55,
     "avatar": "/avatars/2020605518.jpg",
-    "fullName": "Trương Thành Hưng",
+    "fullName": "Trương Thành",
     "dateOfBirth": "23/05/2002",
-    "studentCode": "2020605518",
     "password": "2020605518",
+    "studentCode": "2020605518",
     "className": "CNTT04",
     "schoolYear": "15",
     "clubYear": "15"

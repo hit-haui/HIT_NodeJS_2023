@@ -11,7 +11,7 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   const userId = req.params.userId;
   const users = User.find();
-  const user = users.find((item) => item.userId == userId);
+  const user = users.find((item) => String(item.userId) === userId);
 
   if (!user) {
     return res.json({
@@ -24,18 +24,8 @@ const getUserById = (req, res) => {
   });
 };
 
-const createUserById = (req, res) => {
-  const newUser = {
-    userId: 3,
-    avatar: "avatar",
-    fullName: "Ngo Thi Loan",
-    password: "00000",
-    studentCode: "25236237",
-    className: "NTL",
-    schoolYear: "22",
-    clubYear: "17",
-  };
-  //console.log(newUser);
+const createUser = (req, res) => {
+  const newUser = req.body;
   const user = new User(newUser);
   user.save();
   res.json({
@@ -44,30 +34,26 @@ const createUserById = (req, res) => {
 };
 
 const updateUserById = (req, res) => {
-  const userId = req.params.userId;
-  const users = User.find();
   const newUser = req.body;
-  const index = users.findIndex((item) => {
-    item.userId == userId;
+  const userId = req.params.userId;
+  const user = User.update(userId, newUser);
+  return res.json({
+    user,
   });
-  users.splice(index, 1, newUser);
-  const newUsers = JSON.stringify(users);
-  fs.writeFileSync(path.join(__dirname, "../data/users.json"), newUsers);
-  res.json(newUsers);
-  console.log(newUsers);
 };
 
 const deleteUserById = (req, res) => {
   const userId = req.params.userId;
-  //let users = User.find();
-  User.delete(userId);
-  res.json();
+  const user = User.delete(userId);
+  res.json({
+    user,
+  });
 };
 
 module.exports = {
   getUsers,
   getUserById,
-  createUserById,
+  createUser,
   updateUserById,
   deleteUserById,
 };

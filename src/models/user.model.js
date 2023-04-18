@@ -44,10 +44,9 @@ class User {
     try {
       //read file
       const usersJson = fs.readFileSync(
-        path.join(__dirname, "../data/users.json"),
-        { encoding: "utf8", flag: "r" }
+        path.join(__dirname, "../data/users.json")
       );
-      // console.log(usersJson);
+
       //convert json to js
       const users = JSON.parse(usersJson);
       return users;
@@ -56,14 +55,61 @@ class User {
     }
   }
 
-  static delete(userId) {
-    const index = users.findIndex((user) => user.userId == userId);
-    if (index == -1) {
-      console.log("not found");
-      return;
+  static findUserById(userId) {
+    const users = User.find();
+    const user = users.findIndex((item) => String(item.userId) === userId);
+    if (!user) {
+      return "Not found";
+    } else {
+      return user;
     }
-    users.splice(index, 1);
-    save(users);
+  }
+
+  static update(userId, newUser) {
+    const users = User.find();
+    const index = User.findUserById(userId);
+    console.log(index);
+    if (index == -1) {
+      return "not found";
+    } else {
+      const newUsers = new User(newUser);
+      users.splice(index, 1, newUsers);
+      const usersJson = JSON.stringify(users);
+      fs.writeFileSync(
+        path.join(__dirname, "../data/users.json"),
+        usersJson,
+        (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            return usersJson;
+          }
+        }
+      );
+    }
+  }
+
+  static delete(userId) {
+    const users = User.find();
+    const index = User.findUserById(userId);
+    console.log(index);
+    if (index == -1) {
+      return "not found";
+    } else {
+      users.splice(index, 1);
+      const usersJson = JSON.stringify(users);
+      fs.writeFileSync(
+        path.join(__dirname, "../data/users.json"),
+        usersJson,
+        (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            return usersJson;
+          }
+        }
+      );
+    }
   }
 }
 

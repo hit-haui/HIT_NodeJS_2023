@@ -29,9 +29,7 @@ const updateUserById = (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
-    // console.log(updateData);
     const updatedUser = User.updateById(+id, updateData);
-    console.log(updatedUser);
     if (!updatedUser) {
       return res.status(404).json({ error: `User with id ${id} not found` });
     }

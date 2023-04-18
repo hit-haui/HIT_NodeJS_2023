@@ -90,9 +90,7 @@ class User {
       throw new Error(`User with id ${id} not found`);
     }
     User.saveFile(users);
-    // const updatedUser = users.find((user) => user.id === id);
     return updateData;
-    // return users;
   }
 }
 

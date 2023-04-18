@@ -1,26 +1,18 @@
 const { User } = require("../models/user.model");
 
-const path = require("path");
-
-const fs = require("fs");
-
-const { v4: uuidv4 } = require("uuid");
-
 const getUsers = (req, res) => {
   const users = User.find();
   res.json(users);
-  for (let user of users) {
-    if (!users.id) {
-      user.id = uuidv4();
-    }
-  }
-  const userJson = JSON.stringify(users);
-  fs.writeFileSync(path.join(__dirname, "../data/users.json"), userJson);
 };
 
 const getUserById = (req, res) => {
   const { id } = req.params;
   const user = User.findById(id);
+  if (!user) {
+    return res.status(404).json({
+      message: "Use not found",
+    });
+  }
   res.json(user);
 };
 
@@ -31,18 +23,28 @@ const createUser = (req, res) => {
 };
 
 const updateUserById = (req, res) => {
-  const users = User.find();
-  const data = req.body;
   const { id } = req.params;
+  const user = User.findById(id);
+  if (!user) {
+    return res.status(401).json({
+      message: "User not found",
+    });
+  }
+  const data = req.body;
   User.updateUser(id, data);
-  res.json(users);
+  res.json(User);
 };
 
 const deleteUserById = (req, res) => {
-  const users = User.find();
   const { id } = req.params;
+  const user = User.findById(id);
+  if (!user) {
+    return res.status(401).json({
+      message: "User not found",
+    });
+  }
   User.deleteUser(id);
-  res.json(users);
+  res.json(User);
 };
 
 module.exports = {

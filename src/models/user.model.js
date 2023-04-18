@@ -2,6 +2,8 @@ const fs = require("fs");
 
 const path = require("path");
 
+const { v4: uuidv4 } = require("uuid");
+
 const saveAll = (users) => {
   const userJson = JSON.stringify(users);
   fs.writeFileSync(
@@ -61,12 +63,14 @@ class User {
   }
 
   static findById(id) {
-    const user = User.find((user) => user.id === id);
+    const users = User.find();
+    const user = users.find((user) => user.id === id);
     return user;
   }
 
   static createUser(data) {
     const newUser = new User(data);
+    newUser.id = uuidv4();
     newUser.saveNewUser();
     return newUser;
   }

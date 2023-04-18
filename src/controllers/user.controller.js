@@ -8,9 +8,10 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   const { id } = req.params;
   const user = User.findById(id);
+  console.log(user);
   if (!user) {
     return res.status(404).json({
-      message: "Use not found",
+      message: "User not found",
     });
   }
   res.json(user);
@@ -26,25 +27,31 @@ const updateUserById = (req, res) => {
   const { id } = req.params;
   const user = User.findById(id);
   if (!user) {
-    return res.status(401).json({
+    return res.status(404).json({
       message: "User not found",
     });
+  } else {
+    const data = req.body;
+    User.updateUser(id, data);
+    res.status(200).json({
+      message: "Successfully updated",
+    });
   }
-  const data = req.body;
-  User.updateUser(id, data);
-  res.json(User);
 };
 
 const deleteUserById = (req, res) => {
   const { id } = req.params;
   const user = User.findById(id);
   if (!user) {
-    return res.status(401).json({
+    return res.status(404).json({
       message: "User not found",
     });
+  } else {
+    User.deleteUser(id);
+    res.status(200).json({
+      message: "Successfully deleted",
+    });
   }
-  User.deleteUser(id);
-  res.json(User);
 };
 
 module.exports = {

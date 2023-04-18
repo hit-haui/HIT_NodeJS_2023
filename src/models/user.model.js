@@ -76,12 +76,17 @@ class User {
 
   static updateById(id, newUser) {
     let users = User.find();
+    let isUserExists = false;
     users = users.map((user) => {
       if (user.id === id) {
+        isUserExists = true;
         return newUser;
       }
       return user;
     });
+    if (!isUserExists) {
+      throw new Error(`User with id ${id} not found`);
+    }
     User.saveFile(users);
     return users;
   }

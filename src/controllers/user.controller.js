@@ -28,7 +28,13 @@ const createUser = (req, res) => {
 const updateUserById = (req, res) => {
   const { id } = req.params;
   const newUsers = req.body;
-  const users = User.updateById(+id, newUsers);
+  let users;
+  try {
+    users = User.User.updateById(+id, newUsers);
+  } catch (error) {
+    res.status(404).json({ error: `User with id ${id} not found` });
+    return;
+  }
   res.json({
     users, // the array of users returned after updating one use
   });

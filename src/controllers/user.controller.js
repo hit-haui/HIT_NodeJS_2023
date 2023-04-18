@@ -26,33 +26,32 @@ const createUser = (req, res) => {
 };
 
 const updateUserById = (req, res) => {
-  const { id } = req.params;
-  const newUsers = req.body;
-  let users;
   try {
-    users = User.User.updateById(+id, newUsers);
-  } catch (error) {
-    res.status(404).json({ error: `User with id ${id} not found` });
-    return;
+    const { id } = req.params;
+    const updateData = req.body;
+    // console.log(updateData);
+    const updatedUser = User.updateById(+id, updateData);
+    console.log(updatedUser);
+    if (!updatedUser) {
+      return res.status(404).json({ error: `User with id ${id} not found` });
+    }
+    res.json({ updatedUser });
+  } catch (err) {
+    console.error(err.message);
   }
-  res.json({
-    users, // the array of users returned after updating one use
-  });
 };
 
 const deleteUserById = (req, res) => {
   const { id } = req.params;
-  let users;
   try {
-    users = User.deleteById(+id);
+    const deletedUser = User.deleteById(+id);
+    if (!deletedUser) {
+      return res.status(404).json({ error: `User with id ${id} not found` });
+    }
+    res.json({ deletedUser });
   } catch (error) {
     console.error(error.message);
-    res.status(404).json({ error: `User with id ${id} not found` });
-    return;
   }
-  res.json({
-    users, // the array of users returned after deleting one use
-  });
 };
 
 module.exports = {

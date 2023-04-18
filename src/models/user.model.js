@@ -71,24 +71,28 @@ class User {
       throw new Error(`Cannot find user with id ${id}`);
     }
     User.saveFile(filteredUsers);
-    return filteredUsers;
+    const deletedUser = users.find((user) => user.id === id);
+    return deletedUser;
   }
 
-  static updateById(id, newUser) {
+  static updateById(id, updateData) {
     let users = User.find();
     let isUserExists = false;
     users = users.map((user) => {
       if (user.id === id) {
         isUserExists = true;
-        return newUser;
+        return updateData;
       }
       return user;
     });
+    console.log(users);
     if (!isUserExists) {
       throw new Error(`User with id ${id} not found`);
     }
     User.saveFile(users);
-    return users;
+    // const updatedUser = users.find((user) => user.id === id);
+    return updateData;
+    // return users;
   }
 }
 

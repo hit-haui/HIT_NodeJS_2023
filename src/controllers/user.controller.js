@@ -60,7 +60,6 @@ const createUser = async (req, res) => {
 const updateUserById = async (req, res) => {
   const updatedData = req.body;
   const { id } = req.params;
-  console.log(id);
   try {
     const user = await User.findById(id);
     if (!user) {

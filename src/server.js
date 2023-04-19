@@ -7,7 +7,7 @@ const router = require("./routes");
 const app = express();
 const port = 8080;
 
-mongoose.connect('mongodb://127.0.0.1:27017/users' || process.env.DATABASE_URL)
+mongoose.connect(process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/users')
   .then(() => console.log('Connected!'))
   .catch(err => console.log(err.message))
 

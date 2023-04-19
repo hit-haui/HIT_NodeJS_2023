@@ -9,7 +9,7 @@ const getUsers = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    return res.status(404).json({
+    return res.status(500).json({
       error: error.message,
     });
   }
@@ -30,6 +30,9 @@ const getUserById = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
+    return res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
@@ -61,21 +64,22 @@ const updateUserById = async (req, res) => {
   const updatedData = req.body;
   const { id } = req.params;
   try {
-    const user = await User.findById(id);
-    if (!user) {
+    const updatedUser = await User.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+    if (!updatedUser) {
       return res.status(404).json({
         message: `User with id ${id} not found!`,
       });
     }
-
-    const updatedUser = await User.findOneAndUpdate(id, updatedData, {
-      new: true,
-    });
     res.status(200).json({
       user: updatedUser,
     });
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({
+      message: `Error updating user with id ${id}: ${error.message}`,
+    });
   }
 };
 
@@ -83,21 +87,19 @@ const updateUserById = async (req, res) => {
 const deleteUserById = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findById(id);
-    if (!user) {
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
       return res.status(404).json({
         message: `User with id ${id} not found!`,
       });
     }
-
-    const deletedUser = await User.findOneAndDelete({ _id: id });
     res.status(200).json({
       user: deletedUser,
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error.message);
     res.status(500).json({
-      message: "Internal server error!",
+      message: `Error deleting user with id ${id}: ${error.message}`,
     });
   }
 };

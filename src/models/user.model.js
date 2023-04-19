@@ -1,10 +1,9 @@
-const { log } = require("console");
 const fs = require("fs");
 const path = require("path");
 const allUsers = require("../data/users.json");
 
-class user {
-  constructor(
+class User {
+  constructor({
     id,
     avatar,
     fullName,
@@ -13,8 +12,8 @@ class user {
     studentCode,
     className,
     schoolYear,
-    clubYear
-  ) {
+    clubYear,
+  }) {
     this.id = id;
     this.avatar = avatar;
     this.fullName = fullName;
@@ -28,7 +27,6 @@ class user {
 
   static find() {
     try {
-      console.log(__dirname);
       const productJson = fs.readFileSync(
         path.join(__dirname, "../data/.json"),
         "utf-8"
@@ -36,15 +34,14 @@ class user {
 
       const products = JSON.parse(productJson); //convert JSON to JS
 
-      console.log(productJson);
       return products;
     } catch (err) {
       console.error(err);
     }
   }
 
-  static pushData(allUsers,newUser){
-    return allUsers.push({...newUser});
+  static pushData(allUsers, newUser) {
+    return allUsers.push({ ...newUser });
   }
 
   static save() {
@@ -65,9 +62,9 @@ class user {
   }
 
   static findById(id) {
-    let findUser = allUsers.find((item) => Number(item.id) === Number(id));
-    return findUser;
+    const user = allUsers.find((item) => item.id === id);
+    return user;
   }
 }
 
-module.exports = user;
+module.exports = User;

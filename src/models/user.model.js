@@ -1,63 +1,69 @@
 const fs = require("fs");
 const path = require("path");
-let users = require("../data/users.json");
-class User {
-  constructor({
-    id,
-    avatar,
-    fullName,
-    dataOfBirth,
-    password,
-    studentCode,
-    className,
-    schoolYear,
-    clubYear,
-  }) {
-    this.id = id;
-    this.avatar = avatar;
-    this.fullName = fullName;
-    this.dataOfBirth = dataOfBirth;
-    this.password = password;
-    this.studentCode = studentCode;
-    this.className = className;
-    this.schoolYear = schoolYear;
-    this.clubYear = clubYear;
-  }
+const uuid = require("uuid");
 
-  save() {
-    const newProduct = this;
-    const users = User.find();
-    // convert instance class to object
-    users.push(newProduct);
-    // Javascript to Json
-    const usersJson = JSON.stringify(users);
-    // Write file
-    fs.writeFileSync(path.join(__dirname, "../data/users.json"), usersJson);
-  }
-  static getByPassWord(id) {
-    const user = users.find((item) => item.password == password);
-    return user;
-  }
-  static deleteByPass(id) {
-    const index = users.findIndex((user) => user.password == userPassword);
-    users.splice(index, 1);
-    // const users = User.find();
+const saveData = users =>{
+  const usersJson = JSON.stringify(users);
+  fs.writeFile(path.join(__dirname, "../data/users.json"), usersJson, err => {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log("Data has been saved to file");
+    }
+});
+}
+class User{
+  constructor({id, avatar, fullName, dateOfBirth, password, studentCode, className, schoolYear, clubYear  }){
+    this.id = id || uuid.id;
+    this.avatar = avatar || null;
+    this.fullName = fullName || null;
+    this.dateOfBirth = dateOfBirth || null;
+    this.password = password || null;
+    this.studentCode = studentCode || null;
+    this.className = className || null;
+    this.schoolYear = schoolYear || null;
+    this.clubYear = clubYear || null;
 
-    users.save();
   }
-  static find() {
-    try {
-      const usersJson = fs.readFileSync(
-        path.join(__dirname, "../data/users.json"),
-        "utf8"
-      );
-      //convert json to javascript
+  static getUser() {
+    try{
+      const usersJson = fs.readFileSync(path.join(__dirname, "../data/users.json"), "utf8");
       const users = JSON.parse(usersJson);
       return users;
-    } catch (err) {
+
+    }catch(err) {
       console.log(err);
     }
+  }
+
+  static getById(id) {
+    const users = User.getUser();
+    const user = users.find((user) => user.id === id);
+    return user;
+  }
+  createUser() {
+    const users = User.getUser();
+    const newUser = this;
+    users.push(newUser);
+    saveData(users);
+  }
+
+  static updateUser(userId, userRaw) {
+    const users = User.getUser();
+    const index = users.findIndex(user => user.id === userId);
+    const newUser = new User(userRaw);
+    users.splice(index,1,newUser);
+    saveData(users);
+  }
+
+  static deleteUser(id) {
+    const users = User.getUser();
+    const index = users.findIndex(user => user.id === id)
+    users.splice(index,1);
+    saveData(users);
   }
 }
 
 module.exports = User;
+
+

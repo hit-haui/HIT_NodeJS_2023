@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-
+const mongoose = require("mongoose");
 class User {
     constructor(avatar,fullName,dateOfBirth,password,studentCode,className,schoolYear,clubYear){
         this.avatar=avatar;

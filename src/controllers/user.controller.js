@@ -1,78 +1,96 @@
 const User = require("../models/user.model");
-
-// get users
-const getUsers = (req, res) => {
-  // get all user
-  const users = User.getAllUser();
-  // return result
-  res.status(200).json({
-    users: users,
-  });
-};
-
-// get user by id
-const getUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
+//getAllUser
+const getUsers = async(req, res) => {
+  try{
+    const users = await User.find();
+    res.status(200).json({
+      users,
     });
+  }catch (err){
+    res.status(500).json({
+            error: err.message
+        });
   }
-  // return result
-  res.status(200).json({
-    user: user,
-  });
-};
 
-// create user
-const createUser = (req, res) => {
-  // new user
-  const userRaw = req.body;
-  const newUser = new User(userRaw);
-  // add new user to file
-  newUser.addUser();
-  res.status(201).json({
-    message: "Successfully created user!",
-  });
 };
-
-// edit user information by id
-const updateUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
+//getById
+const getUserById = async (req, res) => {
+  const {userId} = req.params;
+  try{
+    const user = await User.findById(userId);
+    if(!user){
+      return res.status(404).json({
+        msg:"User not found"
+      })
+    }
+    res.status(200).json({
+      user
     });
-  }
-  // update user
-  const userRaw = req.body;
-  User.updateUser(userId, userRaw);
-  res.status(200).json({
-    message: "Successfully updated user information!",
+  }catch (err){
+    res.status(500).json({
+      error: err.message
   });
+  }
+
+};
+//creat
+const createUser =async (req, res) => {
+   const user  = req.body;
+   const newUser = new User(user);
+   try{
+    const user = await User.create(newUser);
+        res.status(201).json({
+            user
+        });
+   }catch (err){
+    res.status(500).json({
+      error: err.message
+  });
+   }
 };
 
-// delete user by id
-const deleteUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
+//update
+const updateUserById =async (req, res) => {
+  const {userId} = req.params;
+  try{
+    const userUpdate = req.body;
+    const user =await User.findByIdAndUpdate(userId,userUpdate );
+    if(!user){
+      return res.status(404).json({
+        msg:"User not found"
+      });
+    }
+  res.status(200).json({
+    updatedUser
+  });
+  }catch (err){
+    res.status(500).json({
+      error: err.message
+  });
+  }
+
+};
+
+//delete
+const deleteUserById =async (req, res) => {
+  const { userId } = req.params;
+  try{
+    const user =await User.findByIdAndDelete(userId);
+    if(!user){
+      return res.status(404).json({
+        msg:"User not found"
+      });
+    }
+    res.status(200).json({
+      userDeleted
     });
-  }
-  // delete user
-  User.deleteUser(userId);
-  res.status(200).json({
-    message: "Successfully delete user!",
+  }catch{
+    res.status(500).json({
+      error: err.message
   });
+  }
+  
 };
-
 module.exports = {
   getUsers,
   getUserById,

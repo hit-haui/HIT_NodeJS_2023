@@ -21,13 +21,13 @@ const getUserById = async (req, res) => {
     const { userId } = req.params;
     try {
         const user = await User.findById(userId);
-        // check user
+        // Check user
         if (!user) {
             return res.status(404).json({
                 message: "User not found!"
             });
         }
-        // return result
+        // Return result
         res.status(200).json({
             user
         });
@@ -41,13 +41,19 @@ const getUserById = async (req, res) => {
 
 // create user
 const createUser = async (req, res) => {
-    // new user
+    // New user
     const newUser = req.body;
-    // add new user to database
+    // Check if there is a required field
+    if (!newUser.studentCode) {
+        return res.status(400).json({ 
+            message: "Student code is required!"
+        });
+    }
+    // Add new user to database
     try {
-        await User.create(newUser);
+        const user = await User.create(newUser);
         res.status(201).json({
-            message: "Successfully created user!"
+            user
         });
     } catch (err) {
         res.status(500).json({
@@ -61,18 +67,16 @@ const createUser = async (req, res) => {
 const updateUserById = async (req, res) => {
     const { userId } = req.params;
     try {
-        const user = await User.findById(userId);
-        // check user
-        if (!user) {
+        const userRaw = req.body;
+        // Update user
+        const updatedUser = await User.findByIdAndUpdate(userId, userRaw);
+        // Check user
+        if (!updatedUser) {
             return res.status(404).json({
                 message: "User not found!"
             });
         }
-        // update user
-        const userRaw = req.body;
-        await User.findByIdAndUpdate(userId, userRaw);
-        // send back the updated user info to client
-        const updatedUser = await User.findById(userId);
+        // Send back the updated user info to client
         res.status(200).json({
             updatedUser
         });
@@ -88,16 +92,15 @@ const updateUserById = async (req, res) => {
 const deleteUserById = async (req, res) => {
     const { userId } = req.params;
     try {
-        const user = await User.findById(userId);
-        // check user
-        if (!user) {
+        // Delete user
+        const userDeleted = await User.findByIdAndDelete(userId);
+        // Check user
+        if (!userDeleted) {
             return res.status(404).json({
-                message: "User not found!",
+                message: "User not found!"
             });
         }
-        // delete user
-        const userDeleted = await User.findByIdAndRemove(userId);
-        // send back the deleted user info to client
+        // Send back the deleted user info to client
         res.status(200).json({
             userDeleted 
         });

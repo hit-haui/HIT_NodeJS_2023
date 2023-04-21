@@ -69,16 +69,6 @@ const createUser = async(req, res) => {
 const updateUserById = async(req, res) => {
   const userId = req.params.userId;
   const userRaw = req.body;
-  // const newUser = new UserModel({
-  //     avatar: userRaw.avatar,
-  //     fullName: userRaw.fullName,
-  //     dataOfBirth: userRaw.dataOfBirth,
-  //     password: userRaw.password,
-  //     studentCode: userRaw.studentCode,
-  //     className: userRaw.className,
-  //     schoolYear: userRaw.schoolYear,
-  //     clubYear: userRaw.clubYear
-  // });
   // check user
   try {
     const user = await UserModel.findOneAndUpdate({_id: userId}, {

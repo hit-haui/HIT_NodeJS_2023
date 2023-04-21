@@ -1,77 +1,78 @@
-const User = require("../models/user.model");
+const userModel = require('../models/user.model')
 
-// get users
-const getUsers = (req, res) => {
-  // get all user
-  const users = User.getAllUser();
-  // return result
-  res.status(200).json({
-    users: users,
-  });
-};
-
-// get user by id
-const getUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
-    });
+const getUsers = async (req, res) => {
+  try {
+    const users = await userModel.find()
+    return res.status(200).json(users)
+  } catch (err) {
+    console.log(err)
   }
-  // return result
-  res.status(200).json({
-    user: user,
-  });
-};
+}
 
-// create user
-const createUser = (req, res) => {
-  // new user
-  const userRaw = req.body;
-  const newUser = new User(userRaw);
-  // add new user to file
-  newUser.addUser();
-  res.status(201).json({
-    message: "Successfully created user!",
-  });
-};
-
-// edit user information by id
-const updateUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
-    });
+const getUserById = async (req, res) => {
+  try {
+    const { userId } = req.params
+    if (!userId) {
+      console.log('Not found user!')
+    } else {
+      const user = await userModel.findById(userId)
+      return res.status(200).json(user)
+    }
+  } catch (err) {
+    console.log(err)
   }
-  // update user
-  const userRaw = req.body;
-  User.updateUser(userId, userRaw);
-  res.status(200).json({
-    message: "Successfully updated user information!",
-  });
-};
+}
 
-// delete user by id
-const deleteUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
-    });
+const createUser = async (req, res) => {
+  try {
+    const data = req.body
+    if (!data) {
+      console.log('Not found')
+    } else {
+      const user = await userModel.create(data)
+      return res.json(user)
+    }
+  } catch (err) {
+    console.log(err)
   }
-  // delete user
-  User.deleteUser(userId);
-  res.status(200).json({
-    message: "Successfully delete user!",
-  });
-};
+}
+
+const updateUserById = async (req, res) => {
+  try {
+    const newUser = req.body
+    if (!newUser) {
+      console.log('New user is required!')
+    } else {
+      const { userId } = req.params
+      if (!userId) {
+        console.log('Not found user!')
+      } else {
+        const user = await userModel.findByIdAndUpdate(userId, newUser)
+        return res.json({
+          message: 'Updating succeed',
+        })
+      }
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const deleteUserById = async (req, res) => {
+  try {
+    const { userId } = req.params
+    if (!userId) {
+      console.log('Not found user!')
+    } else {
+      const user = await userModel.findByIdAndDelete(userId)
+      return res.json({
+        message: 'deleting succeed',
+      })
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 module.exports = {
   getUsers,
@@ -79,4 +80,4 @@ module.exports = {
   createUser,
   updateUserById,
   deleteUserById,
-};
+}

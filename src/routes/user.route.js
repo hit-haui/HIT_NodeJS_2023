@@ -12,7 +12,7 @@ const userRouter = express.Router();
 userRouter.route("/").get(getUsers).post(createUser);
 
 userRouter
-  .route("/:userId")
+  .route("/:id")
   .get(getUserById)
   .put(updateUserById)
   .delete(deleteUserById);

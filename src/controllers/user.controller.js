@@ -9,7 +9,7 @@ const getUsers = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({
+    res.status(500).json({
       error: error.message,
     });
   }
@@ -30,7 +30,7 @@ const getUserById = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({
+    res.status(500).json({
       error: error.message,
     });
   }
@@ -39,15 +39,14 @@ const getUserById = async (req, res) => {
 // create new user
 const createUser = async (req, res) => {
   const newUser = req.body;
+  if (!newUser) {
+    return res.status(400).json({
+      message: "Invalid input data!",
+    });
+  }
 
   try {
     const user = await User.create(newUser);
-    if (!user) {
-      return res.status(400).json({
-        message: "Invalid input data!",
-      });
-    }
-
     res.status(201).json({
       user,
     });

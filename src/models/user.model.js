@@ -11,6 +11,8 @@ const userSchema = new Schema({
     className: String,
     schoolYear: Number,
     clubYear: Number
+}, {
+    timestamps: true
 });
 
 const User = mongoose.model('User', userSchema);

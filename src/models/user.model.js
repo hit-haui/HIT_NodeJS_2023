@@ -1,10 +1,23 @@
 const fs = require("fs");
 const path = require("path");
-const { use } = require("../routes/user.route");
 
+const saveData = (users) => {
+  const usersJson = JSON.stringify(users);
+  fs.writeFileSync(
+    path.join(__dirname, "../data/users.json"),
+    usersJson,
+    (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        return usersJson;
+      }
+    }
+  );
+};
 class User {
   constructor({
-    id,
+    userId,
     avatar,
     fullName,
     dataOfBirth,
@@ -14,30 +27,23 @@ class User {
     schoolYear,
     clubYear,
   }) {
-    this.id = id;
+    this.userId = userId || uuid.userId;
     this.avatar = avatar;
     this.fullName = fullName;
-    this.dataOfBirth = dataOfBirth;
-    this.passWord = passWord;
+    this.dataOfBirth = dataOfBirth || null;
+    this.passWord = passWord || null;
     this.studentCode = studentCode;
     this.className = className;
     this.schoolYear = schoolYear;
     this.clubYear = clubYear;
   }
 
-  save() {
+  createUser() {
     console.log(this);
     const users = User.find();
     //push element to ar
     users.push({ ...this });
-    //convert instance class to object
-    const usersJson = JSON.stringify(users);
-    console.log(users);
-    fs.writeFileSync(
-      //write file
-      path.join(__dirname, "../data/users.json"),
-      usersJson
-    );
+    saveData(users);
   }
 
   static find() {
@@ -46,7 +52,6 @@ class User {
       const usersJson = fs.readFileSync(
         path.join(__dirname, "../data/users.json")
       );
-
       //convert json to js
       const users = JSON.parse(usersJson);
       return users;
@@ -57,59 +62,23 @@ class User {
 
   static findUserById(userId) {
     const users = User.find();
-    const user = users.findIndex((item) => String(item.userId) === userId);
-    if (!user) {
-      return "Not found";
-    } else {
-      return user;
-    }
+    const user = users.find((user) => String(user.userId) === userId);
+    return user;
   }
 
   static update(userId, newUser) {
     const users = User.find();
-    const index = User.findUserById(userId);
-    console.log(index);
-    if (index == -1) {
-      return "not found";
-    } else {
-      const newUsers = new User(newUser);
-      users.splice(index, 1, newUsers);
-      const usersJson = JSON.stringify(users);
-      fs.writeFileSync(
-        path.join(__dirname, "../data/users.json"),
-        usersJson,
-        (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            return usersJson;
-          }
-        }
-      );
-    }
+    const index = users.findIndex((user) => String(user.userId) === userId);
+    const newUsers = new User(newUser);
+    users.splice(index, 1, newUsers);
+    saveData(users);
   }
 
   static delete(userId) {
     const users = User.find();
-    const index = User.findUserById(userId);
-    console.log(index);
-    if (index == -1) {
-      return "not found";
-    } else {
-      users.splice(index, 1);
-      const usersJson = JSON.stringify(users);
-      fs.writeFileSync(
-        path.join(__dirname, "../data/users.json"),
-        usersJson,
-        (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            return usersJson;
-          }
-        }
-      );
-    }
+    const index = users.findIndex((user) => String(user.userId) === userId);
+    users.splice(index, 1);
+    saveData(users);
   }
 }
 

@@ -10,24 +10,22 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   const userId = req.params.userId;
-  const users = User.find();
-  const user = users.find((item) => String(item.userId) === userId);
-
+  console.log(userId);
+  const user = User.findUserById(userId);
   if (!user) {
-    return res.json({
-      mgs: "not found",
+    return res.status(401).json({
+      mgs: "User not found",
     });
   }
-
   res.json({
     user,
   });
 };
 
-const createUser = (req, res) => {
+const createUsers = (req, res) => {
   const newUser = req.body;
   const user = new User(newUser);
-  user.save();
+  user.createUser();
   res.json({
     newUser,
   });
@@ -36,24 +34,36 @@ const createUser = (req, res) => {
 const updateUserById = (req, res) => {
   const newUser = req.body;
   const userId = req.params.userId;
-  const user = User.update(userId, newUser);
-  return res.json({
-    user,
+  const user = User.findUserById(userId);
+  if (!user) {
+    return res.status(401).json({
+      message: "User not found",
+    });
+  }
+  User.update(userId, newUser);
+  res.json({
+    mgs: "update successful",
   });
 };
 
 const deleteUserById = (req, res) => {
   const userId = req.params.userId;
-  const user = User.delete(userId);
+  const user = User.findUserById(userId);
+  if (!user) {
+    return res.status(401).json({
+      message: "User not found",
+    });
+  }
+  User.delete(userId);
   res.json({
-    user,
+    mgs: "delete successful",
   });
 };
 
 module.exports = {
   getUsers,
   getUserById,
-  createUser,
+  createUsers,
   updateUserById,
   deleteUserById,
 };

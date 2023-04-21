@@ -1,72 +1,129 @@
-const data = require("../data/users.json");
-const User = require('../models/user.model');
 
-const getUserByStudentCode = (req, res) => {
-    const users = data;
-    const user = users.find(item => item.studentCode == req.params.studentCode);
-    if(user) {
-        res.json({
-            user: user
-        })
+const UserModel = require("../models/user.model");
+
+// get users
+const getUsers = async (req, res) => {
+  try {
+    const data = await UserModel.find({});
+    res.json({
+      data
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Buggg!!!"
+    })
+  }
+};
+
+// get user by id
+const getUserById = async (req, res) => {
+  const { userId } = req.params;
+  // check user
+  try {
+    const user = await UserModel.findOne({_id: userId});
+    console.log(user);
+    if (user) {
+      res.json({
+        user
+      })
     }
     else {
-        res.json({
-            msg: "User not found"
-        })
+      res.status(400).json({
+        msg: "User not found"
+      })
     }
-}
+  } catch (error) {
+    res.status(500).json({
+      msg: "Lai bugg!!!"
+    })
+  }
+};
 
-const getUser = (req, res) => {
-    const users = User.find();
+// create user
+const createUser = async(req, res) => {
+  // new user
+  const userRaw = req.body;
+  try {
+    const data = await UserModel.create({
+      avatar: userRaw.avatar,
+      fullName: userRaw.fullName,
+      dataOfBirth: userRaw.dataOfBirth,
+      password: userRaw.password,
+      studentCode: userRaw.studentCode,
+      className: userRaw.className,
+      schoolYear: userRaw.schoolYear,
+      clubYear: userRaw.clubYear
+    })
     res.json({
-        users
+      msg: "successful!!!"
     })
-}
-
-const createUser = (req, res) => {
-    const user = new User({
-        avatar: req.body.avatar,
-        fullName: req.body.fullName,
-        dateOfBirth: req.body.dateOfBirth,
-        password: req.body.password,
-        studentCode: req.body.studentCode,
-        className: req.body.className,
-        schoolYear: req.body.schoolYear,
-        clubYear: req.body.clubYear,
+  } catch (error) {
+    res.status(500).json({
+      msg: "Lai bugg!!!"
     })
-    user.save();
+  }
+};
 
-    res.json({
-        msg: "Success"
-    })
-}
-
-const deleteUserBystudentCode = (req, res) => {
-    const {studentCode} = req.params;
-    let users = data;
-    users = users.filter((item, id) => item.studentCode != studentCode);
-    res.json({
-        users,
-    })
-}
-
-const updateUserByStudentCode = (req, res) => {
-    let users = data;
-    const {studentCode} = req.params;
-    const newUser = req.body;
-    users = users.map((item, id) => {
-        if(item.studentCode == studentCode) return newUser;
-        else return item;
+// edit user information by id
+const updateUserById = async(req, res) => {
+  const userId = req.params.userId;
+  const userRaw = req.body;
+  // const newUser = new UserModel({
+  //     avatar: userRaw.avatar,
+  //     fullName: userRaw.fullName,
+  //     dataOfBirth: userRaw.dataOfBirth,
+  //     password: userRaw.password,
+  //     studentCode: userRaw.studentCode,
+  //     className: userRaw.className,
+  //     schoolYear: userRaw.schoolYear,
+  //     clubYear: userRaw.clubYear
+  // });
+  // check user
+  try {
+    const user = await UserModel.findOneAndUpdate({_id: userId}, {
+      avatar: userRaw.avatar,
+      fullName: userRaw.fullName,
+      dataOfBirth: userRaw.dataOfBirth,
+      password: userRaw.password,
+      studentCode: userRaw.studentCode,
+      className: userRaw.className,
+      schoolYear: userRaw.schoolYear,
+      clubYear: userRaw.clubYear
     });
+    console.log(user);
     res.json({
-        users: users
+      user
     })
-}
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Lai Buggg!!!"
+    })
+  }
+};
+
+// delete user by id
+const deleteUserById = async(req, res) => {
+  const userId = req.params.userId;
+  // check user
+  try {
+    const user = await UserModel.deleteOne({_id: userId})
+    console.log(user);
+    res.json({
+     msg: "Deleting successful"
+    })
+  } catch (error) {
+    res.status(500).json({
+      msg: "Lai Buggg!!!"
+    })
+  }
+};
 
 module.exports = {
-    getUser,
-    getUserByStudentCode,
-    createUser,
-    deleteUserBystudentCode,
-    updateUserByStudentCode
-}
+  getUsers,
+  getUserById,
+  createUser,
+  updateUserById,
+  deleteUserById,
+};

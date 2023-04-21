@@ -1,12 +1,14 @@
 {
   "dependencies": {
     "express": "^4.18.2",
-    "nodemon": "^2.0.22"
+    "mongoose": "^7.0.4",
+    "nodemon": "^2.0.22",
+    "uuid": "^9.0.0"
   },
   "name": "hit_nodejs_2023",
   "description": "",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "nodemon src/server.js",

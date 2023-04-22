@@ -39,7 +39,7 @@ const getUserById = async (req, res) => {
 // create new user
 const createUser = async (req, res) => {
   const newUser = req.body;
-  if (!newUser) {
+  if (!newUser.password || !newUser.studentCode || newUser === {}) {
     return res.status(400).json({
       message: "Invalid input data!",
     });

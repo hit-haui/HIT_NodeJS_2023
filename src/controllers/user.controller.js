@@ -1,82 +1,121 @@
 const User = require("../models/user.model");
 
+
 // get users
-const getUsers = (req, res) => {
-  // get all user
-  const users = User.getAllUser();
-  // return result
-  res.status(200).json({
-    users: users,
-  });
+const getUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json({
+            users
+        });
+    } catch (err) {
+        res.status(500).json({
+            error: err.message
+        });
+    }
 };
+
 
 // get user by id
-const getUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
-    });
-  }
-  // return result
-  res.status(200).json({
-    user: user,
-  });
+const getUserById = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findById(userId);
+        // Check user
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found!"
+            });
+        }
+        // Return result
+        res.status(200).json({
+            user
+        });
+    } catch (err) {
+        res.status(500).json({
+            error: err.message
+        });
+    }
 };
+
 
 // create user
-const createUser = (req, res) => {
-  // new user
-  const userRaw = req.body;
-  const newUser = new User(userRaw);
-  // add new user to file
-  newUser.addUser();
-  res.status(201).json({
-    message: "Successfully created user!",
-  });
+const createUser = async (req, res) => {
+    // New user
+    const newUser = req.body;
+    // Check if there is a required field
+    if (!newUser.studentCode) {
+        return res.status(400).json({ 
+            message: "Student code is required!"
+        });
+    }
+    // Add new user to database
+    try {
+        const user = await User.create(newUser);
+        res.status(201).json({
+            user
+        });
+    } catch (err) {
+        res.status(500).json({
+            error: err.message
+        });
+    }
 };
 
-// edit user information by id
-const updateUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
-    });
-  }
-  // update user
-  const userRaw = req.body;
-  User.updateUser(userId, userRaw);
-  res.status(200).json({
-    message: "Successfully updated user information!",
-  });
+
+// update user by id
+const updateUserById = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const userRaw = req.body;
+        // Update user
+        const updatedUser = await User.findByIdAndUpdate(userId, userRaw);
+        // Check user
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: "User not found!"
+            });
+        }
+        // Send back the updated user info to client
+        res.status(200).json({
+            updatedUser
+        });
+    } catch (err) {
+        res.status(500).json({
+            error: err.message
+        });
+    }
 };
+
 
 // delete user by id
-const deleteUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
-    });
-  }
-  // delete user
-  User.deleteUser(userId);
-  res.status(200).json({
-    message: "Successfully delete user!",
-  });
+const deleteUserById = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        // Delete user
+        const userDeleted = await User.findByIdAndDelete(userId);
+        // Check user
+        if (!userDeleted) {
+            return res.status(404).json({
+                message: "User not found!"
+            });
+        }
+        // Send back the deleted user info to client
+        res.status(200).json({
+            userDeleted 
+        });
+    } catch (err) {
+        res.status(500).json({
+            error: err.message
+        });
+    }
 };
 
+
 module.exports = {
-  getUsers,
-  getUserById,
-  createUser,
-  updateUserById,
-  deleteUserById,
+    getUsers,
+    getUserById,
+    createUser,
+    updateUserById,
+    deleteUserById,
 };

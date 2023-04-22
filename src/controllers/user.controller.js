@@ -1,76 +1,52 @@
 const User = require("../models/user.model");
 
-// get users
+// get all users
 const getUsers = (req, res) => {
-  // get all user
-  const users = User.getAllUser();
-  // return result
-  res.status(200).json({
-    users: users,
-  });
+  User.find()
+    .then(data => res.json({ data }))
+    .catch(err => res.status(500).json({ err: err.message }))
 };
 
 // get user by id
 const getUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
-    });
-  }
-  // return result
-  res.status(200).json({
-    user: user,
-  });
+  const { userId } = req.params;
+  User.findById(userId)
+    .then(data => {
+      if (!data) return res.status(404).json({ message: 'User not found' });
+      else return res.status(200).json({ data });
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 };
 
 // create user
 const createUser = (req, res) => {
-  // new user
-  const userRaw = req.body;
-  const newUser = new User(userRaw);
-  // add new user to file
-  newUser.addUser();
-  res.status(201).json({
-    message: "Successfully created user!",
-  });
+  const newUser = req.body;
+  User.create(newUser)
+    .then(data => res.json({ "New User": data }))
+    .catch(err => res.status(500).json({ err: err.message }));
 };
 
 // edit user information by id
 const updateUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
-    });
-  }
-  // update user
-  const userRaw = req.body;
-  User.updateUser(userId, userRaw);
-  res.status(200).json({
-    message: "Successfully updated user information!",
-  });
+  const { userId } = req.params;
+  const newUser = req.body;
+  User.findByIdAndUpdate(userId, newUser)
+    .then(data => {
+      if (!data) return res.status(404).json({ message: 'User not found' });
+      else return res.status(200).json({ data });
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 };
 
 // delete user by id
 const deleteUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
-    });
-  }
-  // delete user
-  User.deleteUser(userId);
-  res.status(200).json({
-    message: "Successfully delete user!",
-  });
+  const { userId } = req.params;
+  User.findByIdAndDelete(userId)
+    .then(data => {
+      if (!data) return res.status(404).json({ message: 'User not found' });
+      else return res.status(200).json({ data });
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 };
 
 module.exports = {

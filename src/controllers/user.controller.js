@@ -3,7 +3,7 @@ const getUsers = async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json({
-      users: users,
+      users,
     });
   } catch (err) {
     conslog.log(err);
@@ -29,10 +29,15 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
   const data = req.body;
+  if (!data.fullName || !data.studentCode) {
+    return res.status(400).json({
+      message: "Need to add some user information",
+    });
+  }
   try {
     const newUser = new User(data);
     await newUser.save();
-    res.status(200).json({
+    res.status(201).json({
       newUser,
     });
   } catch (err) {
@@ -51,7 +56,7 @@ const updateUserById = async (req, res) => {
       });
     }
     res.status(200).json({
-      message: "A user has been updated",
+      updateUser,
     });
   } catch (err) {
     console.log(err);
@@ -68,7 +73,7 @@ const deleteUserById = async (req, res) => {
       });
     }
     res.status(200).json({
-      message: "A user has been deleted",
+      deleteUser,
     });
   } catch (err) {
     console.log(err);

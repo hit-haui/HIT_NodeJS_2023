@@ -7,14 +7,8 @@ const userSchema = new Schema(
       type: String,
       require: true,
     },
-    dateOfBirth: {
-      type: Date,
-      require: true,
-    },
-    password: {
-      type: String,
-      require: true,
-    },
+    dateOfBirth: Date,
+    password: String,
     studentCode: {
       type: String,
       require: true,

@@ -1,12 +1,12 @@
 {
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^7.0.4",
-    "nodemon": "^2.0.22",
-    "uuid": "^9.0.0"
+    "nodemon": "^2.0.22"
   },
   "name": "hit_nodejs_2023",
-  "description": "",
+  "description": "Bài tập về nhà lớp NodeJS\r ## Hướng dẫn\r - Clone project về máy \\\r `git clone https://github.com/hit-haui/HIT_NodeJS_2023.git`\r - Tạo nhánh mới theo tên buổi kèm theo tên của mình \\\r `git checkout -b btvn-buoi5/dinh-tan-hung`\r - Install package và code thôi \\\r `npm install` hoặc `npm i`\r - Sau khi hoàn thành task push lên nhánh của mình **(Không push lên nhánh main)**\r ## Còn tiếp ...",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -22,5 +22,6 @@
   "bugs": {
     "url": "https://github.com/hit-haui/HIT_NodeJS_2023/issues"
   },
-  "homepage": "https://github.com/hit-haui/HIT_NodeJS_2023#readme"
+  "homepage": "https://github.com/hit-haui/HIT_NodeJS_2023#readme",
+  "keywords": []
 }

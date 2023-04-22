@@ -9,10 +9,10 @@ const {
 
 const userRouter = express.Router();
 
-userRouter.route("/users").get(getUsers).post(createUser);
+userRouter.route("/").get(getUsers).post(createUser);
 
 userRouter
-  .route("/users/:userId")
+  .route("/:userId")
   .get(getUserById)
   .put(updateUserById)
   .delete(deleteUserById);

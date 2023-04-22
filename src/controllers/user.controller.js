@@ -5,7 +5,9 @@ const getUsers = async (req, res) => {
     const users = await userModel.find()
     return res.status(200).json(users)
   } catch (err) {
-    console.log(err)
+    res.status(500).json({
+      error: err.message,
+    })
   }
 }
 
@@ -16,45 +18,66 @@ const getUserById = async (req, res) => {
       console.log('Not found user!')
     } else {
       const user = await userModel.findById(userId)
-      return res.status(200).json(user)
+      if (!user) {
+        return res.status(404).json({
+          message: 'User not found!',
+        })
+      } else {
+        res.status(200).json(user)
+      }
     }
   } catch (err) {
-    console.log(err)
+    res.status(500).json({
+      error: err.message,
+    })
   }
 }
 
 const createUser = async (req, res) => {
   try {
     const data = req.body
+    if (!data.fullName && !!data.password && !data.studentCode) {
+      return res.status(400).json({
+        message: 'Full name ,password , student code are required!',
+      })
+    }
     if (!data) {
       console.log('Not found')
     } else {
       const user = await userModel.create(data)
-      return res.json(user)
+      res.json(user)
     }
   } catch (err) {
-    console.log(err)
+    res.status(500).json({
+      error: err.message,
+    })
   }
 }
 
 const updateUserById = async (req, res) => {
   try {
     const newUser = req.body
-    if (!newUser) {
-      console.log('New user is required!')
+    const { userId } = req.params
+    if (!userId) {
+      return res.status(404).json({
+        message: 'User not found!',
+      })
     } else {
-      const { userId } = req.params
-      if (!userId) {
-        console.log('Not found user!')
+      const user = await userModel.findByIdAndUpdate(userId, newUser)
+      if (!user) {
+        return res.status(404).json({
+          message: 'User not found!',
+        })
       } else {
-        const user = await userModel.findByIdAndUpdate(userId, newUser)
-        return res.json({
-          message: 'Updating succeed',
+        res.status(200).json({
+          user,
         })
       }
     }
   } catch (err) {
-    console.log(err)
+    res.status(500).json({
+      error: err.message,
+    })
   }
 }
 
@@ -65,12 +88,20 @@ const deleteUserById = async (req, res) => {
       console.log('Not found user!')
     } else {
       const user = await userModel.findByIdAndDelete(userId)
-      return res.json({
-        message: 'deleting succeed',
-      })
+      if (!user) {
+        return res.status(404).json({
+          message: 'User not found!',
+        })
+      } else {
+        return res.json({
+          user,
+        })
+      }
     }
   } catch (err) {
-    console.log(err)
+    res.status(500).json({
+      error: err.message,
+    })
   }
 }
 

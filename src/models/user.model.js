@@ -4,18 +4,12 @@ const { Schema } = mongoose
 
 const userSchema = new Schema(
   {
-    avatar: {
-      type: String,
-      require: true,
-    },
+    avatar: String,
     fullName: {
       type: String,
       require: true,
     },
-    dateOfBirth: {
-      type: String,
-      require: true,
-    },
+    dateOfBirth: String,
     password: {
       type: String,
       require: true,
@@ -24,14 +18,8 @@ const userSchema = new Schema(
       type: Number,
       require: true,
     },
-    className: {
-      type: String,
-      require: true,
-    },
-    schoolYear: {
-      type: Number,
-      require: true,
-    },
+    className: String,
+    schoolYear: Number,
     clubYear: Number,
   },
   {
@@ -39,6 +27,6 @@ const userSchema = new Schema(
   }
 )
 
-const userModel = mongoose.model('User', userSchema)
+const Users = mongoose.model('User', userSchema)
 
-module.exports = userModel
+module.exports = Users

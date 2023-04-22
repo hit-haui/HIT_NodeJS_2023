@@ -42,6 +42,11 @@ const createUser =async (req, res) => {
         res.status(201).json({
             user
         });
+  // try{
+  //   const newUser = await User.create(user);
+  //   res.status(201).json({
+  //       user
+  //   });
    }catch (err){
     res.status(500).json({
       error: err.message

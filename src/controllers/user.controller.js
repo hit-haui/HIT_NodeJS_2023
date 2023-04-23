@@ -35,7 +35,12 @@ const createUser = async (req, res) => {
   const userRaw = req.body;
   try {
     const newUser = new User(userRaw);
-    await newUser.save();
+    const user = await User.create(newUser);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
     res.status(201).json({
       newUser,
     });

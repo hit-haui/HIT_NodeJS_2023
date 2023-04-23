@@ -12,6 +12,15 @@ dotenv.config();
 
 const port = process.env.PORT || 3000;
 const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/UserDefault";
+app.use(function (req, res, next) {
+  console.log('Time:', Date.now())
+  next()
+})
+
+app.use(function (error, req, res, next) {
+  console.log('Time:', Date.now())
+  next()
+})
 
 mongoose
   .connect(mongoURI)

@@ -1,76 +1,112 @@
+
 const User = require("../models/user.model");
 
 // get users
-const getUsers = (req, res) => {
+const getUsers = async (req, res) => {
   // get all user
-  const users = User.getAllUser();
-  // return result
-  res.status(200).json({
-    users: users,
-  });
-};
-
-// get user by id
-const getUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
+  try {
+    const users = await User.find({});
+    // console.log(users);
+    res.status(200).json({
+      users,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error:err.message,
     });
   }
-  // return result
-  res.status(200).json({
-    user: user,
-  });
+}
+
+
+// get user by id
+const getUserById = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findOne({_id:userId});
+    // Check user
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+    // tra ve user tu id 
+    res.status(200).json({
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+    });
+  }
 };
 
 // create user
-const createUser = (req, res) => {
-  // new user
-  const userRaw = req.body;
-  const newUser = new User(userRaw);
-  // add new user to file
-  newUser.addUser();
-  res.status(201).json({
-    message: "Successfully created user!",
-  });
-};
-
-// edit user information by id
-const updateUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
+const createUser = async (req, res) => {
+  // New user
+  const newUser = req.body;
+  // tao ra 1 user moi
+  try {
+    const user = await User.create(newUser);
+    // tra ra user moi
+    res.status(201).json({
+      user,
+    });
+  } 
+  // tra ra loi
+  catch (err) {
+    res.status(500).json({
+      error: err.message,
     });
   }
-  // update user
-  const userRaw = req.body;
-  User.updateUser(userId, userRaw);
-  res.status(200).json({
-    message: "Successfully updated user information!",
-  });
+};
+
+// update user by id
+const updateUserById = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const userUpdateById = req.body;
+    // Update user
+    const updatedUser = await User.findByIdAndUpdate({_id: userId}, userUpdateById);
+    // Check user ton tai
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+    // tra ra user duoc update
+    res.status(200).json({
+      updatedUser,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+    });
+  }
 };
 
 // delete user by id
-const deleteUserById = (req, res) => {
-  const userId = req.params.userId;
-  // check user
-  const user = User.findUserByID(userId);
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found!",
+const deleteUserById = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    // Delete user
+    const userDeleteById = await User.findByIdAndDelete({_id:userId});
+    // Check user xem ton tai ko
+    if (!userDeleteById) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+    // tra ra sau khi xoa
+    res.status(200).json({
+      message:"Xoa thanh cong!"
     });
   }
-  // delete user
-  User.deleteUser(userId);
-  res.status(200).json({
-    message: "Successfully delete user!",
-  });
+  // ban ra loi  
+  catch (err) {
+    res.status(500).json({
+      error: err.message
+    });
+  }
 };
 
 module.exports = {

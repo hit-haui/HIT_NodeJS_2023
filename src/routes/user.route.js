@@ -7,14 +7,13 @@ const {
   deleteUserById,
 } = require("../controllers/user.controller");
 
-const userRouter = express.Router();
+const router = express.Router()
+router.route("/").get(getUsers).post(createUser);
 
-userRouter.route("/").get(getUsers).post(createUser);
-
-userRouter
+router
   .route("/:userId")
   .get(getUserById)
   .put(updateUserById)
   .delete(deleteUserById);
 
-module.exports = userRouter;
+module.exports = router;

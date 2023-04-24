@@ -5,13 +5,13 @@ const userSchema = new Schema(
     avatar: String,
     fullName: {
       type: String,
-      require: true,
+      required: true,
     },
     dateOfBirth: Date,
     password: String,
     studentCode: {
       type: String,
-      require: true,
+      required: true,
     },
     className: String,
     schoolYear: String,

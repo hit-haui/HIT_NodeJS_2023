@@ -22,9 +22,9 @@ const getUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   const { userId } = req.params;
   try {
-    const user = await User.findOne({_id:userId});
+    const userById = await User.findOne({_id:userId});
     // Check user
-    if (!user) {
+    if (!userById) {
       return res.status(404).json({
         message: "User not found!",
       });
@@ -43,13 +43,13 @@ const getUserById = async (req, res) => {
 // create user
 const createUser = async (req, res) => {
   // New user
-  const newUser = req.body;
+  const userCreated = req.body;
   // tao ra 1 user moi
   try {
-    const user = await User.create(newUser);
+    const newUser = await User.create(userCreated);
     // tra ra user moi
     res.status(201).json({
-      user,
+      newUser,
     });
   } 
   // tra ra loi

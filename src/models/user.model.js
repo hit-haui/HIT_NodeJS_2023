@@ -13,11 +13,11 @@ const userSchema = new Schema(
         },
         dateOfBirth: {
             type: Date,
-            default: "01-01-1970"
+            default: "1970-01-01"
         },
         password: {
             type: String,
-            default: function() {
+            default: function () {
                 return this.studentCode + "@17"
             }
         },

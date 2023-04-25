@@ -6,45 +6,39 @@ const getUsers = (req, res) => {
   });
 };
 const getUserById = (req, res) => {
-  const getUsers = User.find();
   const { userId } = req.params;
-  const  user= getUsers.find((item) => item.id == userId);
-  if (user) {
-    res.json({ userById });
-  } else {
-    res.json({ message: "User not found" });
-  }
+  const user = User.getById(userId);
+  res.json({
+    user,
+  })
 };
 const createUser = (req, res) => {
   const userCreated = new User(req.body);
-  const users = userCreated.save();
-  res.json({ users});
+  userCreated.create();
+  res.json({
+    message:"Create successful",
+  })
 };
 const updateUserById = (req, res) => {
-  const getUsers = User.find();
   const userUpdated = new User(req.body);
   const { userId } = req.params;
-  if(!userId){
-    res.json({
-      message:"Khong tim thay id!"
+  const user = User.getById(userId);
+  if (!user) {
+    res.status(401).json({
+      message: "User not found!"
     })
   }
-  const newUsers = users.map((item, index) => {
-    if (item.id == userId) {
-      return userUpdated;
-    }
-    return item;
-  });
-  res.json({ newUsers });
+  User.updateById(userId,userUpdated);
+  res.json({ message:"Update successful" });
 };
 const deleteUserById = (req, res) => {
-  const users = User.find();
   const { userId } = req.params;
-  if(!userId){
-    res.json({message:"Id khong ton tai!"})
+  const user = User.getById(userId);
+  if (!user) {
+    res.status(401).json({ message: "User not found" })
   }
-  const usersNew = users.filter((item) => item.id !== userId);
-  res.json({ Newusers });
+  User.deleteById(userId)
+  res.json({ message:"Delete successful" });
 };
 module.exports = {
   getUsers,

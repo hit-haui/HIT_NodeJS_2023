@@ -5,6 +5,7 @@ const User = require("../models/user.model");
 const getUsers = async (req, res) => {
     try {
         const users = await User.find();
+        console.log(users);
         res.status(200).json({
             users
         });
@@ -14,7 +15,6 @@ const getUsers = async (req, res) => {
         });
     }
 };
-
 
 // get user by id
 const getUserById = async (req, res) => {
@@ -64,7 +64,7 @@ const createUser = async (req, res) => {
 
 
 // update user by id
-const updateUserById = async (req, res) => {
+const updateUserById = async (req, res,next) => {
     const { userId } = req.params;
     try {
         const userRaw = req.body;
@@ -72,6 +72,7 @@ const updateUserById = async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(userId, userRaw);
         // Check user
         if (!updatedUser) {
+            // throw new Error("User not found!")
             return res.status(404).json({
                 message: "User not found!"
             });
@@ -84,6 +85,7 @@ const updateUserById = async (req, res) => {
         res.status(500).json({
             error: err.message
         });
+        // next(err);
     }
 };
 

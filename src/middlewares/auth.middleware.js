@@ -1,7 +1,9 @@
 const authMiddleware = (req, res, next) => {
     const { permission } = req.query;
     if (permission !== 'admin') {
-        throw Object.assign(new Error('Unauthorized'), { status: 403 });
+        const err = new Error('Unauthorized!');
+        err.status = 403;
+        throw err;
     }
     next();
 }

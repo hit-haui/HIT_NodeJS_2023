@@ -3,8 +3,8 @@ const User = require("../models/user.model");
 // get all users
 const getUsers = async (req, res, next) => {
     try {
-        const data = await User.find();
-        res.status(200).json({ data });
+        const users = await User.find();
+        res.status(200).json({ users });
     }
     catch (err) {
         next(err);
@@ -15,11 +15,13 @@ const getUsers = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
     const { userId } = req.params;
     try {
-        const data = await User.findById(userId);
-        if (!data) {
-            throw Object.assign(new Error('User not found!'), { status: 404 });
+        const user = await User.findById(userId);
+        if (!user) {
+            const err = new Error('User not found!');
+            err.status = 404;
+            throw err;
         }
-        else return res.status(200).json({ data });
+        res.status(200).json({ user });
     }
     catch (err) {
         next(err);
@@ -31,10 +33,12 @@ const createUser = async (req, res, next) => {
     const newUser = req.body;
     try {
         if (!newUser.studentCode) {
-            throw Object.assign(new Error('Student code is required!'), { status: 400 });
+            const err = new Error('Student code is required!');
+            err.status = 400;
+            throw err;
         }
-        const data = await User.create(newUser);
-        res.status(201).json({ data });
+        const user = await User.create(newUser);
+        res.status(201).json({ user });
     }
     catch (err) {
         next(err);
@@ -47,13 +51,17 @@ const updateUserById = async (req, res, next) => {
     const newUser = req.body;
     try {
         if (!newUser.studentCode) {
-            throw Object.assign(new Error('Student code is required!'), { status: 400 });
+            const err = new Error('Student code is required!');
+            err.status = 400;
+            throw err;
         }
-        const data = await User.findByIdAndUpdate(userId, newUser);
-        if (!data) {
-            throw Object.assign(new Error('User not found!'), { status: 404 });
+        const user = await User.findByIdAndUpdate(userId, newUser);
+        if (!user) {
+            const err = new Error('User not found!');
+            err.status = 404;
+            throw err;
         }
-        else return res.status(200).json({ data });
+        res.status(200).json({ user });
     }
     catch (err) {
         next(err);
@@ -64,11 +72,13 @@ const updateUserById = async (req, res, next) => {
 const deleteUserById = async (req, res, next) => {
     const { userId } = req.params;
     try {
-        const data = await User.findByIdAndDelete(userId);
-        if (!data) {
-            throw Object.assign(new Error('User not found!'), { status: 404 });
+        const user = await User.findByIdAndDelete(userId);
+        if (!user) {
+            const err = new Error('User not found!');
+            err.status = 404;
+            throw err;
         }
-        else return res.status(200).json({ data });
+        res.status(200).json({ user });
     }
     catch (err) {
         next(err);

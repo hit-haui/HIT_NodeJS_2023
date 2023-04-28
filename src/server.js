@@ -1,25 +1,23 @@
 const express = require("express");
-const router = require("./routes");
 const mongoose = require("mongoose");
+const router = require("./routes");
 const dotenv = require("dotenv");
-
+const errorMiddleware = require("./middlewares/error.middleware");
 const app = express();
 
+dotenv.config();
 app.use(express.json());
 app.use(router);
 
-dotenv.config();
-
-const port = process.env.PORT || 3000;
-const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/UserDefault";
-
 mongoose
-  .connect(mongoURI)
-  .then(() => console.log("Connect database successfully!"))
-  .catch((err) => {
-    console.log(err);
-  });
+  .connect(
+    `mongodb://127.0.0.1:${process.env.PORT_MONGO}/${process.env.DATABASE_NAME}`
+  )
+  .then(() => console.log("Connected!"))
+  .catch((err) => console.error(err));
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.use(errorMiddleware);
+
+app.listen(process.env.PORT, () => {
+  console.log(`Example app listening on port ${process.env.PORT}`);
 });

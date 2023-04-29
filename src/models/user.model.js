@@ -13,7 +13,7 @@ const userSchema = new Schema(
         },
         dateOfBirth: {
             type: Date,
-            default: "1970-01-01"
+            default: "01-01-1970"
         },
         password: {
             type: String,

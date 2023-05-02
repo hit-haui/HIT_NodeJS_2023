@@ -1,7 +1,7 @@
 const Classroom = require("../models/classroom.model");
 
 
-// get classrooms
+// get classrooms 
 const getClassrooms = async (req, res, next) => {
     try {
         const classrooms = await Classroom.find().populate(['leaders', 'supports', 'students']);
@@ -14,7 +14,7 @@ const getClassrooms = async (req, res, next) => {
 };
 
 
-// get classroom by id
+// get classroom by id 
 const getClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     try {
@@ -47,7 +47,7 @@ const createClassroom = async (req, res, next) => {
 };
 
 
-// edit classroom imformation by id
+// edit classroom information by id
 const updateClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     const newClassroom = req.body;

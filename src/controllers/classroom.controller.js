@@ -93,7 +93,7 @@ const addUserToClassroomById = async (req, res, next) => {
     try {
         // check permission
         if (!["leader", "support", "student"].includes(role)) {
-            const err = new Error("You do not have access permission!");
+            const err = new Error("Invalid role!");
             err.status = 400;
             throw err;
         }
@@ -106,16 +106,17 @@ const addUserToClassroomById = async (req, res, next) => {
         }
         // check if user exists in class
         const checkUserExist = classroom[`${role}s`].includes(userId);
+        console.log(checkUserExist);
         if (checkUserExist) {
             const err = new Error("User already exists in the class!");
             err.status = 400;
             throw err;
         }
         // add user to the classroom
-        classroom[`${role}s`].push(userId);
-        const newUser = await classroom.save();
+        classroom[`${role}s`].push(Object(userId));
+        const newClassroom = await classroom.save();
         res.status(201).json({
-            newUser
+            newClassroom
         });
     } catch (err) {
         next(err);
@@ -130,7 +131,7 @@ const deleteUserFromClassroomById = async (req, res, next) => {
     try {
         // check permission
         if (!["leader", "support", "student"].includes(role)) {
-            const err = new Error("You do not have access permission!");
+            const err = new Error("Invalid role!");
             err.status = 400;
             throw err;
         }

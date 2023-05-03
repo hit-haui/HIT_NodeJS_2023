@@ -59,7 +59,7 @@ const updateUserById = async (req, res, next) => {
         const newUser = req.body;
         const updatedUser = await User.findByIdAndUpdate(userId, newUser);
         if (!updatedUser) {
-            const err = new Error('User not found!');
+            const err = new Error("User not found!");
             err.status = 404;
             throw err;
         }
@@ -78,7 +78,7 @@ const deleteUserById = async (req, res, next) => {
     try {
         const deletedUser = await User.findByIdAndDelete(userId);
         if (!deletedUser) {
-            const err = new Error('User not found!');
+            const err = new Error("User not found!");
             err.status = 404;
             throw err;
         }

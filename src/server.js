@@ -2,7 +2,7 @@ const express = require("express");
 const router = require("./routes");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-
+const errorMiddleware = require("./middlewares/error.middleware");
 const app = express();
 
 app.use(express.json());
@@ -19,7 +19,7 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-
+app.use(errorMiddleware);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

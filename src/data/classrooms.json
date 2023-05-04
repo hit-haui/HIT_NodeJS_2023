@@ -1,0 +1,16 @@
+[
+  { 
+    "image": "/avatars/2020605518.jpg",
+    "name": "Nodejs",
+    "startTime": "18",
+    "endTime": "20",
+    "studentCode": "2020605518",
+    "schedule": "CNTT04",
+    "studentTotal": 30,
+    "location": "12",
+    "leaders":[{"type":"644dc5f683e4535fe580cc27"}],
+    "supports":[{"type":"644dc5f683e4535fe580cc27"}],
+    "students":[{"type":"644dc5f683e4535fe580cc27"}],
+    "description":"Đẹp trai"
+  }
+]

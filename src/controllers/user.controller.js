@@ -17,24 +17,26 @@ const getUsers = async (req, res) => {
 };
 
 // get user by id
-const getUserById = async (req, res) => {
+const getUserById = async (req, res,next) => {
     const { userId } = req.params;
     try {
         const user = await User.findById(userId);
         // Check user
         if (!user) {
-            return res.status(404).json({
-                message: "User not found!"
-            });
+            // return res.status(404).json({
+            //     message: "User not found!"
+            // });
+            throw new Error("User not found!!!");
         }
         // Return result
         res.status(200).json({
             user
         });
     } catch (err) {
-        res.status(500).json({
-            error: err.message
-        });
+        // res.status(500).json({
+        //     error: err.message
+        // });
+        next(err);
     }
 };
 

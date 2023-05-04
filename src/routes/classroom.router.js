@@ -1,32 +1,29 @@
 const express = require("express");
-
 const {
   getClassrooms,
+  getClassById,
   createClassroom,
-  deleteClassroomById,
-  updateClassroomById,
-  getClassroomById,
-  addUserToClassroomById,
-  deleteUserFromClassroomById,
-} = require("../controllers/classroom.controller");
-const authMiddleware = require("../middlewares/auth.middleware");
+  updateClassById,
+  deleteClassById,
+  addUserToClassroomBtId,
+  deleteUserFromClass,
+} = require("../controllers/class.controller");
 
+const authMiddleware = require("../middlewares/auth.middlewares");
 const classroomRouter = express.Router();
 
 classroomRouter
   .route("/")
   .get(getClassrooms)
   .post(authMiddleware, createClassroom);
+classroomRouter
+  .route("/:classID")
+  .get(getClassById)
+  .put(authMiddleware, updateClassById)
+  .delete(authMiddleware, deleteClassById);
 
 classroomRouter
-  .route("/:classroomId")
-  .get(getClassroomById)
-  .put(authMiddleware, updateClassroomById)
-  .delete(authMiddleware, deleteClassroomById);
-
-classroomRouter
-  .route("/:classroomId/user")
-  .post(authMiddleware, addUserToClassroomById)
-  .delete(authMiddleware, deleteUserFromClassroomById);
-
+  .route("/:classID/user")
+  .post(authMiddleware, addUserToClassroomBtId)
+  .delete(authMiddleware, deleteUserFromClass);
 module.exports = classroomRouter;

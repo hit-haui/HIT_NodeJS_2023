@@ -23,7 +23,7 @@ const getClassroomById = async (req, res, next) => {
     const classroom = await Classroom.findById(classroomId).populate([
       "leaders",
       "supports",
-      "student",
+      "students",
     ]);
     if (!classroom) {
       const err = new Err("Classroom not found");

@@ -91,15 +91,15 @@ const addUserToClassroomById = async (req, res, next) => {
             err.status = 404;
             throw err;
         }
-        const checkUserExist = classroom[`${role}s`].includes(userId);
-        if (checkUserExist) {
+        const isUserExist = classroom[`${role}s`].includes(userId);
+        if (isUserExist) {
             const err = new Error('User already exists in the class!');
             err.status = 400;
             throw err;
         }
         classroom[`${role}s`].push(userId);
-        const addUserToClassroom = await classroom.save();
-        res.status(201).json(addUserToClassroom);
+        const userAdded = await classroom.save();
+        res.status(201).json(userAdded);
     }
     catch (err) {
         next(err);
@@ -122,15 +122,15 @@ const deleteUserFromClassroomById = async (req, res, next) => {
             err.status = 404;
             throw err;
         }
-        const checkUserExist = classroom[`${role}s`].includes(userId);
-        if (!checkUserExist) {
+        const isUserExist = classroom[`${role}s`].includes(userId);
+        if (!isUserExist) {
             const err = new Error('User do not exists in the class!');
             err.status = 400;
             throw err;
         }
         classroom[`${role}s`].remove(userId);
-        const deleteUserFromClassroom = await classroom.save();
-        res.status(201).json(deleteUserFromClassroom);
+        const userDeleted = await classroom.save();
+        res.status(201).json(userDeleted);
     }
     catch (err) {
         next(err);

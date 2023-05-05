@@ -1,7 +1,6 @@
 const Classroom = require("../models/classroom.model");
 
 
-// get classrooms 
 const getClassrooms = async (req, res, next) => {
     try {
         const classrooms = await Classroom.find().populate(['leaders', 'supports', 'students']);
@@ -14,7 +13,6 @@ const getClassrooms = async (req, res, next) => {
 };
 
 
-// get classroom by id 
 const getClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     try {
@@ -33,7 +31,6 @@ const getClassroomById = async (req, res, next) => {
 };
 
 
-// create classroom
 const createClassroom = async (req, res, next) => {
     const newClassroom = req.body;
     try {
@@ -47,7 +44,6 @@ const createClassroom = async (req, res, next) => {
 };
 
 
-// edit classroom information by id
 const updateClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     const newClassroom = req.body;
@@ -67,7 +63,6 @@ const updateClassroomById = async (req, res, next) => {
 };
 
 
-// delete classroom by id
 const deleteClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     try {
@@ -86,7 +81,6 @@ const deleteClassroomById = async (req, res, next) => {
 };
 
 
-// add user to classroom
 const addUserToClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     const { userId, role } = req.body;
@@ -105,15 +99,14 @@ const addUserToClassroomById = async (req, res, next) => {
             throw err;
         }
         // check if user exists in class
-        const checkUserExist = classroom[`${role}s`].includes(userId);
-        console.log(checkUserExist);
-        if (checkUserExist) {
+        const isUserExist = classroom[`${role}s`].includes(userId);
+        if (isUserExist) {
             const err = new Error("User already exists in the class!");
             err.status = 400;
             throw err;
         }
         // add user to the classroom
-        classroom[`${role}s`].push(Object(userId));
+        classroom[`${role}s`].push(userId);
         const newClassroom = await classroom.save();
         res.status(201).json({
             newClassroom
@@ -124,7 +117,6 @@ const addUserToClassroomById = async (req, res, next) => {
 };
 
 
-// delete user from classroom
 const deleteUserFromClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     const { userId, role } = req.body;
@@ -143,8 +135,8 @@ const deleteUserFromClassroomById = async (req, res, next) => {
             throw err;
         }
         // check if user exists in class
-        const checkUserExist = classroom[`${role}s`].includes(userId);
-        if (!checkUserExist) {
+        const isUserExist = classroom[`${role}s`].includes(userId);
+        if (!isUserExist) {
             const err = new Error("User does not exist in the class!");
             err.status = 400;
             throw err;

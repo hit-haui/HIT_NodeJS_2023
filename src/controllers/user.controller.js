@@ -38,15 +38,15 @@ const getUserById = async (req, res) => {
 
 // create new user
 const createUser = async (req, res) => {
-  const newUser = req.body;
-  if (!newUser.password || !newUser.studentCode || newUser === {}) {
+  const { password, studentCode } = req.body;
+  if (!password || !studentCode) {
     return res.status(400).json({
       message: "Invalid input data!",
     });
   }
 
   try {
-    const user = await User.create(newUser);
+    const user = await User.create({ studentCode, password });
     res.status(201).json({
       user,
     });

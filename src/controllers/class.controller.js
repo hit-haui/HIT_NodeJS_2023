@@ -1,8 +1,8 @@
 const Classrooms = require('../models/class.model')
 
-const getClassroom = async (req, res, next) => {
+const getClassrooms = async (req, res, next) => {
   try {
-    const classrooms = await Classrooms.find().populate([
+    const classrooms = await Classrooms.find({}).populate([
       'leaders',
       'supports',
       'students',
@@ -25,9 +25,8 @@ const getClassroomById = async (req, res, next) => {
       const err = new Error('Classroom not found')
       err.status = 404
       throw err
-    } else {
-      res.status(200).json(classroom)
     }
+    res.status(200).json(classroom)
   } catch (err) {
     next(err)
   }
@@ -43,7 +42,7 @@ const createClassroom = async (req, res, next) => {
   }
 }
 
-const updateClassroom = async (req, res, next) => {
+const updateClassroomById = async (req, res, next) => {
   const { classId } = req.params
   const updateClassroom = req.body
   try {
@@ -63,7 +62,7 @@ const updateClassroom = async (req, res, next) => {
   }
 }
 
-const deleteClassroom = async (req, res, next) => {
+const deleteClassroomById = async (req, res, next) => {
   const { classId } = req.params
   try {
     const classroom = await Classrooms.findByIdAndDelete(classId)
@@ -94,13 +93,13 @@ const addUserToClassroom = async (req, res, next) => {
       err.status = 404
       throw err
     }
-    const checkUserExist = classroom[`${role}s`].includes(userId)
-    if (checkUserExist) {
+    const isUserExist = classroom[`${role}s`].includes(userId)
+    if (isUserExist) {
       const err = new Error('User already exists in the class')
       err.status = 404
       throw err
     }
-    classroom[`${role}s`].push(Object(userId))
+    classroom[`${role}s`].push(userId)
     const newUser = await Classrooms.save()
     return res.status(200).json(newUser)
   } catch (err) {
@@ -138,11 +137,11 @@ const deleteUserInClass = async (req, res, next) => {
 }
 
 module.exports = {
-  getClassroom,
+  getClassrooms,
   getClassroomById,
   createClassroom,
-  updateClassroom,
-  deleteClassroom,
+  updateClassroomById,
+  deleteClassroomById,
   addUserToClassroom,
   deleteUserInClass,
 }

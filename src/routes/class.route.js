@@ -5,22 +5,25 @@ const classRouter = express.Router()
 const authMiddleware = require('../middlewares/auth.middleware')
 
 const {
-  getClassroom,
+  getClassrooms,
   getClassroomById,
   createClassroom,
-  updateClassroom,
-  deleteClassroom,
+  updateClassroomById,
+  deleteClassroomById,
   addUserToClassroom,
   deleteUserInClass,
 } = require('../controllers/class.controller')
 
-classRouter.route('/').get(getClassroom).post(authMiddleware, createClassroom)
+classRouter
+  .route('/')
+  .get(getClassroomById)
+  .post(authMiddleware, createClassroom)
 
 classRouter
   .route('/:classId')
   .get(getClassroomById)
-  .put(authMiddleware, updateClassroom)
-  .delete(authMiddleware, deleteClassroom)
+  .put(authMiddleware, updateClassroomById)
+  .delete(authMiddleware, deleteClassroomById)
 
 classRouter
   .route('/:classId')

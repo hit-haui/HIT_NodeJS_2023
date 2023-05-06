@@ -1,7 +1,6 @@
 const { error } = require('console')
 const User = require('../models/user.model')
 
-// get users
 const getUsers = async (req, res) => {
   try {
     const users = await User.find()
@@ -15,7 +14,6 @@ const getUsers = async (req, res) => {
   }
 }
 
-// get user by id
 const getUserById = async (req, res, next) => {
   const { userId } = req.params
   try {
@@ -23,9 +21,6 @@ const getUserById = async (req, res, next) => {
     // Check user
     if (!user) {
       throw new Error('User not found!')
-      // return res.status(404).json({
-      //     message: "User not found!"
-      // });
     }
     // Return result
     res.status(200).json({
@@ -36,7 +31,6 @@ const getUserById = async (req, res, next) => {
   }
 }
 
-// create user
 const createUser = async (req, res) => {
   // New user
   const newUser = req.body
@@ -59,7 +53,6 @@ const createUser = async (req, res) => {
   }
 }
 
-// update user by id
 const updateUserById = async (req, res) => {
   const { userId } = req.params
   try {
@@ -83,7 +76,6 @@ const updateUserById = async (req, res) => {
   }
 }
 
-// delete user by id
 const deleteUserById = async (req, res) => {
   const { userId } = req.params
   try {

@@ -17,7 +17,7 @@ const userSchema = new Schema(
         },
         password: {
             type: String,
-            default: function() {
+            default: function () {
                 return this.studentCode + "@17"
             }
         },

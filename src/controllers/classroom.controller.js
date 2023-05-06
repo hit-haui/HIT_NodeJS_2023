@@ -27,6 +27,11 @@ const getClassroomById = async (req, res, next) => {
 const createClassroom = async (req, res, next) => {
     const rawClassroom = req.body;
     try {
+        if (!rawClassroom.name || !rawClassroom.startTime) {
+            const err = new Error('Invalid classroom');
+            err.status = 400;
+            throw err;
+        }
         const newClassroom = await Classroom.create(rawClassroom);
         res.status(201).json({ newClassroom });
     } catch (err) {
@@ -73,7 +78,7 @@ const addUserToClassroomById = async (req, res, next) => {
     const { userId } = req.body;
     try {
         // Check valid role
-        if (role !== 'leader' && role !== 'support' && role !== 'student') {
+        if (!["leader", "support", "student"].includes(role)) {
             const err = new Error('Invalid role');
             err.status = 400;
             throw err;
@@ -112,7 +117,7 @@ const deleteUserFromClassroomById = async (req, res, next) => {
     const { userId } = req.body;
     try {
         // Check valid role
-        if (role !== 'leader' && role !== 'support' && role !== 'student') {
+        if (!["leader", "support", "student"].includes(role)) {
             const err = new Error('Invalid role');
             err.status = 400;
             throw err;

@@ -1,6 +1,5 @@
 const Classroom = require("../models/classroom.model");
 
-// get all classrooms
 const getClassrooms = async (req, res, next) => {
     try {
         const classrooms = await Classroom.find().populate(['leaders', 'supports', 'students']);
@@ -11,7 +10,6 @@ const getClassrooms = async (req, res, next) => {
     };
 };
 
-// get classroom by id
 const getClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     try {
@@ -28,7 +26,6 @@ const getClassroomById = async (req, res, next) => {
     };
 };
 
-// create classroom
 const createClassroom = async (req, res, next) => {
     const newClassroom = req.body;
     try {
@@ -40,7 +37,6 @@ const createClassroom = async (req, res, next) => {
     };
 };
 
-// edit classroom imformation by id
 const updateClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     const newClassroom = req.body;
@@ -58,7 +54,6 @@ const updateClassroomById = async (req, res, next) => {
     };
 };
 
-// delete classroom by id
 const deleteClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     try {
@@ -75,7 +70,6 @@ const deleteClassroomById = async (req, res, next) => {
     };
 };
 
-// add members to classroom
 const addUserToClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     const { userId, role } = req.body;
@@ -106,7 +100,6 @@ const addUserToClassroomById = async (req, res, next) => {
     };
 };
 
-// delete members from classroom
 const deleteUserFromClassroomById = async (req, res, next) => {
     const { classroomId } = req.params;
     const { userId, role } = req.body;

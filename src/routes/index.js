@@ -1,7 +1,8 @@
 const express = require("express");
-const router = express.Router();
 const userRouter = require("./user.route");
 const classroomRouter = require("./classroom.route");
+
+const router = express.Router();
 
 const routes = [
   {

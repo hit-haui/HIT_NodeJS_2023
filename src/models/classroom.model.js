@@ -5,7 +5,7 @@ const classroomSchema = new Schema(
     {
         name: {
             type: String,
-            require: true
+            required: true
         },
         image: {
             type: String,
@@ -13,13 +13,13 @@ const classroomSchema = new Schema(
         },
         startTime: {
             type: Date,
-            require: true
+            required: true
         },
         endTime: Date,
         schedule: String,
         studentTotal: {
             type: Number,
-            defalut: 20
+            default: 20
         },
         location: {
             type: String,

@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+
 const userSchema = new Schema(
     {
         avatar: {
             type: String,
-            default: "https://static.dhcnhn.vn/student"
+            default: "images/user-default.png"
         },
         fullName: {
             type: String,

@@ -1,46 +1,26 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-
+const { Schema } = mongoose;
 const userSchema = new Schema(
-    {
-        avatar: {
-            type: String,
-            default: "https://static.dhcnhn.vn/student"
-        },
-        fullName: {
-            type: String,
-            default: null
-        },
-        dateOfBirth: {
-            type: Date,
-            default: "01-01-1970"
-        },
-        password: {
-            type: String,
-            default: function() {
-                return this.studentCode + "@17"
-            }
-        },
-        studentCode: {
-            type: Number,
-            required: true,
-        },
-        className: {
-            type: String,
-            default: null
-        },
-        schoolYear: {
-            type: Number,
-            default: null
-        },
-        clubYear: {
-            type: Number,
-            default: null
-        }
+  {
+    avatar: String,
+    fullName: {
+      type: String,
+      required: true,
     },
-    {
-        timestamps: true,
-    }
+    dateOfBirth: Date,
+    password: String,
+    studentCode: {
+      type: String,
+      required: true,
+    },
+    className: String,
+    schoolYear: String,
+    clubYear: String,
+  },
+
+  {
+    timestamps: true,
+  }
 );
 const User = mongoose.model("User", userSchema);
 module.exports = User;

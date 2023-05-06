@@ -1,4 +1,5 @@
 const Classroom = require("../models/classroom.model");
+const User = require("../models/user.model");
 const getClassrooms = async (req, res, next) => {
   try {
     const classrooms = await Classroom.find().populate([
@@ -62,6 +63,7 @@ const updateClassroomById = async (req, res, next) => {
       error.status = 404;
       throw error;
     }
+
     res.status(200).json({
       updateClassroom,
     });
@@ -73,18 +75,16 @@ const deleteClassroomById = async (req, res, next) => {
   const { classroomId } = req.params;
   const permission = req.body;
   try {
-    const deleteClassroom = await Classroom.findByIdAndDelete(
+    const deleteClassroomById = await Classroom.findByIdAndDelete(
       classroomId,
       permission
     );
-    if (!deleteClassroom) {
+    if (!deleteClassroomById) {
       const error = new Error("Classroom has not been updated");
       error.status = 404;
       throw error;
     }
-    res.status(200).json({
-      deleteClassroom,
-    });
+    res.status(204).json(null);
   } catch (err) {
     next(err);
   }
@@ -92,6 +92,7 @@ const deleteClassroomById = async (req, res, next) => {
 const addUserToClassroomById = async (req, res, next) => {
   const { classroomId } = req.params;
   const { userId, role } = req.body;
+  const users = await User.find();
   try {
     if (!["leader", "support", "student"].includes(role)) {
       const error = new Error("Invaid role");
@@ -110,8 +111,16 @@ const addUserToClassroomById = async (req, res, next) => {
       error.status = 400;
       throw error;
     }
+    const isUserExistInUsers = users.includes(userId);
+    if (!isUserExistInUsers) {
+      const error = new Error("User not found");
+      error.status = 404;
+      throw error;
+    }
     classroom[`${role}s`].push(userId);
+
     const addedUserToClassroomById = await classroom.save();
+
     res.status(201).json(addedUserToClassroomById);
   } catch (err) {
     next(err);
@@ -140,7 +149,7 @@ const deleteUserToClassroomById = async (req, res, next) => {
     }
     classroom[`${role}s`].remove(userId);
     const deletedUserToClassroomById = await classroom.save();
-    res.status(200).json({ deletedUserToClassroomById });
+    res.status(204).json(null);
   } catch (err) {
     next(err);
   }

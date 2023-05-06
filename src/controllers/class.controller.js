@@ -77,10 +77,10 @@ const updateClassroomById = async (req, res, next) => {
 const deleteClassroomById = async (req, res, next) => {
   const { classroomId } = req.params;
   try {
-    const classroom = req.body;
+    //const classroom = req.body;
     const deleteClass = await Classroom.findByIdAndDelete(classroomId);
     if (!deleteClass) {
-      const err = new Err("classroom not found!");
+      const err = new Error("classroom not found!");
       err.status = 400;
       throw err;
     }

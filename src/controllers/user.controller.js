@@ -1,116 +1,84 @@
 const User = require("../models/user.model");
 
-
-// get users
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
     try {
         const users = await User.find();
-        res.status(200).json({
-            users
-        });
-    } catch (err) {
-        res.status(500).json({
-            error: err.message
-        });
+        res.status(200).json({ users });
     }
+    catch (err) {
+        next(err);
+    };
 };
 
-
-// get user by id
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
     const { userId } = req.params;
     try {
         const user = await User.findById(userId);
-        // Check user
         if (!user) {
-            return res.status(404).json({
-                message: "User not found!"
-            });
+            const err = new Error('User not found!');
+            err.status = 404;
+            throw err;
         }
-        // Return result
-        res.status(200).json({
-            user
-        });
-    } catch (err) {
-        res.status(500).json({
-            error: err.message
-        });
+        res.status(200).json({ user });
     }
+    catch (err) {
+        next(err);
+    };
 };
 
-
-// create user
-const createUser = async (req, res) => {
-    // New user
+const createUser = async (req, res, next) => {
     const newUser = req.body;
-    // Check if there is a required field
-    if (!newUser.studentCode) {
-        return res.status(400).json({ 
-            message: "Student code is required!"
-        });
-    }
-    // Add new user to database
     try {
+        if (!newUser.studentCode) {
+            const err = new Error('Student code is required!');
+            err.status = 400;
+            throw err;
+        }
         const user = await User.create(newUser);
-        res.status(201).json({
-            user
-        });
-    } catch (err) {
-        res.status(500).json({
-            error: err.message
-        });
+        res.status(201).json({ user });
     }
+    catch (err) {
+        next(err);
+    };
 };
 
+const updateUserById = async (req, res, next) => {
+    const { userId } = req.params;
+    const newUser = req.body;
+    try {
+        if (!newUser.studentCode) {
+            const err = new Error('Student code is required!');
+            err.status = 400;
+            throw err;
+        }
+        const user = await User.findByIdAndUpdate(userId, newUser);
+        if (!user) {
+            const err = new Error('User not found!');
+            err.status = 404;
+            throw err;
+        }
+        res.status(200).json({ user });
+    }
+    catch (err) {
+        next(err);
+    };
+};
 
-// update user by id
-const updateUserById = async (req, res) => {
+const deleteUserById = async (req, res, next) => {
     const { userId } = req.params;
     try {
-        const userRaw = req.body;
-        // Update user
-        const updatedUser = await User.findByIdAndUpdate(userId, userRaw);
-        // Check user
-        if (!updatedUser) {
-            return res.status(404).json({
-                message: "User not found!"
-            });
+        const user = await User.findByIdAndDelete(userId);
+        if (!user) {
+            const err = new Error('User not found!');
+            err.status = 404;
+            throw err;
         }
-        // Send back the updated user info to client
-        res.status(200).json({
-            updatedUser
-        });
-    } catch (err) {
-        res.status(500).json({
-            error: err.message
-        });
+        res.status(200).json({ user });
     }
+    catch (err) {
+        next(err);
+    };
 };
-
-
-// delete user by id
-const deleteUserById = async (req, res) => {
-    const { userId } = req.params;
-    try {
-        // Delete user
-        const userDeleted = await User.findByIdAndDelete(userId);
-        // Check user
-        if (!userDeleted) {
-            return res.status(404).json({
-                message: "User not found!"
-            });
-        }
-        // Send back the deleted user info to client
-        res.status(200).json({
-            userDeleted 
-        });
-    } catch (err) {
-        res.status(500).json({
-            error: err.message
-        });
-    }
-};
-
 
 module.exports = {
     getUsers,

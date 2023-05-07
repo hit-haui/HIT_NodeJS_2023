@@ -6,7 +6,7 @@ const {
   updateClassroomById,
   deleteClassroomById,
   addUserToClassroomById,
-  deleteUserToClassroomById,
+  deleteUserFromClassroomById,
 } = require("../controllers/class.controller");
 
 const authMiddleware = require("../middleware/auth.middleware");
@@ -26,5 +26,5 @@ classroomRouter
 classroomRouter
   .route("./classroomId/user")
   .put(authMiddleware, addUserToClassroomById)
-  .delete(authMiddleware, deleteUserToClassroomById);
+  .delete(authMiddleware, deleteUserFromClassroomById);
 module.exports = classroomRouter;

@@ -26,7 +26,7 @@ const getClassroomById = async (req, res, next) => {
       "students",
     ]);
     if (!classroom) {
-      const err = new Err("Classroom not found");
+      const err = new Error("Classroom not found");
       err.status = 404;
       throw err;
     }
@@ -61,8 +61,8 @@ const updateClassroomById = async (req, res, next) => {
       classroom
     ).populate(["leaders", "supports", "students"]);
     if (!updatedClass) {
-      const err = new Err("classroom not found!");
-      err.status = 400;
+      const err = new Error("classroom not found!");
+      err.status = 404;
       throw err;
     }
     res.status(200).json({
@@ -78,14 +78,14 @@ const deleteClassroomById = async (req, res, next) => {
   const { classroomId } = req.params;
   try {
     //const classroom = req.body;
-    const deleteClass = await Classroom.findByIdAndDelete(classroomId);
-    if (!deleteClass) {
+    const deletedClass = await Classroom.findByIdAndDelete(classroomId);
+    if (!deletedClass) {
       const err = new Error("classroom not found!");
       err.status = 400;
       throw err;
     }
     res.status(200).json({
-      deleteClass,
+      deletedClass,
     });
   } catch (err) {
     next(err);
@@ -99,26 +99,26 @@ const addUserToClassroomById = async (req, res, next) => {
   try {
     //check permission
     if (!["leaders", "supports", "students"].includes(role)) {
-      const err = new Err("You do not have access permission");
+      const err = new Error("You do not have access permission");
       err.status = 400;
       throw err;
     }
     //check classroom
     const classroom = await Classroom.findById(classroomId);
     if (!classroom) {
-      const err = new Err("classroom not found");
+      const err = new Error("classroom not found");
       err.status = 404;
       throw err;
     }
     //check if user exists in class
-    const checkUserExists = classroom[`${role}s`].includes(userId);
-    if (checkUserExists) {
-      const err = new Err("User already exists in the classroom");
+    const isUserExists = classroom[`${role}s`].includes(userId);
+    if (isUserExists) {
+      const err = new Error("User already exists in the classroom");
       err.status = 400;
       throw err;
     }
     //add user to the class
-    classroom[`${role}s`].push(Object(userId));
+    classroom[`${role}s`].push(userId);
     const newUser = await classroom.save();
     res.status(201).json({
       newUser,
@@ -129,27 +129,27 @@ const addUserToClassroomById = async (req, res, next) => {
 };
 
 // delete user to classroom
-const deleteUserToClassroomById = async (req, res, next) => {
+const deleteUserFromClassroomById = async (req, res, next) => {
   const { classroomId } = req.params;
   const { userId, role } = req.body;
   try {
     //check permission
     if (!["leaders", "supports", "students"].includes(role)) {
-      const err = new Err("You do not have access permission");
+      const err = new Error("You do not have access permission");
       err.status = 400;
       throw err;
     }
     //check classroom
     const classroom = await Classroom.findById(classroomId);
     if (!classroom) {
-      const err = new Err("classroom not found");
+      const err = new Error("classroom not found");
       err.status = 404;
       throw err;
     }
     //check if user exists in class
-    const checkUserExists = classroom[`${role}s`].includes(userId);
-    if (checkUserExists) {
-      const err = new Err("User already exists in the classroom");
+    const isUserExists = classroom[`${role}s`].includes(userId);
+    if (isUserExists) {
+      const err = new Error("User already exists in the classroom");
       err.status = 400;
       throw err;
     }
@@ -172,5 +172,5 @@ module.exports = {
   updateClassroomById,
   deleteClassroomById,
   addUserToClassroomById,
-  deleteUserToClassroomById,
+  deleteUserFromClassroomById,
 };

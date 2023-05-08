@@ -72,24 +72,24 @@ const deleteClassById = async (req, res, next) => {
     const deleteClass = await Classroom.findByIdAndDelete(classID);
     if (!deleteClass) {
       const err = new Error("Classroom not found!");
-      err.status(400);
+      err.status(404);
       throw err;
     }
-    res.status(200).json({ deleteClass });
+    res.status(200).json({});
   } catch (err) {
     next(err);
   }
 };
 
 //add user to classroom
-const addUserToClassroomBtId = async (req, res, next) => {
+const addUserToClassroomById = async (req, res, next) => {
   const { classID } = req.params;
   const { userId, role } = req.body;
   try {
     //check permission
     if (!["leader", "support", "student"].includes(role)) {
       const err = new Error("You do not have access permission");
-      err.status = 400;
+      err.status = 404;
       throw err;
     }
     // check classroom
@@ -100,14 +100,14 @@ const addUserToClassroomBtId = async (req, res, next) => {
       throw err;
     }
     //check if user exists in class
-    const checkUserExists = classroom[`${role}s`].includes(userId);
-    if (checkUserExists) {
+    const isCheckUserExists = classroom[`${role}s`].includes(userId);
+    if (isCheckUserExists) {
       const err = new Error("User already exists in the class");
       err.status = 400;
       throw err;
     }
     //add user to the class
-    classroom[`${role}s`].push(Object(userId));
+    classroom[`${role}s`].push(userId);
     const newUser = await classroom.save();
     res.status(201).json({
       newUser,
@@ -133,8 +133,8 @@ const deleteUserFromClass = async (req, res, next) => {
       throw err;
     }
     //check if user exists in class
-    const checkUserExists = classroom[`${role}s`].includes(userId);
-    if (!checkUserExists) {
+    const isCheckUserExists = classroom[`${role}s`].includes(userId);
+    if (!isCheckUserExists) {
       const err = new Error("User does not exist in the class!");
       err.status = 400;
       throw err;
@@ -154,6 +154,6 @@ module.exports = {
   createClassroom,
   updateClassById,
   deleteClassById,
-  addUserToClassroomBtId,
+  addUserToClassroomById,
   deleteUserFromClass,
 };

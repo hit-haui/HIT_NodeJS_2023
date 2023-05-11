@@ -9,9 +9,10 @@ const {
     addUserToClassroomById,
     deleteUserFromClassroomById,
 } = require("../controllers/classroom.controller");
-const authMiddleware = require("../middlewares/auth.middleware");
 
 const classroomRouter = express.Router();
+
+const authMiddleware = require("../middlewares/auth.middleware");
 
 classroomRouter.route('/')
     .get(getClassrooms)

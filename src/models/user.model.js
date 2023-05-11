@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const bcrypt = require("bcrypt");
 
 const userSchema = new Schema(
     {
@@ -36,11 +37,31 @@ const userSchema = new Schema(
         clubYear: {
             type: Number,
             default: null
+        },
+        role: {
+            type: String,
+            enum: ['user', 'admin'],
+            default: 'user'
         }
     },
     {
         timestamps: true,
     }
 );
+
+userSchema.pre('save', async function (next) {
+    try {
+        const user = this;
+        if (user.isModified('password')) {
+            user.password = await bcrypt.hash(user.password, 7);
+        }
+        next();
+    }
+    catch (err) {
+        next(err);
+    };
+});
+
 const User = mongoose.model("User", userSchema);
+
 module.exports = User;

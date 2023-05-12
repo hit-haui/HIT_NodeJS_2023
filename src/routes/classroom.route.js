@@ -13,16 +13,16 @@ const authMiddleware = require("../middlewares/auth.middleware");
 
 const classroomRouter = express.Router();
 
-classroomRouter.route('/')
+classroomRouter.route("/")
     .get(getClassrooms)
     .post(authMiddleware, createClassroom)
 
-classroomRouter.route('/:classroomId')
+classroomRouter.route("/:classroomId")
     .get(getClassroomById)
     .put(authMiddleware, updateClassroomById)
     .delete(authMiddleware, deleteClassroomById)
 
-classroomRouter.route('/:classroomId/user')
+classroomRouter.route("/:classroomId/user")
     .post(authMiddleware, addUserToClassroomById)
     .delete(authMiddleware, deleteUserFromClassroomById)
 

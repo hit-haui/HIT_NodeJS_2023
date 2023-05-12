@@ -9,7 +9,7 @@ const classroomSchema = new Schema(
         },
         image: {
             type: String,
-            default: '/image/default-classroom.png'
+            default: "/images/classroom-default.png"
         },
         startTime: {
             type: Date,

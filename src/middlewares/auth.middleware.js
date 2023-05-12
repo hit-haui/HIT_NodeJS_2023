@@ -4,7 +4,7 @@ const authMiddleware = (req, res, next) => {
   if (permission !== "admin") {
     throw {
       message: "One does not have permission to access this resource!",
-      status: 400,
+      status: 401,
     };
   }
   next();

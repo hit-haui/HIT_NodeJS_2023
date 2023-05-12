@@ -3,7 +3,10 @@ const Schema = mongoose.Schema;
 
 const classroomSchema = new Schema(
   {
-    name: String,
+    name: {
+      type: String,
+      require: [true, "Please provide your classname!"],
+    },
     image: String,
     startTime: Date,
     endTime: Date,
@@ -14,7 +17,7 @@ const classroomSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "User",
-        // required: [true, "Please provide your leaders!"],
+        required: [true, "Please provide your leaders!"],
       },
     ],
     supports: [{ type: Schema.Types.ObjectId, ref: "User" }],

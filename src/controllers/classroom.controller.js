@@ -39,15 +39,14 @@ const getClassroomById = async (req, res, next) => {
 
 const createClassroom = async (req, res, next) => {
   let newClassroom = req.body;
-  const { leaders } = req.body;
+  const { leaders, name } = req.body;
   try {
     // check if there is a required field
-    if (!leaders)
+    if (!leaders || !name)
       throw {
         message: "Invalid input data!",
         status: 400,
       };
-    newClassroom = req.body;
     const classroom = await Classroom.create(newClassroom);
     res.status(201).json({
       classroom,
@@ -74,6 +73,9 @@ const updateClassroomById = async (req, res, next) => {
         status: 400,
       };
     }
+    res.status(200).json({
+      updatedClassroom,
+    });
   } catch (error) {
     next(error);
   }
@@ -122,8 +124,8 @@ const addUserToClassroomById = async (req, res, next) => {
     }
 
     // check if user exists in class
-    const userExist = classroom[`${role}s`].includes(userId);
-    if (userExist) {
+    const isUserExist = classroom[`${role}s`].includes(userId);
+    if (isUserExist) {
       throw {
         message: "User already exists in the class!",
         status: 400,
@@ -155,10 +157,10 @@ const deleteUserFromClassroomById = async (req, res, next) => {
     // check if the classroom exists or not
     const classroom = await Classroom.findById(classroomId);
     if (!classroom) {
-      throw Object.assign(
-        new Error(`Classroom with id ${classroomId} not found!`),
-        { status: 400 }
-      );
+      throw {
+        message: `Classroom with id ${classroomId} not found!`,
+        status: 400,
+      };
     }
 
     // check if user exists in class

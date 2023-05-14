@@ -6,15 +6,17 @@ const {
   updateUserById,
   deleteUserById,
 } = require("../controllers/user.controller");
+const authMiddleware = require("../middlewares/auth.middleware");
 
 const userRouter = express.Router();
 
-userRouter.route("/").get(getUsers).post(createUser);
+userRouter.route("/")
+  .get(getUsers)
+  .post(authMiddleware, createUser);
 
-userRouter
-  .route("/:userId")
+userRouter.route("/:userId")
   .get(getUserById)
-  .put(updateUserById)
-  .delete(deleteUserById);
+  .put(authMiddleware, updateUserById)
+  .delete(authMiddleware, deleteUserById);
 
 module.exports = userRouter;

@@ -38,13 +38,22 @@ const getUserById = async (req, res, next) => {
 const createUser = async (req, res, next) => {
     // New user
     const newUser = req.body;
+    const { studentCode, password } = newUser;
     try {
         // Check if there is a required field
-        if (!newUser.studentCode) {
-            const err = new Error('Student code is required!');
+        if (!studentCode || !password) {
+            const err = new Error('Student code or password is required!');
             err.status = 400;
             throw err;
         }
+
+        const isUserExists = await User.exists({ studentCode });
+        if (isUserExists) {
+            const err = new Error('Student is exists!');
+            err.status = 400;
+            throw err
+        }
+
         // Add new user to database
         const user = await User.create(newUser);
         res.status(201).json({
@@ -92,9 +101,7 @@ const deleteUserById = async (req, res, next) => {
             throw err;
         }
         // Send back the deleted user info to client
-        res.status(200).json({
-            deletedUser
-        });
+        res.status(204).json();
     } catch (err) {
         next(err);
     }

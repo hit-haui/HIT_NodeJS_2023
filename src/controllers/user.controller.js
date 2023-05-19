@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const getUsers = async (req, res) => {
     try {
         const users = await User.find();
-        console.log(users);
+        // console.log(users);
         res.status(200).json({
             users
         });
@@ -46,11 +46,11 @@ const createUser = async (req, res) => {
     // New user
     const newUser = req.body;
     // Check if there is a required field
-    //  if (!newUser.studentCode) {
-    //     return res.status(400).json({ 
-    //         message: "Student code is required!"
-    //     });
-    // }
+     if (!newUser.studentCode) {
+        return res.status(400).json({ 
+            message: "Student code is required!"
+        });
+    }
     newUser.password = await bcrypt.hash(newUser.password,7);
     console.log(newUser.password);
     // Add new user to database
@@ -103,7 +103,7 @@ const deleteUserById = async (req, res) => {
         // Check user
         if (!userDeleted) {
             return res.status(404).json({
-                message: "User not found!"
+                message: "User not found!",
             });
         }
         // Send back the deleted user info to client
@@ -116,7 +116,6 @@ const deleteUserById = async (req, res) => {
         });
     }
 };
-
 
 module.exports = {
     getUsers,

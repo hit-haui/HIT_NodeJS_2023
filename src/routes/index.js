@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userRouter = require("./user.route");
 const classroomRouter = require("./classroom.route");
+const login = require("../controllers/auth.controller");
 
 const routes = [
   {
@@ -9,9 +10,13 @@ const routes = [
     route: userRouter,
   },
   {
-    path: '/classrooms',
-    route: classroomRouter
-  }
+    path: "/classrooms",
+    route: classroomRouter,
+  },
+  {
+    path: "/login",
+    route: login,
+  },
 ];
 
 routes.map((route) => {

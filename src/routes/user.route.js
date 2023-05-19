@@ -10,7 +10,10 @@ const {
 const authMiddleware = require("../middlewares/auth.middleware")
 const userRouter = express.Router();
 
-userRouter.route("/").get(authMiddleware, getUsers).post(createUser);
+userRouter
+  .route("/")
+  .get(authMiddleware, getUsers)
+  .post(authMiddleware, createUser);
 
 userRouter
   .route("/:userId")

@@ -6,8 +6,13 @@ const login = async (req, res, next) => {
     try {
         const { studentCode, password } = req.body;
         const user = await User.findOne({ studentCode });
+        if (!user) {
+            const err = new Error("Student code or password is incorrect!");
+            err.status = 401;
+            throw err;
+        }
         const isPassword = await bcrypt.compare(password, user.password);
-        if (!user || !isPassword) {
+        if (!isPassword) {
             const err = new Error("Student code or password is incorrect!");
             err.status = 401;
             throw err;
@@ -30,7 +35,7 @@ const register = async (req, res, next) => {
             err.status = 400;
             throw err;
         }
-        const checkUser = await User.findOne({ studentCode: studentCode});
+        const checkUser = await User.findOne({ studentCode });
         if (checkUser) {
             const err = new Error("Student code is exit!");
             err.status = 400;

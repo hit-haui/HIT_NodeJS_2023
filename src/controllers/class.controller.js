@@ -78,59 +78,68 @@ const deleteClassroomById = async (req, res, next) => {
   }
 }
 
-const addUserToClassroom = async (req, res, next) => {
-  const { classId } = req.params
-  const { userId, role } = req.body
+const addUserToClassroomById = async (req, res, next) => {
+  const { classroomId } = req.params
+  const { role } = req.query
+  const { userId } = req.body
   try {
-    if (!['leaders', 'supports', 'students'].includes(role)) {
-      const err = new Error('Not have access')
-      err.status = 404
+    if (!['leader', 'support', 'student'].includes(role)) {
+      const err = new Error('Invalid role')
+      err.status = 400
       throw err
     }
-    const classroom = await Classrooms.findById(classId)
+    const classroom = await Classroom.findById(classroomId)
     if (!classroom) {
-      const err = new Error('Classroom not found')
+      const err = new Error('Classroom not found!')
       err.status = 404
       throw err
     }
-    const isUserExist = classroom[`${role}s`].includes(userId)
-    if (isUserExist) {
-      const err = new Error('User already exists in the class')
-      err.status = 404
+    const isExistInClassroom = classroom[`${role}s`].includes(userId)
+    if (isExistInClassroom) {
+      const err = new Error(`User as ${role} exists in classroom`)
+      err.status = 400
       throw err
     }
     classroom[`${role}s`].push(userId)
-    const newUser = await Classrooms.save()
-    return res.status(200).json(newUser)
+    const addedUserToClassroom = await classroom.save()
+
+    res.status(201).json({
+      message: `User added as ${role} to classroom`,
+      addedUserToClassroom,
+    })
   } catch (err) {
     next(err)
   }
 }
 
-const deleteUserInClass = async (req, res, next) => {
-  const { classId } = req.params
-  const { userId, role } = req.body
+const deleteUserFromClassroomById = async (req, res, next) => {
+  const { classroomId } = req.params
+  const { role } = req.query
+  const { userId } = req.body
   try {
-    if (!['leaders', 'supports', 'students'].includes(role)) {
-      const err = new Error('Not have access')
-      err.status = 404
+    if (!['leader', 'support', 'student'].includes(role)) {
+      const err = new Error('Invalid role')
+      err.status = 400
       throw err
     }
-    const classroom = await Classrooms.findById(classId)
+    const classroom = await Classroom.findById(classroomId)
     if (!classroom) {
-      const err = new Error('Classroom not found')
+      const err = new Error('Classroom not found!')
       err.status = 404
       throw err
     }
-    const checkUserExist = classroom[`${role}s`].includes(userId)
-    if (!checkUserExist) {
-      const err = new Error('User does not already exists in the class')
+    const isExistInClassroom = classroom[`${role}s`].includes(userId)
+    if (!isExistInClassroom) {
+      const err = new Error(`User as ${role} don't exists in classroom`)
       err.status = 404
       throw err
     }
     classroom[`${role}s`].remove(userId)
-    const deleteUser = await Classrooms.save()
-    return res.status(200).json(deleteUser)
+    const deletedUserFromClassroom = await classroom.save()
+    res.status(200).json({
+      message: `User deleted as ${role} to classroom`,
+      deletedUserFromClassroom,
+    })
   } catch (err) {
     next(err)
   }
@@ -142,6 +151,6 @@ module.exports = {
   createClassroom,
   updateClassroomById,
   deleteClassroomById,
-  addUserToClassroom,
-  deleteUserInClass,
+  addUserToClassroomById,
+  deleteUserFromClassroomById,
 }

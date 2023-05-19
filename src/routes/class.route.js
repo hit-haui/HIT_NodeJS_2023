@@ -10,8 +10,8 @@ const {
   createClassroom,
   updateClassroomById,
   deleteClassroomById,
-  addUserToClassroom,
-  deleteUserInClass,
+  addUserToClassroomById,
+  deleteUserFromClassroomById,
 } = require('../controllers/class.controller')
 
 classRouter
@@ -27,6 +27,6 @@ classRouter
 
 classRouter
   .route('/:classId')
-  .put(authMiddleware, addUserToClassroom)
-  .delete(authMiddleware, deleteUserInClass)
+  .put(authMiddleware, addUserToClassroomById)
+  .delete(authMiddleware, deleteUserFromClassroomById)
 module.exports = classRouter

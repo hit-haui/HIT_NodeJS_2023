@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-
+const bcrypt = require("bcrypt")
 // get users
 const getUsers = async (req, res, next) => {
     try {
@@ -46,6 +46,13 @@ const createUser = async (req, res, next) => {
             throw err;
         }
         // Add new user to database
+        const checkUser = await User.findOne({ studentCode: newUser.studentCode });
+        if (checkUser) {
+            const err = new Error('Student code is exit!');
+            err.status = 400;
+            throw err;
+        }
+        newUser.password = await bcrypt.hash(newUser.password, 7);
         const user = await User.create(newUser);
         res.status(201).json({
             user

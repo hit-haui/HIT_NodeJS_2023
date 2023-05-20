@@ -24,10 +24,9 @@ const getClassroomById = async (req, res, next) => {
       "students",
     ]);
     if (!classroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
+      const err = new Error(`Classroom with id ${classroomId} not found!`);
+      err.status = 400;
+      throw err;
     }
     res.status(200).json({
       classroom,
@@ -37,16 +36,18 @@ const getClassroomById = async (req, res, next) => {
   }
 };
 
+const checkRequiredFields = (newClassroom) => {
+  const { leaders, name } = newClassroom;
+  if (!leaders || !name) {
+    const error = new Error("Invalid input data!");
+    error.status = 400;
+    throw error;
+  }
+};
 const createClassroom = async (req, res, next) => {
-  let newClassroom = req.body;
-  const { leaders, name } = req.body;
+  const newClassroom = req.body;
   try {
-    // check if there is a required field
-    if (!leaders || !name)
-      throw {
-        message: "Invalid input data!",
-        status: 400,
-      };
+    checkRequiredFields(newClassroom);
     const classroom = await Classroom.create(newClassroom);
     res.status(201).json({
       classroom,
@@ -54,6 +55,12 @@ const createClassroom = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+const handleNonExistClassroom = (classroomId) => {
+  const err = new Error(`Classroom with id ${classroomId} not found!`);
+  err.status = 400;
+  throw err;
 };
 
 const updateClassroomById = async (req, res, next) => {
@@ -67,12 +74,8 @@ const updateClassroomById = async (req, res, next) => {
         new: true,
       }
     );
-    if (!updatedClassroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
-    }
+    if (!updatedClassroom) return handleNonExistClassroom(classroomId);
+
     res.status(200).json({
       updatedClassroom,
     });
@@ -85,12 +88,8 @@ const deleteClassroomById = async (req, res, next) => {
   const { classroomId } = req.params;
   try {
     const deletedClassroom = await Classroom.findByIdAndDelete(classroomId);
-    if (!deletedClassroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
-    }
+    if (!deletedClassroom) return handleNonExistClassroom(classroomId);
+
     res.status(200).json({
       deletedClassroom,
     });
@@ -108,28 +107,21 @@ const addUserToClassroomById = async (req, res, next) => {
   try {
     // check exist role
     if (!["leader", "support", "student"].includes(role)) {
-      throw {
-        message: "Invalid role!",
-        status: 400,
-      };
+      const err = new Error("Invalid role!");
+      err.status = 400;
+      throw err;
     }
 
     // check if the classroom exists or not
     const classroom = await Classroom.findById(classroomId);
-    if (!classroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
-    }
+    if (!classroom) return handleNonExistClassroom(classroomId);
 
     // check if user exists in class
     const isUserExist = classroom[`${role}s`].includes(userId);
     if (isUserExist) {
-      throw {
-        message: "User already exists in the class!",
-        status: 400,
-      };
+      const err = new Error("User already exists in the class!");
+      err.status = 400;
+      throw err;
     }
 
     // add user to the classroom
@@ -156,20 +148,14 @@ const deleteUserFromClassroomById = async (req, res, next) => {
   try {
     // check if the classroom exists or not
     const classroom = await Classroom.findById(classroomId);
-    if (!classroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
-    }
+    if (!classroom) return handleNonExistClassroom(classroomId);
 
     // check if user exists in class
     const isUserExist = classroom[`${role}s`].includes(userId);
     if (!isUserExist) {
-      throw {
-        message: "User does not exist in this classroom!",
-        status: 400,
-      };
+      const err = new Error("User does not exist in this classroom!");
+      err.status = 400;
+      throw err;
     }
 
     // delete user

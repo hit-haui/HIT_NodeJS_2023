@@ -21,7 +21,7 @@ const login = async (req, res, next) => {
             throw err;
         }
 
-        const token = await jwt.sign(
+        const token = jwt.sign(
             {
                 userId: user.id
             },

@@ -59,7 +59,7 @@ const createClassroom = async (req, res, next) => {
 
 const handleNonExistClassroom = (classroomId) => {
   const err = new Error(`Classroom with id ${classroomId} not found!`);
-  err.status = 400;
+  err.status = 404;
   throw err;
 };
 

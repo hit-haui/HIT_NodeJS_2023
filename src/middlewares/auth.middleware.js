@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
+
 const authMiddleware = async (req, res, next) => {
   try {
-    console.log(req.headers);
     const authorization = req.headers.authorization;
     if (!authorization) {
       const err = new Error("Unauthorized");
@@ -20,15 +20,13 @@ const authMiddleware = async (req, res, next) => {
       err.status = 401;
       throw err;
     }
-    req.user = user;
+
     if (user.role !== "admin") {
       const err = new Error("Forbidden");
       err.status = 403;
       throw err;
     }
-    res.json({
-      user,
-    });
+    req.user = user;
     return next();
   } catch (err) {
     next(err);

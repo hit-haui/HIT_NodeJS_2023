@@ -1,11 +1,27 @@
-const express = require('express')
+const express = require("express");
+const validate = require("../middlewares/validate");
+const multer = require("multer");
 
-const { Register, Login } = require('../controllers/auth.controller')
+const dest = "uploads/";
 
-const authRouter = express.Router()
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
+  },
+});
 
-authRouter.route('/register').post(Register)
+const upload = multer({ storage: storage });
 
-authRouter.route('/login').post(Login)
+const { Register, Login } = require("../controllers/auth.controller");
 
-module.exports = authRouter
+const authRouter = express.Router();
+
+authRouter.route("/register").post(upload.single("avatar"), Register);
+
+authRouter.route("/login").post(Login);
+
+module.exports = authRouter;

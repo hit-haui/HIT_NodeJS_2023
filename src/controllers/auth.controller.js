@@ -25,14 +25,13 @@ const login = async (req, res, next) => {
             {
                 userId: user.id
             },
-            process.env.SECRET_KEY,
+            process.env.JWT_SECRET_KEY,
             {
-                expiresIn: '1h'
+                expiresIn: process.env.JWT_EXPIRES_IN
             }
         );
 
         res.status(200).json({
-            message: 'Login successful!',
             token
         })
     } catch (err) {
@@ -42,7 +41,6 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
     const {
-        avatar,
         fullName,
         dateOfBirth,
         password,
@@ -67,7 +65,6 @@ const register = async (req, res, next) => {
         }
 
         const user = await User.create({
-            avatar,
             fullName,
             dateOfBirth,
             password,

@@ -12,7 +12,7 @@ const authMiddleware = async (req, res, next) => {
     const token = authorization.split(" ")[1];
 
     try {
-        const payload = jwt.verify(token, process.env.SECRET_KEY);
+        const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
         const { userId } = payload;
         const user = await User.findById(userId);
         if (!user) {
@@ -26,6 +26,8 @@ const authMiddleware = async (req, res, next) => {
             err.status = 403;
             throw err;
         }
+
+        req.user = user;
 
         next();
     } catch (error) {

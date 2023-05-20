@@ -12,7 +12,7 @@ app.use(router);
 dotenv.config();
 
 const port = process.env.PORT || 3000;
-const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/UserDefault";
+const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/nodejs";
 
 mongoose
   .connect(mongoURI)
@@ -24,5 +24,5 @@ mongoose
 app.use(errorMiddeware);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Example app listening on port http://localhost:${port}`);
 });

@@ -17,7 +17,7 @@ const login = async (req, res, next) => {
         const isPassword = await bcrypt.compare(password, user.password);
         if (!isPassword) {
             const err = new Error('Password is incorrect!');
-            err.status = 400;
+            err.status = 401;
             throw err;
         }
 
@@ -40,6 +40,52 @@ const login = async (req, res, next) => {
     }
 };
 
+const register = async (req, res, next) => {
+    const {
+        avatar,
+        fullName,
+        dateOfBirth,
+        password,
+        studentCode,
+        className,
+        schoolYear,
+        clubYear
+    } = req.body;
+
+    try {
+        if (!studentCode || !password) {
+            const err = new Error('Student code or password is required!');
+            err.status = 400;
+            throw err;
+        }
+
+        const isUserExists = await User.exists({ studentCode });
+        if (isUserExists) {
+            const err = new Error('Student is exists!');
+            err.status = 400;
+            throw err
+        }
+
+        const user = await User.create({
+            avatar,
+            fullName,
+            dateOfBirth,
+            password,
+            studentCode,
+            className,
+            schoolYear,
+            clubYear
+        });
+
+        res.status(201).json({
+            user
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
-    login
+    login,
+    register,
 };

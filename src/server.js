@@ -1,5 +1,5 @@
 const express = require("express");
-const router = require("./routes");
+const router = require('./routes')
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const errorMiddeware = require("./middlewares/error.middleware");

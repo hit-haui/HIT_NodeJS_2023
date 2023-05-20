@@ -13,6 +13,12 @@ const getClassrooms = async (req, res, next) => {
   }
 };
 
+const handleNonExistClassroom = (classroomId) => {
+  const err = new Error(`Classroom with id ${classroomId} not found!`);
+  err.status = 404;
+  throw err;
+};
+
 const getClassroomById = async (req, res, next) => {
   const { classroomId } = req.params;
   try {
@@ -21,11 +27,8 @@ const getClassroomById = async (req, res, next) => {
       "supports",
       "students",
     ]);
-    if (!classroom) {
-      const err = new Error("Classroom not found!");
-      err.status = 404;
-      throw err;
-    }
+    if (!classroom) return handleNonExistClassroom(classroomId);
+
     res.status(200).json({ classroom });
   } catch (err) {
     next(err);
@@ -56,11 +59,8 @@ const updateClassroomById = async (req, res, next) => {
       rawClassroom,
       { new: true }
     );
-    if (!updatedClassroom) {
-      const err = new Error("Classroom not found!");
-      err.status = 404;
-      throw err;
-    }
+    if (!updatedClassroom) return handleNonExistClassroom(classroomId);
+
     res.status(200).json({ updatedClassroom });
   } catch (err) {
     next(err);
@@ -71,11 +71,8 @@ const deleteClassroomById = async (req, res, next) => {
   const { classroomId } = req.params;
   try {
     const deletedClassroom = await Classroom.findByIdAndDelete(classroomId);
-    if (!deletedClassroom) {
-      const err = new Error("Classroom not found!");
-      err.status = 404;
-      throw err;
-    }
+    if (!deletedClassroom) return handleNonExistClassroom(classroomId);
+
     res.status(204).json();
   } catch (err) {
     next(err);
@@ -97,11 +94,7 @@ const addUserToClassroomById = async (req, res, next) => {
     }
 
     const classroom = await Classroom.findById(classroomId);
-    if (!classroom) {
-      const err = new Error("Classroom not found!");
-      err.status = 404;
-      throw err;
-    }
+    if (!classroom) return handleNonExistClassroom(classroomId);
 
     // Check if user exists in classroom
     const isExistInClassroom = classroom[`${role}s`].includes(userId);
@@ -139,11 +132,7 @@ const deleteUserFromClassroomById = async (req, res, next) => {
     }
 
     const classroom = await Classroom.findById(classroomId);
-    if (!classroom) {
-      const err = new Error("Classroom not found!");
-      err.status = 404;
-      throw err;
-    }
+    if (!classroom) return handleNonExistClassroom(classroomId);
 
     // Check if user exists in classroom
     const isExistInClassroom = classroom[`${role}s`].includes(userId);

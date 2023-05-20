@@ -1,5 +1,4 @@
 const Classroom = require("../models/classroom.model");
-
 const getClassrooms = async (req, res, next) => {
     try {
         const classrooms = await Classroom.find().populate(['leaders', 'supports', 'students']);

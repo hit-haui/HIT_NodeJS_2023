@@ -7,11 +7,9 @@ const getClassrooms = async (req, res, next) => {
       "supports",
       "students",
     ]);
-    res.status(200).json({
-      classrooms,
-    });
-  } catch (error) {
-    next(error);
+    res.status(200).json({ classrooms });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -24,60 +22,48 @@ const getClassroomById = async (req, res, next) => {
       "students",
     ]);
     if (!classroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
+      const err = new Error("Classroom not found!");
+      err.status = 404;
+      throw err;
     }
-    res.status(200).json({
-      classroom,
-    });
-  } catch (error) {
-    next(error);
+    res.status(200).json({ classroom });
+  } catch (err) {
+    next(err);
   }
 };
 
 const createClassroom = async (req, res, next) => {
-  let newClassroom = req.body;
-  const { leaders, name } = req.body;
+  const rawClassroom = req.body;
   try {
-    // check if there is a required field
-    if (!leaders || !name)
-      throw {
-        message: "Invalid input data!",
-        status: 400,
-      };
-    const classroom = await Classroom.create(newClassroom);
-    res.status(201).json({
-      classroom,
-    });
-  } catch (error) {
-    next(error);
+    if (!rawClassroom.name || !rawClassroom.startTime) {
+      const err = new Error("Invalid classroom");
+      err.status = 400;
+      throw err;
+    }
+    const newClassroom = await Classroom.create(rawClassroom);
+    res.status(201).json({ newClassroom });
+  } catch (err) {
+    next(err);
   }
 };
 
 const updateClassroomById = async (req, res, next) => {
   const { classroomId } = req.params;
-  const updatedData = req.body;
+  const rawClassroom = req.body;
   try {
     const updatedClassroom = await Classroom.findByIdAndUpdate(
       classroomId,
-      updatedData,
-      {
-        new: true,
-      }
+      rawClassroom,
+      { new: true }
     );
     if (!updatedClassroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
+      const err = new Error("Classroom not found!");
+      err.status = 404;
+      throw err;
     }
-    res.status(200).json({
-      updatedClassroom,
-    });
-  } catch (error) {
-    next(error);
+    res.status(200).json({ updatedClassroom });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -86,108 +72,97 @@ const deleteClassroomById = async (req, res, next) => {
   try {
     const deletedClassroom = await Classroom.findByIdAndDelete(classroomId);
     if (!deletedClassroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
+      const err = new Error("Classroom not found!");
+      err.status = 404;
+      throw err;
     }
-    res.status(200).json({
-      deletedClassroom,
-    });
-  } catch (error) {
-    next(error);
+    res.status(204).json();
+  } catch (err) {
+    next(err);
   }
 };
 
-// add user to classroom by classroomId, user role
+// Add a leader/support/student to a classroom
 const addUserToClassroomById = async (req, res, next) => {
+  // In Postman use Query Params: [key, value] = [role, leader/support/student]
   const { classroomId } = req.params;
-  const { userId } = req.body;
   const { role } = req.query;
-  const newUser = req.body;
+  const { userId } = req.body;
   try {
-    // check exist role
+    // Check valid role
     if (!["leader", "support", "student"].includes(role)) {
-      throw {
-        message: "Invalid role!",
-        status: 400,
-      };
+      const err = new Error("Invalid role");
+      err.status = 400;
+      throw err;
     }
 
-    // check if the classroom exists or not
     const classroom = await Classroom.findById(classroomId);
     if (!classroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
+      const err = new Error("Classroom not found!");
+      err.status = 404;
+      throw err;
     }
 
-    // check if user exists in class
-    const isUserExist = classroom[`${role}s`].includes(userId);
-    if (isUserExist) {
-      throw {
-        message: "User already exists in the class!",
-        status: 400,
-      };
+    // Check if user exists in classroom
+    const isExistInClassroom = classroom[`${role}s`].includes(userId);
+    if (isExistInClassroom) {
+      const err = new Error(`User as ${role} exists in classroom`);
+      err.status = 400;
+      throw err;
     }
 
-    // add user to the classroom
+    // Add user to classroom
     classroom[`${role}s`].push(userId);
+    const addedUserToClassroom = await classroom.save();
 
-    // save the changes to the database
-    classroom.save();
-
-    // return newUser
     res.status(201).json({
-      role,
-      newUser,
+      message: `User added as ${role} to classroom`,
+      addedUserToClassroom,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-// delete user from classroom by classroomId, userId
+// Delete a leader/support/student from a classroom
 const deleteUserFromClassroomById = async (req, res, next) => {
+  // In Postman use Query Params: [key, value] = [role, leader/support/student]
   const { classroomId } = req.params;
-  const { userId } = req.body;
   const { role } = req.query;
+  const { userId } = req.body;
   try {
-    // check if the classroom exists or not
+    // Check valid role
+    if (!["leader", "support", "student"].includes(role)) {
+      const err = new Error("Invalid role");
+      err.status = 400;
+      throw err;
+    }
+
     const classroom = await Classroom.findById(classroomId);
     if (!classroom) {
-      throw {
-        message: `Classroom with id ${classroomId} not found!`,
-        status: 400,
-      };
+      const err = new Error("Classroom not found!");
+      err.status = 404;
+      throw err;
     }
 
-    // check if user exists in class
-    const isUserExist = classroom[`${role}s`].includes(userId);
-    if (!isUserExist) {
-      throw {
-        message: "User does not exist in this classroom!",
-        status: 400,
-      };
+    // Check if user exists in classroom
+    const isExistInClassroom = classroom[`${role}s`].includes(userId);
+    if (!isExistInClassroom) {
+      const err = new Error(`User as ${role} don't exists in classroom`);
+      err.status = 404;
+      throw err;
     }
 
-    // delete user
-    classroom[`${role}s`].pull(userId);
+    // Delete user to classroom
+    classroom[`${role}s`].remove(userId);
+    const deletedUserFromClassroom = await classroom.save();
 
-    // save the changes to the database
-    classroom.save();
-
-    // return deletedUser
-    const deletedUser = classroom[`${role}s`].find(
-      (item) => item.userId !== userId
-    );
     res.status(200).json({
-      role,
-      deletedUser,
+      message: `User deleted as ${role} to classroom`,
+      deletedUserFromClassroom,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 

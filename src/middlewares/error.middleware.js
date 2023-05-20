@@ -1,7 +1,7 @@
-const errorMiddleware = (error, req, res, next) => {
-  return res.status(error.status || 500).json({
-    err: error.message,
+const errorMiddeware = (err, req, res, next) => {
+  res.status(err.status || 500).json({
+    message: err.message,
   });
 };
 
-module.exports = errorMiddleware;
+module.exports = errorMiddeware;

@@ -5,24 +5,30 @@ const classroomSchema = new Schema(
   {
     name: {
       type: String,
-      require: [true, "Please provide your classname!"],
+      required: true,
     },
-    image: String,
-    startTime: Date,
+    image: {
+      type: String,
+      default: "/image/default-classroom.png",
+    },
+    startTime: {
+      type: Date,
+      required: true,
+    },
     endTime: Date,
     schedule: String,
-    studentTotal: Number,
-    location: String,
-    leaders: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: [true, "Please provide your leaders!"],
-      },
-    ],
+    studentTotal: {
+      type: Number,
+      default: 20,
+    },
+    location: {
+      type: String,
+      default: "Phòng CLB HIT, tầng 9, tòa A1",
+    },
+    leaders: [{ type: Schema.Types.ObjectId, ref: "User" }],
     supports: [{ type: Schema.Types.ObjectId, ref: "User" }],
     students: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    description: { type: String, trim: true },
+    description: String,
   },
   {
     timestamps: true,
@@ -30,4 +36,5 @@ const classroomSchema = new Schema(
 );
 
 const Classroom = mongoose.model("Classroom", classroomSchema);
+
 module.exports = Classroom;

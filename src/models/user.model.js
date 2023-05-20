@@ -47,8 +47,20 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
-userSchema.pre("save", function () {
-  console.log("this gets printed third");
+userSchema.pre("save", async function (next) {
+  const user = this;
+  // if (!this.isModified("password")) {
+  //   next();
+  // }
+  try {
+    // Kiểm tra xem password có được thay đổi hay không
+    if (!user.isModified("password")) {
+      user.password = await bcrypt.hash(user.password, 7);
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 const User = mongoose.model("User", userSchema);
 module.exports = User;

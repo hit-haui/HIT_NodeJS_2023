@@ -17,7 +17,7 @@ const authMiddleware = async (req, res, next) => {
     throw err;
   }
   try {
-    const token = authorization.split(" "[1]);
+    const token = authorization.split("")[1];
     const payload = await jwt.verify(token, process.end.SECRET_KEY);
     console.log(token);
     console.log(payload);
@@ -33,8 +33,9 @@ const authMiddleware = async (req, res, next) => {
         err.status = 403;
         throw err;
     }
+    next();
   } catch (err) {
-    next(er);
+    next(err);
   }
 
   // next();

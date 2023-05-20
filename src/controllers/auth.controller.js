@@ -21,7 +21,7 @@ const login = async (req, res, next) => {
             throw err;
         }
 
-        const token = await jwt.sign(
+        const token = jwt.sign(
             {
                 userId: user.id
             },
@@ -42,7 +42,6 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
     const {
-        avatar,
         fullName,
         dateOfBirth,
         password,
@@ -67,7 +66,6 @@ const register = async (req, res, next) => {
         }
 
         const user = await User.create({
-            avatar,
             fullName,
             dateOfBirth,
             password,

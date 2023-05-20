@@ -12,17 +12,19 @@ const getUsers = async (req, res) => {
   }
 };
 
+const handleNonExistUser = (userId) => {
+  const err = new Error(`User with id ${userId} not found!`);
+  err.status = 400;
+  throw err;
+};
 // get user by id
 const getUserById = async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
     // Check user
-    if (!user) {
-      throw Object.assign(new Error(`User with id ${userId} not found!`), {
-        status: 400,
-      });
-    }
+    if (!user) return handleNonExistUser(userId);
+
     // Return result
     res.status(200).json({
       user,
@@ -64,11 +66,8 @@ const updateUserById = async (req, res) => {
       new: true,
     });
     // Check user
-    if (!updatedUser) {
-      throw Object.assign(new Error(`User with id ${userId} not found!`), {
-        status: 400,
-      });
-    }
+    if (!updatedUser) return handleNonExistUser(userId);
+
     // Send back the updated user info to client
     res.status(200).json({
       updatedUser,
@@ -84,12 +83,10 @@ const deleteUserById = async (req, res) => {
   try {
     // Delete user
     const deletedUser = await User.findByIdAndDelete(userId);
+
     // Check user
-    if (!deletedUser) {
-      throw Object.assign(new Error(`User with id ${userId} not found!`), {
-        status: 400,
-      });
-    }
+    if (!deletedUser) return handleNonExistUser(userId);
+
     // Send back the deleted user info to client
     res.status(200).json({
       deletedUser,

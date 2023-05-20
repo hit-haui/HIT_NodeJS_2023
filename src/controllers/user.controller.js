@@ -34,11 +34,7 @@ const getUserById = async (req, res, next) => {
 
 // create user
 const createUser = async (req, res, next) => {
-  // New user
   const newUser = req.body;
-  const hashPassword = await bcrypt.hash(newUser.password, 7);
-  console.log(hashPassword);
-
   try {
     // Check if there is a required field
     if (!newUser.studentCode) {
@@ -46,6 +42,13 @@ const createUser = async (req, res, next) => {
       err.status = 400;
       throw err;
     }
+    const checkUser = await User.findOne({ studentCode: newUser.studentCode });
+    if (checkUser) {
+      const err = new Error("Student code is exit!");
+      err.status = 400;
+      throw err;
+    }
+
     // Add new user to database
     const user = await User.create(newUser);
     res.status(201).json({

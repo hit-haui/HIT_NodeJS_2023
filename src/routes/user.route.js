@@ -17,7 +17,7 @@ userRouter.route("/").get(getUsers).post(authMiddleware, createUser);
 userRouter
   .route("/:userId")
   .get(getUserById)
-  .put(updateUserById)
-  .delete(deleteUserById);
+  .put(authMiddleware, updateUserById)
+  .delete(authMiddleware, deleteUserById);
 
 module.exports = userRouter;

@@ -14,7 +14,7 @@ const login = async (req, res, next) => {
     const isPassword = await bcrypt.compare(password, user.password);
     if (!isPassword) {
       const err = new Error("Studen code or password is incorrect!");
-      err.status = 400;
+      err.status = 401;
       throw err;
     }
     const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {

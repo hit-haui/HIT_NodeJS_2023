@@ -20,7 +20,7 @@ const authMiddleware = async (req, res, next) => {
             err.status = 404;
             throw err;
         }
-
+        req.user = user;
         if (user.role !== 'admin') {
             const err = new Error('Forbidden');
             err.status = 403;

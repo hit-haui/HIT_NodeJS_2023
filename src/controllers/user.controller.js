@@ -67,7 +67,6 @@ const updateUserById = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(userId, userRaw);
     // Check user
     if (!updatedUser) {
-      // throw new Error("User not found!")
       const err = new Error("User not found!");
       err.status = 404;
       throw err;

@@ -6,11 +6,14 @@ const {
   updateUserById,
   deleteUserById,
 } = require("../controllers/user.controller");
+const authMiddleware = require("../middlewares/auth.middleware");
 
 const userRouter = express.Router();
 
-userRouter.route("/").get(getUsers).post(createUser);
-
+userRouter
+  .route("/")
+  .get(authMiddleware, getUsers)
+  .post(authMiddleware, createUser);
 userRouter
   .route("/:userId")
   .get(getUserById)

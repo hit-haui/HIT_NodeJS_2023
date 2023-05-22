@@ -17,9 +17,12 @@ const login = async (req, res, next) => {
             err.status = 401;
             throw err;
         }
-        const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: "1h" });
+        const token = jwt.sign(
+            { userId: user._id }, 
+            process.env.SECRET_KEY, 
+            { expiresIn: process.env.JWT_EXPIRES_IN || "1h" }
+        );
         res.status(200).json({
-            message: "Login successfully!",
             token,
         });
     } catch (err) {
@@ -35,8 +38,8 @@ const register = async (req, res, next) => {
             err.status = 400;
             throw err;
         }
-        const checkUser = await User.findOne({ studentCode });
-        if (checkUser) {
+        const existingUser = await User.findOne({ studentCode });
+        if (existingUser) {
             const err = new Error("Student code is exit!");
             err.status = 400;
             throw err;
@@ -51,6 +54,6 @@ const register = async (req, res, next) => {
 };
 
 module.exports = {
-   login,
-   register
+    login,
+    register
 };

@@ -10,8 +10,10 @@ const authMiddleware = async (req, res, next) => {
     throw err;
   }
   try {
-    const token = authorization.split("")[1];
-    const payload = await jwt.verify(token, process.end.SECRET_KEY);
+    console.log(authorization);
+    const token = authorization.split(" ")[1];
+    const payload = await jwt.verify(token, process.env.SECRET_KEY);
+    console.log(payload);
     const userId = payload.userId;
     const user = await User.findById(userId);
     if (!user) {
@@ -24,6 +26,7 @@ const authMiddleware = async (req, res, next) => {
       err.status = 403;
       throw err;
     }
+    req.user = user;
     next();
   } catch (err) {
     next(err);

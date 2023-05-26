@@ -49,11 +49,7 @@ const userSchema = new Schema(
 );
 userSchema.pre("save", async function (next) {
   const user = this;
-  // if (!this.isModified("password")) {
-  //   next();
-  // }
   try {
-    // Kiểm tra xem password có được thay đổi hay không
     if (!user.isModified("password")) {
       user.password = await bcrypt.hash(user.password, 7);
     }

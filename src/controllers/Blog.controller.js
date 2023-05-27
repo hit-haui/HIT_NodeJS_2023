@@ -1,7 +1,13 @@
 const Blog = require("../models/Blog.model")
 
 const getBlogs = async (req, res, next) => {
-
+    try {
+        const blogs = await Blog.find();
+        res.status(200).json({ blogs});
+    }
+    catch (err) {
+        msg: "error"
+    }
 }
 
 const getBlog = async (req, res, next)  =>{

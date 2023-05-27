@@ -9,8 +9,8 @@ const {
 
 const blogRouter = express.Router();
 
-userRouter.route("/").get(getBlogs).get(createBlog);
+blogRouter.route("/").get(getBlogs).get(createBlog);
 
-userRouter.route("/:blogId").get(getBlogs).put(updateBlog).delete(deleteBlog);
+blogRouter.route("/:blogId").get(getBlog).put(updateBlog).delete(deleteBlog);
 
 module.exports = blogRouter;

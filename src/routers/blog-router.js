@@ -8,7 +8,7 @@ blogRouter.route('/')
     .get(getBlogs)
     .post(createBlog)
 
-blogRouter.route('/:classroomId')
+blogRouter.route('/:blogId')
     .get(getBlog)
     .put(updateBlog)
     .delete(deleteBlog)

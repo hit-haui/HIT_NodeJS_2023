@@ -3,7 +3,13 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const app = express();
 
+const errorMiddleware = require("./src/middleware/error.middleware");
+
+dotenv.config();
+
 const blogRoute = require("./src/router/blogs.route");
+app.use(express.json());
+app.use(blogRoute);
 
 const port = process.env.PORT || 3000;
 const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/KIEM_TRA";
@@ -14,11 +20,7 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-
-app.use(express.json());
-app.use(blogRoute);
-
-dotenv.config();
+app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

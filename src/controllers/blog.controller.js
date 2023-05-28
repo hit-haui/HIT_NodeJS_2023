@@ -13,7 +13,7 @@ const getBlogs = async (req, res, next) => {
 const getBlog = async (req, res, next) => {
   try {
     const { blogId } = req.params;
-    const blog = await Blog.findById({ blogId });
+    const blog = await Blog.findById(blogId);
     if (!blog) {
       const err = new Error("Blog not found");
       err.status = 404;
@@ -30,7 +30,7 @@ const getBlog = async (req, res, next) => {
 const creatBlog = async (req, res, next) => {
   try {
     const newBlog = req.body;
-    if (!Blog.title) {
+    if (!newBlog.title) {
       const err = new Error("Information is not enough");
       err.status = 401;
       throw err;
@@ -48,7 +48,7 @@ const updateBlog = async (req, res, next) => {
     const { blogId } = req.params;
     const blogRaw = req.body;
 
-    const updateBlog = await Blog.findByIdAndUpdate({ blogId }, blogRaw);
+    const updateBlog = await Blog.findByIdAndUpdate(blogId, blogRaw);
     if (!updateBlog) {
       const err = new Error("Blog not found");
       err.status = 404;
@@ -64,7 +64,7 @@ const updateBlog = async (req, res, next) => {
 const deleteBlog = async (req, res, next) => {
   try {
     const { blogId } = req.params;
-    const deleteBlog = await Blog.findByIdAndDelete({ blogId });
+    const deleteBlog = await Blog.findByIdAndDelete(blogId);
     if (!deleteBlog) {
       const err = new Error("Blog not found");
       err.status = 404;

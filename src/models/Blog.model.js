@@ -7,9 +7,8 @@ const BlogSchema = new Schema(
             Type: String,
             
         },
-        password:{
-            Type: String
-            
+        content:{
+            Type: String  
         },
         
     }

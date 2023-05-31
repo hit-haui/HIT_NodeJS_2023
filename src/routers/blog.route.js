@@ -8,16 +8,13 @@ const {
     getBlog
 } = require("../controllers/Blog.controller");
 
-const classroomRouter = express.Router();
+const blogRouter = express.Router();
 
 
-classroomRouter.route('/').get(getBlogs).post(createBLog)
+blogRouter.route('/api/blogs').get(getBlogs).post(createBLog)
    
 
-classroomRouter.route('/:blogId').get(getBlog).put(updateBLog).delete(deleteBLog)
- 
-
-classroomRouter.route('/:classroomId/user')
+blogRouter.route('/:blogId').get(getBlog).put(updateBLog).delete(deleteBLog)
     
 
-module.exports = classroomRouter;
+module.exports = blogRouter;

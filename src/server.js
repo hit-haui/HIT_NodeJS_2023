@@ -1,6 +1,7 @@
 const express = require("express")
 const dotenv = require("dotenv")
 const mongoose = require("mongoose")
+const router = require("./routers")
 const app = express()
 
 dotenv.config()
@@ -13,9 +14,9 @@ mongoose
 .catch((err) => {
     console.log(err)
 })
-app.get("/", function(req, res) {
-    res.send("Hello word")
-})
+
+app.use(express.json());
+app.use(router);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

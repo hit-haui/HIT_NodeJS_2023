@@ -15,10 +15,6 @@ const blogSchema = new Schema(
             type: String,
             default: 'Guest'
         },
-        reactions: {
-            type: Number,
-            default: 0
-        },
         images: [{ type: String }],
     },
     {

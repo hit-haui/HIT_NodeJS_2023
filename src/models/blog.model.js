@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const blogsSchema = new Schema({
-  name: {
+  title: {
     type: String,
     required: true,
   },

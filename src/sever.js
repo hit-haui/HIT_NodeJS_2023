@@ -1,7 +1,14 @@
 const express = require("express");
-const app = express();
+const router = require("./routes");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const errorMiddleware = require("./middleware/error.middleware");
+
+const app = express();
+
+app.use(express.json());
+app.use(router);
+
 dotenv.config();
 
 const port = process.env.PORT || 8080;
@@ -11,9 +18,7 @@ mongoose
   .then(() => console.log("Connected!"))
   .catch((err) => console.log(err));
 
-app.get("/", function (req, res) {
-  res.send("Hello world");
-});
+app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

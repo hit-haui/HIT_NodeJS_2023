@@ -66,7 +66,6 @@ const updateBlogById = async (req, res) => {
 };
 const deleteBlogById = async (req, res) => {
   const { blogId } = req.params;
-  sss;
   if (!blogId) {
     res.status(404).json({
       message: "Blog not found",

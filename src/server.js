@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const router = require("./routers");
-const port = 8000;
 app.use(express.json());
 app.use(router);
 const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/hit_nodejs";

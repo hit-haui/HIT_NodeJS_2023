@@ -16,6 +16,7 @@ const blogSchema = new Schema(
       type: String,
       default: "Other",
     },
+    image: String,
     authors: [
       {
         type: Schema.Types.ObjectId,

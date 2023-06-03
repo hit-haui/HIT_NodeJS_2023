@@ -5,8 +5,12 @@ const blogsSchema = new Schema({
     type: String,
     required: true,
   },
+
   image: {
     type: String,
+  },
+  author: {
+    type: { type: Schema.Types.ObjectId, ref: "User" },
   },
   content: {
     type: String,

@@ -1,10 +1,10 @@
 const express = require("express");
 const router = require("./routes");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const errorMiddleware = require("./middleware/error.middleware");
 
 const app = express();
+const dotenv = require("dotenv");
 
 app.use(express.json());
 app.use(router);

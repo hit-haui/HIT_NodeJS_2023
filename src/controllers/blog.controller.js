@@ -1,21 +1,19 @@
 const Blog = require('../models/blog.model');
 
 
-const getBlogs = async (req, res) => {
+const getBlogs = async (req, res, next) => {
     try {
         const blogs = await Blog.find();
         res.status(200).json({
             blogs
         });
-    } catch (error) {
-        json.status(500).json({
-            message: error.message
-        });
+    } catch (err) {
+        next(err);
     };
 };
 
 
-const getBlog = async (req, res) => {
+const getBlog = async (req, res, next) => {
     const { blogId } = req.params;
     try {
         const blog = await Blog.findById(blogId);
@@ -27,15 +25,13 @@ const getBlog = async (req, res) => {
         res.status(200).json({
             blog
         });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+    } catch (err) {
+        next(err);
     };
 };
 
 
-const createBlog = async (req, res) => {
+const createBlog = async (req, res, next) => {
     const rawBlog = req.body;
     const { title, content } = rawBlog;
     try {
@@ -48,15 +44,13 @@ const createBlog = async (req, res) => {
         res.status(201).json({
             newBlog
         });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+    } catch (err) {
+        next(err);
     };
 };
 
 
-const updateBlog = async (req, res) => {
+const updateBlog = async (req, res, next) => {
     const { blogId } = req.params;
     const newBlog = req.body;
     try {
@@ -69,15 +63,13 @@ const updateBlog = async (req, res) => {
         res.status(200).json({
             updatedBlog
         });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+    } catch (err) {
+        next(err);
     };
 };
 
 
-const deleteBlog = async (req, res) => {
+const deleteBlog = async (req, res, next) => {
     const { blogId } = req.params;
     try {
         const deletedBlog = await Blog.findByIdAndDelete(blogId);
@@ -87,10 +79,8 @@ const deleteBlog = async (req, res) => {
             throw err;
         }
         res.status(204).json();
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+    } catch (err) {
+        next(err);
     };
 };
 

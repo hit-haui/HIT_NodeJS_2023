@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const router = require('./routers');
 
+const errorMiddeware = require('./middlewares/error.middleware');
+
 dotenv.config();
 
 const app = express();
@@ -18,6 +20,8 @@ mongoose
   .catch((err) => {
     console.log(err);
 });
+
+app.use(errorMiddeware);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

@@ -1,3 +1,5 @@
+const Blog = require("../models/blog.model");
+
 const getBlogs = async (req, res, next) => {};
 const getBlogById = async (req, res, next) => {};
 const createBlog = async (req, res, next) => {};

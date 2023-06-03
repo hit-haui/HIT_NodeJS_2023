@@ -12,7 +12,9 @@ const blogSchema = new Schema(
             required: true
         },
 
-
+        author: {
+            type:{ type: Schema.Types.ObjectId, ref: 'User' },
+        },
         comments: [{ type: String }]
     },
     {

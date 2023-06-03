@@ -6,7 +6,10 @@ const blogSchema = new Schema(
     name: {
       type: String,
     },
-    password: {
+    author: {
+      type: String,
+    },
+    content: {
       type: String,
     },
   },

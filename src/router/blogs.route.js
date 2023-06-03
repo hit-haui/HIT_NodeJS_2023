@@ -2,20 +2,20 @@ const express = require("express");
 
 const {
   getBlogs,
-  getBlogById,
+  getBlog,
   createBlog,
-  updateBlogById,
-  deleteBlogById,
+  updateBlog,
+  deleteBlog,
 } = require("../controller/blog.controller");
 
 const blogRoute = express.Router();
 
-blogRoute.route("/").get(getBlogs).post(createBlog);
+blogRoute.route("/blogs").get(getBlogs).post(createBlog);
 
 blogRoute
-  .route("/:blogId")
-  .get(getBlogById)
-  .put(updateBlogById)
-  .delete(deleteBlogById);
+  .route("/blogs/:blogId")
+  .get(getBlog)
+  .put(updateBlog)
+  .delete(deleteBlog);
 
 module.exports = blogRoute;

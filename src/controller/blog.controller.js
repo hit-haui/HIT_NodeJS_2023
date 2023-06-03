@@ -3,18 +3,13 @@ const Blog = require("../models/blogs.model");
 const getBlogs = async (req, res, next) => {
   try {
     const blogs = await Blog.find();
-    if (!blogs) {
-      const err = new Error("Blog cannot found");
-      err.status = 404;
-      throw err;
-    }
     res.status(200).json({ blogs });
   } catch (err) {
     next(err);
   }
 };
 
-const getBlogById = async (req, res, next) => {
+const getBlog = async (req, res, next) => {
   try {
     const { blogId } = req.params;
     const blog = await Blog.findById(blogId);
@@ -32,11 +27,6 @@ const getBlogById = async (req, res, next) => {
 const createBlog = async (req, res, next) => {
   try {
     const newBlog = req.body;
-    if (!newBlog) {
-      const err = new Error("Blog is required");
-      err.status = 401;
-      throw err;
-    }
     const blog = await Blog.create(newBlog);
     res.status(201).json({
       blog,
@@ -46,7 +36,7 @@ const createBlog = async (req, res, next) => {
   }
 };
 
-const updateBlogById = async (req, res, next) => {
+const updateBlog = async (req, res, next) => {
   try {
     const newBlog = req.body;
     const { blogId } = req.params;
@@ -56,7 +46,7 @@ const updateBlogById = async (req, res, next) => {
       throw err;
     }
     const blogUpdate = await Blog.findByIdAndUpdate(blogId, newBlog);
-    res.status(201).json({
+    res.status(200).json({
       blogUpdate,
     });
   } catch (err) {
@@ -64,11 +54,11 @@ const updateBlogById = async (req, res, next) => {
   }
 };
 
-const deleteBlogById = async (req, res, next) => {
+const deleteBlog = async (req, res, next) => {
   try {
     const { blogId } = req.params;
     if (!blogId) {
-      const err = new Error("BlogId is required");
+      new Error("BlogId is required");
       err.status = 401;
       throw err;
     }
@@ -83,8 +73,8 @@ const deleteBlogById = async (req, res, next) => {
 
 module.exports = {
   getBlogs,
-  getBlogById,
+  getBlog,
   createBlog,
-  updateBlogById,
-  deleteBlogById,
+  updateBlog,
+  deleteBlog,
 };

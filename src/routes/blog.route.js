@@ -2,7 +2,7 @@ const express = require("express");
 
 const {
     getBlogs,
-    getBlogById,
+    getBlog,
     createBlog,
     updateBlogById,
     deleteBlogById
@@ -15,7 +15,7 @@ blogRouter.route("/")
     .post(createBlog);
 
 blogRouter.route("/:blogId")
-    .get(getBlogById)
+    .get(getBlog)
     .put(updateBlogById)
     .delete(deleteBlogById);
 

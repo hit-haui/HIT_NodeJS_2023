@@ -13,7 +13,7 @@ const blogSchema = new Schema(
         },
         author: {
             type: String,
-            require: true
+            required: true
         },
         image: {
             type: String,

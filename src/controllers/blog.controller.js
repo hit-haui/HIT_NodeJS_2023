@@ -10,12 +10,12 @@ const getBlogs = async (req, res, next) => {
     };
 };
 
-const getBlogById = async (req, res, next) => {
+const getBlog = async (req, res, next) => {
     const { blogId } = req.params;
     try {
         const blog = await Blog.findById(blogId);
         if (!blog) {
-            const err = new Error('blog not found!');
+            const err = new Error('Blog not found!');
             err.status = 404;
             throw err;
         }
@@ -82,7 +82,7 @@ const deleteBlogById = async (req, res, next) => {
 
 module.exports = {
     getBlogs,
-    getBlogById,
+    getBlog,
     createBlog,
     updateBlogById,
     deleteBlogById

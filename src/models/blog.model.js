@@ -11,12 +11,8 @@ const blogSchema = new Schema(
             type: String,
             required: true
         },
-        author: {
-            type: String,
-            default: 'Author'
-        },
 
-        images: [{ type: String }],
+
         comments: [{ type: String }]
     },
     {

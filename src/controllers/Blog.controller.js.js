@@ -18,7 +18,9 @@ const getBlog = async (req, res) => {
     try {
         const blog = await Blog.findById(blogId);
         if (!blog) {
-          throw Error('Blog not found!');
+            const err = new Error('Blog is not found!');
+            err.status = 400;
+            throw err;
         }
         res.status(200).json({
             blog
@@ -72,7 +74,9 @@ const deleteBlog = async (req, res) => {
     try {
         const deletedBlog = await Blog.findByIdAndDelete(blogId);
         if (!deletedBlog) {
-          throw Error('Blog not found!');
+            const err = new Error('Blog not found');
+            err.status = 400;
+            throw err;
         }
         res.status(204)
     } catch (error) {

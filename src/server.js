@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(router);
 app.use("/uploads", express.static("uploads"));
 const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/hit_nodejs";
-const port = 8000;
+const port = 3000;
 mongoose
   .connect(mongoURI)
   .then(() => console.log("Connect database successfully!"))

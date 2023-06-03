@@ -64,7 +64,6 @@ const updateBlogById = async (req, res,next) => {
 };
 const deleteBlogById = async (req, res,next) => {
   const { blogId } = req.params;
-  console.log(blogId);
   if (!blogId) {
     const err = new Error("BogId not found!");
     err.status = 404;

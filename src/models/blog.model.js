@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const Schema = mongoose.Schema;
 const blogSchema = new Schema({
   title: {
@@ -12,5 +13,6 @@ const blogSchema = new Schema({
     type: String,
   },
 });
+
 const Blog = mongoose.model("Blog", blogSchema);
 module.exports = Blog;

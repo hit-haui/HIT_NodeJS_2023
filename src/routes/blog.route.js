@@ -6,6 +6,7 @@ const {
   updateBlog,
   deleteBlog,
 } = require("../controllers/blog.controller");
+const authMiddleware = require("../middlewares/auth.middleware");
 
 const blogRouter = express.Router();
 blogRouter.route("/").get(getBlogs).post(creatBlog);

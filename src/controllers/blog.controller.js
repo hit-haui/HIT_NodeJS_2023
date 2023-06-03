@@ -1,9 +1,9 @@
 const Blog = require("../models/blog.model");
 
 const handleNonExistBlog = () => {
-  res.status(404).json({
-    message: "Blog  not found!",
-  });
+  const error = new Error("Blog not found!!!");
+  error.status = 404;
+  throw error;
 };
 
 const getBlogs = async (req, res, next) => {
@@ -14,9 +14,7 @@ const getBlogs = async (req, res, next) => {
   });
   try {
   } catch (error) {
-    res.status(500).json({
-      message: `Error getting blogs: ${error.message}`,
-    });
+    next(error);
   }
 };
 
@@ -31,9 +29,7 @@ const getBlog = async (req, res, next) => {
       blog,
     });
   } catch (error) {
-    res.status(500).json({
-      message: `Error getting blog with id ${blogId}: ${error.message}`,
-    });
+    next(error);
   }
 };
 
@@ -42,9 +38,9 @@ const createBlog = async (req, res, next) => {
   const { title, content } = blogData;
 
   if (!title || !content) {
-    return res.status(400).json({
-      message: "Invalid input data!",
-    });
+    const error = new Error("Invalid input data!");
+    error.status = 404;
+    throw error;
   }
 
   try {
@@ -53,9 +49,7 @@ const createBlog = async (req, res, next) => {
       blogData,
     });
   } catch (error) {
-    res.status(500).json({
-      message: `Error creating blog: ${error.message}`,
-    });
+    next(error);
   }
 };
 const updateBlog = async (req, res, next) => {
@@ -73,9 +67,7 @@ const updateBlog = async (req, res, next) => {
       updatedBlog,
     });
   } catch (error) {
-    res.status(500).json({
-      message: `Error updating blog with id ${blogId}: ${error.message}`,
-    });
+    next(error);
   }
 };
 const deleteBlog = async (req, res, next) => {
@@ -90,9 +82,7 @@ const deleteBlog = async (req, res, next) => {
       deleteBlog,
     });
   } catch (error) {
-    res.status(500).json({
-      message: `Error deleting user with id ${id}: ${error.message}`,
-    });
+    next(error);
   }
 };
 

@@ -4,15 +4,19 @@ const blogSchema = new Schema(
   {
     avatar: {
       type: String,
-      default: "https://anh.vn",
+      required: true,
     },
     content: {
       type: String,
-      default: null,
+      required: true,
     },
     title: {
       type: String,
-      default: null,
+      required: true,
+    },
+    author: {
+      type: String,
+      required: true,
     },
   },
   {

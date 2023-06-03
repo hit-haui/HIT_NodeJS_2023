@@ -1,90 +1,87 @@
 const Blog = require("../model/blog.model");
-const getBlogs = async (req, res) => {
+const getBlogs = async (req, res,next) => {
   const Blogs = await Blog.find();
   try {
     if (!Blogs) {
-      res.status(404).json({
-        message: "Blog not found",
-      });
+       const err = new Error("Blog not found");
+       err.status = 404;
+       throw err;
     }
     res.status(200).json({ Blogs });
   } catch (err) {
-    res.status(404).json({
-      message: "Blog not found",
-    });
+    next(err);
   }
 };
-const getBlogById = async (req, res) => {
+const getBlogById = async (req, res,next) => {
   const { blogId } = req.params;
   try {
     const blog = await Blog.findById(blogId);
     if (!blog) {
-      res.status(404).json({
-        message: "Blog not found",
-      });
+      const err = new Error("Blog not found");
+      err.status = 404;
+      throw err;
     }
     res.status(200).json({ blog });
   } catch (err) {
-    res.status(404).json({
-      message: "Blog not found",
-    });
+    next(err);
   }
 };
-const createBlog = async (req, res) => {
+const createBlog = async (req, res,next) => {
   const blogCreated = req.body;
-  console.log(blogCreated);
   try {
+    if (blogCreated.author) {
+      const err = new Error("Author is exist!");
+      err.status = 404;
+      throw err;
+    }
     const blog = await Blog.create(blogCreated);
-    res.status(200).json({ blog });
+    res.status(201).json({ blog });
   } catch (err) {
-    res.status(500).json({ message: "Blog ko dc khoi tao" });
+    next(err);
   }
 };
-const updateBlogById = async (req, res) => {
+const updateBlogById = async (req, res,next) => {
   const { blogId } = req.params;
   try {
     const updateBlog = req.body;
     if (!blogId) {
-      res.status(404).json({
-        message: "BlogId not exist!",
-      });
+      const err = new Error("BogId is not exist!");
+      err.status = 404;
+      throw err;
     }
     const bolgUpdated = Blog.findByIdAndUpdate(blogId, updateBlog, {
       new: true,
     });
     if (!bolgUpdated) {
-      res.status(404).json({
-        message: "Blog not found",
-      });
+      const err = new Error("BogId is not found!");
+      err.status = 404;
+      throw err;
     }
     res.json({ updateBlog });
   } catch (err) {
-    res.status(400).json({
-      message: "Update thất bại",
-    });
+    next(err);
   }
 };
-const deleteBlogById = async (req, res) => {
+const deleteBlogById = async (req, res,next) => {
   const { blogId } = req.params;
+  console.log(blogId);
   if (!blogId) {
-    res.status(404).json({
-      message: "Blog not found",
-    });
+    const err = new Error("BogId not found!");
+    err.status = 404;
+    throw err;
   }
   try {
     const bolgDeleted = await Blog.findByIdAndDelete(blogId);
     if (!bolgDeleted) {
-      res.status(404).json({
-        message: "Blog not found",
-      });
+      const err = new Error("Bog not found!");
+      err.status = 404;
+      throw err;
     }
     res.status(200).json({
       bolgDeleted,
     });
   } catch (err) {
-    res.status(404).json({
-      message: "Blog not found",
-    });
+    next(err);
   }
 };
 module.exports = {

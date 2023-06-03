@@ -1,6 +1,6 @@
 const Blog = require("../model/blog.model");
 const getBlogs = async (req, res,next) => {
-  const Blogs = await Blog.find();
+  const Blogs = await Blog.find().populate('author');
   try {
     if (!Blogs) {
        const err = new Error("Blog not found");
@@ -15,7 +15,7 @@ const getBlogs = async (req, res,next) => {
 const getBlogById = async (req, res,next) => {
   const { blogId } = req.params;
   try {
-    const blog = await Blog.findById(blogId);
+    const blog = await Blog.findById(blogId).populate('author');
     if (!blog) {
       const err = new Error("Blog not found");
       err.status = 404;
@@ -29,11 +29,6 @@ const getBlogById = async (req, res,next) => {
 const createBlog = async (req, res,next) => {
   const blogCreated = req.body;
   try {
-    if (blogCreated.author) {
-      const err = new Error("Author is exist!");
-      err.status = 404;
-      throw err;
-    }
     const blog = await Blog.create(blogCreated);
     res.status(201).json({ blog });
   } catch (err) {

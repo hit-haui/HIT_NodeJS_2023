@@ -7,12 +7,12 @@ const handleNonExistBlog = () => {
 };
 
 const getBlogs = async (req, res, next) => {
-  const blogs = await Blog.find();
-
-  res.status(200).json({
-    blogs,
-  });
   try {
+    const blogs = await Blog.find().populate(["authors"]);
+
+    res.status(200).json({
+      blogs,
+    });
   } catch (error) {
     next(error);
   }
@@ -37,16 +37,15 @@ const createBlog = async (req, res, next) => {
   const blogData = req.body;
   const { title, content } = blogData;
 
-  if (!title || !content) {
-    const error = new Error("Invalid input data!");
-    error.status = 404;
-    throw error;
-  }
-
   try {
+    if (!title || !content) {
+      const error = new Error("Invalid input data!");
+      error.status = 404;
+      throw error;
+    }
     const blog = await Blog.create(blogData);
     res.status(201).json({
-      blogData,
+      blog,
     });
   } catch (error) {
     next(error);

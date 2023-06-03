@@ -7,12 +7,12 @@ const handleNonExistUser = () => {
 };
 
 const getUsers = async (req, res, next) => {
-  const users = await User.find();
-
-  res.status(200).json({
-    users,
-  });
   try {
+    const users = await User.find();
+
+    res.status(200).json({
+      users,
+    });
   } catch (error) {
     next(error);
   }
@@ -63,7 +63,7 @@ const updateUser = async (req, res, next) => {
     if (!updatedUser) return handleNonExistUser();
 
     res.status(200).json({
-      updatedBlog: updatedUser,
+      updatedUser,
     });
   } catch (error) {
     next(error);

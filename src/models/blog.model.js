@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+// const User = require("./user.model");
 
 const blogSchema = new Schema(
   {
@@ -15,10 +16,14 @@ const blogSchema = new Schema(
       type: String,
       default: "Other",
     },
-    author: {
-      type: String,
-      default: "Anonymous",
-    },
+    authors: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        default: "Anonymous",
+        required: true,
+      },
+    ],
     views: {
       type: Number,
       default: 0,

@@ -3,7 +3,7 @@ const Blog = require('../models/blog.model');
 
 const getBlogs = async (req, res, next) => {
     try {
-        const blogs = await Blog.find();
+        const blogs = await Blog.find().populate(['author']);
         res.status(200).json({
             blogs
         });
@@ -16,7 +16,7 @@ const getBlogs = async (req, res, next) => {
 const getBlog = async (req, res, next) => {
     const { blogId } = req.params;
     try {
-        const blog = await Blog.findById(blogId);
+        const blog = await Blog.findById(blogId).populate(['author']);
         if (!blog) {
             const err = new Error('Blog not found!');
             err.status = 404;

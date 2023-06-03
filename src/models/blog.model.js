@@ -12,8 +12,9 @@ const blogSchema = new Schema(
             required: true
         },
         author: {
-            type: String,
-            default: 'Guest'
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
         },
         reactions: {
             type: Number,

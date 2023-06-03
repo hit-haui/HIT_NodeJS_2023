@@ -3,12 +3,14 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const errorMiddleware = require("./src/middleware/error.middleware");
 const blogRoute = require("./src/router/blogs.route");
+const userRoute = require("./src/router/user.route");
 const app = express();
 
 dotenv.config();
 
 app.use(express.json());
 app.use(blogRoute);
+app.use(userRoute);
 
 const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/KIEM_TRA";
 mongoose

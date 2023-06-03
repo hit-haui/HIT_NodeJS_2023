@@ -8,16 +8,17 @@ const userSchema = new Schema(
       type: String,
       default: "https://static.dhcnhn.vn/student",
     },
-    fullName: {
+    name: {
       type: String,
       default: null,
     },
-    dateOfBirth: {
-      type: Date,
+    birth: {
+      type: String,
       default: "01-01-1900",
     },
     role: {
       type: String,
+      default: "author",
     },
   },
   {

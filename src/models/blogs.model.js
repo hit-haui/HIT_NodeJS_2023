@@ -10,6 +10,7 @@ const blogSchema = new Schema(
     content: {
       type: String,
     },
+    author: { type: Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,

@@ -11,6 +11,8 @@ const blogSchema = new Schema({
   content: {
     type: String,
   },
+
+  author: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 const Blog = mongoose.model("Blog", blogSchema);

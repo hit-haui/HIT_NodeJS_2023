@@ -5,6 +5,8 @@ const router = require("./routers");
 
 const app = express();
 
+app.use("/uploads", express.static("uploads"));
+
 app.use(express.json());
 app.use(router);
 

@@ -7,6 +7,10 @@ const blogSchema = new Schema(
     name: {
       type: String,
     },
+    image: {
+      type: String,
+      default: "https://static.dhcnhn.vn/student",
+    },
     content: {
       type: String,
     },

@@ -1,21 +1,21 @@
 const Blog = require("../model/blog.model");
-const getBlogs = async (req, res,next) => {
-  const Blogs = await Blog.find().populate('author');
+const getBlogs = async (req, res, next) => {
+  const Blogs = await Blog.find().populate("author");
   try {
     if (!Blogs) {
-       const err = new Error("Blog not found");
-       err.status = 404;
-       throw err;
+      const err = new Error("Blog not found");
+      err.status = 404;
+      throw err;
     }
     res.status(200).json({ Blogs });
   } catch (err) {
     next(err);
   }
 };
-const getBlogById = async (req, res,next) => {
+const getBlogById = async (req, res, next) => {
   const { blogId } = req.params;
   try {
-    const blog = await Blog.findById(blogId).populate('author');
+    const blog = await Blog.findById(blogId).populate("author");
     if (!blog) {
       const err = new Error("Blog not found");
       err.status = 404;
@@ -26,16 +26,35 @@ const getBlogById = async (req, res,next) => {
     next(err);
   }
 };
-const createBlog = async (req, res,next) => {
-  const blogCreated = req.body;
+const createBlog = async (req, res, next) => {
+  // const blogCreated = req.body;
+  // try {
+  //   const blog = await Blog.create(blogCreated);
+  //   res.status(201).json({ blog });
+  // } catch (err) {
+  //   next(err);
+  // }
   try {
-    const blog = await Blog.create(blogCreated);
-    res.status(201).json({ blog });
+    const avatar = req.file.path;
+    const { content, author, title } = req.body;
+    const checkBlog = await Blog.findOne({ author });
+    // if (checkBlog) {
+    //   const err = new Error("Blog is exist");
+    //   err.status = 400;
+    //   throw err;
+    // }
+    const newBlog = await Blog.create({
+      content,
+      author,
+      title,
+      avatar,
+    });
+    res.status(201).json(newBlog);
   } catch (err) {
     next(err);
   }
 };
-const updateBlogById = async (req, res,next) => {
+const updateBlogById = async (req, res, next) => {
   const { blogId } = req.params;
   try {
     const updateBlog = req.body;
@@ -57,7 +76,7 @@ const updateBlogById = async (req, res,next) => {
     next(err);
   }
 };
-const deleteBlogById = async (req, res,next) => {
+const deleteBlogById = async (req, res, next) => {
   const { blogId } = req.params;
   if (!blogId) {
     const err = new Error("BogId not found!");

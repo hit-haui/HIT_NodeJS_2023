@@ -29,7 +29,7 @@ const getUserById = async (req, res, next) => {
 const createUser = async (req, res, next) => {
   const userCreated = req.body;
   try {
-    if (userCreated.role!='admin') {
+    if (userCreated.role != "admin") {
       const err = new Error("ko co quyen tao user");
       err.status = 404;
       throw err;

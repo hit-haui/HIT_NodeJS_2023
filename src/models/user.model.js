@@ -18,10 +18,10 @@ const userSchema = new Schema(
         },
         password: {
             type: String,
-            required: true
+            required: [true, "Password required"]
         },
         userCode: {
-            type: Number,
+            type: String,
             required: true,
         },
         role: {

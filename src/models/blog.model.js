@@ -13,12 +13,19 @@ const blogSchema = new Schema(
     },
 
     author: {
-      type: { type: Schema.Types.ObjectId, ref: "User" },
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    image: {
+      type: String,
     },
     comments: [{ type: String }],
   },
   {
-    timestamps: true,
+    timestamps: {
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+    },
   }
 );
 

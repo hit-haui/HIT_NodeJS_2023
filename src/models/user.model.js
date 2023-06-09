@@ -11,12 +11,9 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    image: {
-      type: String,
-      default: "https://static.dhcnhn.vn/student",
-    },
     role: {
       type: String,
+      enum: ["admin", "user"],
     },
   },
   {

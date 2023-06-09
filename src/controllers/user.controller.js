@@ -29,14 +29,14 @@ const getUserById = async (req, res, next) => {
 const createUser = async (req, res, next) => {
     const newUser = req.body;
     try {
-        const checkUser = await User.findOne({ userCode: newUser.userCode });
-        if (checkUser) {
-            const err = new Error('User already exists!');
+        if (!newUser.userCode) {
+            const err = new Error('User code is required!');
             err.status = 400;
             throw err;
         }
-        if (!newUser.userCode) {
-            const err = new Error('User code is required!');
+        const checkUser = await User.findOne({ userCode: newUser.userCode });
+        if (checkUser) {
+            const err = new Error('User already exists!');
             err.status = 400;
             throw err;
         }

@@ -5,11 +5,11 @@ const blogSchema = new Schema(
     {
         title: {
             type: String,
-            default: null
+            required: true
         },
         content: {
             type: String,
-            default: null
+            required: true
         },
         author: {
             type: Schema.Types.ObjectId, ref: 'User',

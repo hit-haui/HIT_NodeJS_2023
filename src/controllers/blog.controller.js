@@ -1,9 +1,11 @@
 const Blog = require('../models/blog.model');
-const multer = require('multer');
 
 const getBlogs = async (req, res, next) => {
     try {
-        const blogs = await Blog.find().populate('author');
+        const blogs = await Blog.find().populate({
+			path: 'author',
+			select: '-createdAt -updatedAt -__v',
+		});
         res.status(200).json({ blogs });
     }
     catch (err) {
@@ -14,7 +16,10 @@ const getBlogs = async (req, res, next) => {
 const getBlog = async (req, res, next) => {
     const { blogId } = req.params;
     try {
-        const blog = await Blog.findById(blogId).populate('author');
+        const blog = await Blog.findById(blogId).populate({
+			path: 'author',
+			select: '-createdAt -updatedAt -__v',
+		});
         if (!blog) {
             const err = new Error('Blog not found!');
             err.status = 404;
@@ -28,57 +33,40 @@ const getBlog = async (req, res, next) => {
 };
 
 const createBlog = async (req, res, next) => {
-    const storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, 'uploads/');
-        },
-        filename: (req, file, cb) => {
-            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-            cb(null, file.fieldname + '-' + uniqueSuffix + '.jpg');
-        }
-    });
-    const upload = multer({ storage });
     const newBlog = req.body;
     try {
-        console.log("blog: ", req);
+        const { title, content } = newBlog;
+        if (!title || !content) {
+            const err = new Error('Title or content is required!');
+			err.status = 400;
+			throw err;
+        }
         if (!newBlog.author) {
             const err = new Error('Author is required!');
             err.status = 400;
             throw err;
         }
-        upload.single('image')(req, res, (err) => {
-            if (err) {
-                err.status = 400;
-                throw err;
-            }
-            newBlog.image = req.file.filename;
-            const blog = Blog.create(newBlog);
-            res.status(201).json({ blog });
-        });
-    } catch (err) {
-        next(err);
+        const blog = await Blog.create(newBlog);
+        if (!blog.image) blog.image = req.file.filename;
+        res.status(201).json({ blog });
     }
-    // const newBlog = req.body;
-    // try {
-    //     if (!newBlog.author) {
-    //         const err = new Error('Author is require!');
-    //         err.status = 400;
-    //         throw err;
-    //     }
-    //     const blog = await Blog.create(newBlog);
-    //     res.status(201).json({ blog });
-    // }
-    // catch (err) {
-    //     next(err);
-    // };
+    catch (err) {
+        next(err);
+    };
 };
 
 const updateBlogById = async (req, res, next) => {
     const { blogId } = req.params;
     const newBlog = req.body;
     try {
+        const { title, content } = newBlog;
+		if (!title || !content) {
+			const err = new Error('Title or content is required!');
+			err.status = 400;
+			throw err;
+		}
         if (!newBlog.author) {
-            const err = new Error('Author is require!');
+            const err = new Error('Author is required!');
             err.status = 400;
             throw err;
         }

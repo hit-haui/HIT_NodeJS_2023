@@ -1,44 +1,44 @@
 const Blog = require("../models/blog.model");
 
-const getBlogs = async (req, res) => {
+const getBlogs = async (req, res, next) => {
     try {
         const blogs = await Blog.find();
         res.status(200).json({
             blogs
         });
     } catch (error) {
-        json.status(500).json({
-            message: error.message
-        });
+        next(error);
     }
 }
 
-const getBlog = async (req, res) => {
+const getBlog = async (req, res, next) => {
     const { blogId } = req.params;
 
     try {
         const blog = await Blog.findById(blogId);
 
         if (!blog) {
-            throw Error('Blog not found!');
+            const err = new Error('Blog not found!');
+            err.status = 404;
+            throw err;
         }
         res.status(200).json({
             blog
         });
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        next(error);
     }
 }
 
-const createBlog = async (req, res) => {
+const createBlog = async (req, res, next) => {
     const rawBlog = req.body;
     const { title, content } = rawBlog;
 
     try {
         if (!title || !content) {
-            throw Error('Title or content is required!');
+            const err = new Error('Title or content is required!');
+            err.status = 400;
+            throw err;
         }
 
         const newBlog = await Blog.create(rawBlog);
@@ -47,13 +47,11 @@ const createBlog = async (req, res) => {
             newBlog
         });
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        next(error);
     }
 }
 
-const updateBlog = async (req, res) => {
+const updateBlog = async (req, res, next) => {
     const { blogId } = req.params;
     const rawBlog = req.body;
 
@@ -61,34 +59,34 @@ const updateBlog = async (req, res) => {
         const updatedBlog = await Blog.findByIdAndUpdate(blogId, rawBlog, { new: true });
 
         if (!updatedBlog) {
-            throw Error('Blog not found!');
+            const err = new Error('Blog not found!');
+            err.status = 404;
+            throw err;
         }
 
         res.status(200).json({
             updatedBlog
         });
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        next(error);
     }
 }
 
-const deleteBlog = async (req, res) => {
+const deleteBlog = async (req, res, next) => {
     const { blogId } = req.params;
 
     try {
         const deletedBlog = await Blog.findByIdAndDelete(blogId);
 
         if (!deletedBlog) {
-            throw Error('Blog not found!');
+            const err = new Error('Blog not found!');
+            err.status = 404;
+            throw err;
         }
 
         res.status(204).json();
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        next(error);
     }
 }
 

@@ -5,12 +5,10 @@ const blogSchema = new Schema({
     type: String,
     required: true,
   },
-  image: {
-    type: String,
-  },
   content: {
     type: String,
   },
+  author: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 const Blog = mongoose.model("Blog", blogSchema);
 module.exports = Blog;

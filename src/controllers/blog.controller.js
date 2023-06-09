@@ -41,6 +41,8 @@ const createBlog = async (req, res, next) => {
             throw err;
         }
 
+        rawBlog.image = req.file.filename;
+
         const newBlog = await Blog.create(rawBlog);
 
         res.status(201).json({

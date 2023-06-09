@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const blogSchema = new Schema(
     {
+        image: {
+            type: String,
+            default: 'image-blog-default.jpg',
+        },
         title: {
             type: String,
             required: true

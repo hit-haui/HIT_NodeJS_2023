@@ -30,8 +30,9 @@ const createBlog = asyncHandler(async (req, res, next) => {
     if (!title || !content) {
         throw new AppError('Title or content is required!', 400);
     }
-    // mới cho upload 1 ảnh, nhiều ảnh lỗi
-    rawBlog.images = req.file.filename;
+    const imageFiles = req.files;
+    const images = imageFiles.map(file => file.filename);
+    rawBlog.images = images;
     const newBlog = await Blog.create(rawBlog);
     res.status(201).json({
         newBlog

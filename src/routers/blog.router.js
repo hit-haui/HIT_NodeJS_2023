@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
     },
 });
 
-const upload = multer({ storage: storage }).single('image');
+const upload = multer({ storage: storage }).array('images', 10);
 
 const blogRouter = express.Router();
 

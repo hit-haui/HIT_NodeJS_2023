@@ -17,8 +17,9 @@ const blogSchema = new Schema(
             default: 'Other'
         },
         author: {
-            type: String,
-            default: 'Anonymous'
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
         },
         views: {
             type: Number,

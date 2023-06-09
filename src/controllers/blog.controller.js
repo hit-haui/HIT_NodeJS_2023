@@ -30,7 +30,6 @@ const getBlog = async (req, res, next) => {
 const creatBlog = async (req, res, next) => {
   const newBlog = req.body;
   try {
-    console.log(req.body);
     if (!newBlog.title) {
       const err = new Error("Information is not enough");
       err.status = 400;

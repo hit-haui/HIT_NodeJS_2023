@@ -8,6 +8,8 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+app.use("/uploads", express.static("uploads"));
+
 const port = process.env.PORT || 5000;
 
 const MONGODB_URI =

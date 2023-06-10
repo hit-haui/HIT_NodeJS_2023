@@ -30,12 +30,14 @@ const getBlog = async (req, res, next) => {
 
 const creatBlog = async (req, res, next) => {
   const newBlog = req.body;
+  newBlog.image = req.file;
   try {
-    if (!newBlog.title) {
+    if (!newBlog.title || !newBlog.image) {
       const err = new Error("Information is not enough");
       err.status = 400;
       throw err;
     }
+
     const creatBlog = await Blog.create(newBlog);
     res.status(200).json({
       creatBlog,

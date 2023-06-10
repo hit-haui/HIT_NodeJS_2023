@@ -1,5 +1,5 @@
 const express = require("express");
-
+const blogRouter = express.Router();
 const {
   getBlogs,
   getBlog,
@@ -7,9 +7,10 @@ const {
   updateBlog,
   deleteBlog,
 } = require("../controllers/blog.controller");
-const blogRouter = express.Router();
 
-blogRouter.route("/").get(getBlogs).post(creatBlog);
+const upload = require("../upload");
+
+blogRouter.route("/").get(getBlogs).post(upload, creatBlog);
 blogRouter.route("/:blogId").get(getBlog).put(updateBlog).delete(deleteBlog);
 
 module.exports = blogRouter;

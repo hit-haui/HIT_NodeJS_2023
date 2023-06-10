@@ -100,8 +100,3 @@ module.exports = {
   updateBlog,
   deleteBlog,
 };
-
-// const extractTokenFromHeader = (request) => {
-//   const [type, token] = request.headers.authorization?.split(" ") ?? [];
-//   return type === "Bearer" ? token : undefined;
-// };

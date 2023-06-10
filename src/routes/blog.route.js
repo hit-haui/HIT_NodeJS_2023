@@ -9,6 +9,8 @@ const {
     deleteBlogById
 } = require("../controllers/blog.controller");
 
+const authMiddleware = require("../middlewares/authMiddleware.js");
+
 const dest = 'uploads/';
 
 const storage = multer.diskStorage({
@@ -25,13 +27,15 @@ const upload = multer({ storage });
 
 const blogRouter = express.Router();
 
-blogRouter.route("/")
-    .get(getBlogs)
-    .post(upload.single("image"), createBlog);
+blogRouter
+	.route('/')
+	.get(getBlogs)
+	.post(authMiddleware, upload.single('image'), createBlog);
 
-blogRouter.route("/:blogId")
-    .get(getBlog)
-    .put(updateBlogById)
-    .delete(deleteBlogById);
+blogRouter
+	.route('/:blogId')
+	.get(getBlog)
+	.put(authMiddleware, updateBlogById)
+	.delete(authMiddleware, deleteBlogById);
 
 module.exports = blogRouter;

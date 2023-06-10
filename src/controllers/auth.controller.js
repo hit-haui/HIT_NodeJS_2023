@@ -1,9 +1,10 @@
-const User = require("../models/blog.model");
+const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Register = async (req, res, next) => {
   try {
     const { userCode, password, name } = req.body;
+    console.log(req.body);
     if (!userCode || !password) {
       const err = new Error("userCode or password is not required");
       err.status = 400;
@@ -27,13 +28,13 @@ const Login = async (req, res, next) => {
   try {
     const { userCode, password } = req.body;
     const user = await User.findOne({ userCode });
-    if (user) {
+    if (!user) {
       const err = new Error("User is not found ");
       err.status = 404;
       throw err;
     }
-    const isPassword = bcrypt.compare(user, user.password);
-    if (isPassword) {
+    const isPassword = await bcrypt.compare(password, user.password);
+    if (!isPassword) {
       const err = new Error("Password is not true");
       err.status = 400;
       throw err;

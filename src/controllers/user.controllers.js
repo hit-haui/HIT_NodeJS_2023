@@ -48,7 +48,7 @@ const updateUserById = async (req, res) => {
   const { userId } = req.params;
   const newUser = req.body;
   try {
-    const updatedUser = await Blog.findByIdAndUpdate(userId, newUser);
+    const updatedUser = await User.findByIdAndUpdate(userId, newUser);
     if (!updatedUser) {
       const err = new Error(" user not found!");
       err.status = 404;
@@ -65,7 +65,7 @@ const updateUserById = async (req, res) => {
 const deleteUserById = async (req, res, next) => {
   const { userId } = req.params;
   try {
-    const deletedUser = await Blog.findByIdAndDelete(userId);
+    const deletedUser = await User.findByIdAndDelete(userId);
     if (!deletedUser) {
       const err = new Error("User not found");
       err.status = 400;

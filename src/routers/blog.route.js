@@ -18,7 +18,6 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage}).single('image');
 const blogRouter = express.Router();
-
 blogRouter.route("/").get(getBlogs).post(upload, createBlog);
 
 blogRouter.route("/:blogId").get(getBlog).put(updateBlog).delete(deleteBlog);

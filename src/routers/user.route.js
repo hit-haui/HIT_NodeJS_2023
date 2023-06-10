@@ -8,13 +8,13 @@ const {
   deleteUserById,
 } = require("../controllers/User.controllers");
 const userRouter = express.Router();
-
-userRouter.route("/").get(getUsers).post(createUser);
+const authMiddleware = require('../middleware/Auth.middleware')
+userRouter.route("/").get(getUsers).post(authMiddleware,createUser);
 
 userRouter
   .route("/:userId")
   .get(getUserById)
-  .put(updateUserById)
-  .delete(deleteUserById);
+  .put(authMiddleware,updateUserById)
+  .delete(authMiddleware,deleteUserById);
 
 module.exports = userRouter;

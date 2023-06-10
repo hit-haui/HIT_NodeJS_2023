@@ -1,4 +1,6 @@
 const User = require("../models/blog.model");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const Register = async (req, res, next) => {
   try {
     const { userCode, password, name } = req.body;
@@ -21,7 +23,36 @@ const Register = async (req, res, next) => {
     next(err);
   }
 };
-
+const Login = async (req, res, next) => {
+  try {
+    const { userCode, password } = req.body;
+    const user = await User.findOne({ userCode });
+    if (user) {
+      const err = new Error("User is not found ");
+      err.status = 404;
+      throw err;
+    }
+    const isPassword = bcrypt.compare(user, user.password);
+    if (isPassword) {
+      const err = new Error("Password is not true");
+      err.status = 400;
+      throw err;
+    }
+    const token = jwt.sign(
+      {
+        userId: user._id,
+      },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
+    res.status(200).json({ token });
+  } catch (err) {
+    next(err);
+  }
+};
 module.exports = {
   Register,
+  Login,
 };

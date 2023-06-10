@@ -1,52 +1,52 @@
 const User = require("../model/user.model");
 const getUsers = async (req, res, next) => {
-  const Users = await User.find();
+  const users = await User.find();
   try {
-    if (!Users) {
+    if (!users) {
       const err = new Error("Users not found");
       err.status = 404;
       throw err;
     }
-    res.status(200).json({ Users });
+   res.status(200).json 
+    ({ users });
   } catch (err) {
     next(err);
   }
 };
 const getUserById = async (req, res, next) => {
-  const { UserId } = req.params;
+  const { userId } = req.params;
   try {
-    const User = await User.findById(UserId);
-    if (!User) {
+    const user = await User.findById(userId);
+    if (!user) {
       const err = new Error("User not found");
       err.status = 404;
       throw err;
     }
-    res.status(200).json({ User });
+    res.status(200).json({ user });
   } catch (err) {
     next(err);
   }
 };
 const createUser = async (req, res, next) => {
-  const userCreated = req.body;
+  const newUser = req.body;
   try {
-    if (userCreated.role != "admin") {
+    if (newUser.role !== "admin") {
       const err = new Error("ko co quyen tao user");
       err.status = 404;
       throw err;
     }
-    const newUser = await User.create(userCreated);
-    res.status(201).json({ newUser });
+    const userCreated = await User.create(newUser);
+    res.status(201).json({ userCreated });
   } catch (err) {
     next(err);
   }
 };
 const updateUserById = async (req, res, next) => {
   const { userId } = req.params;
-  console.log(userId);
   try {
     const updateUser = req.body;
     if (!userId) {
-      const err = new Error("useId is not exist!");
+      const err = new Error("useId is missing!");
       err.status = 404;
       throw err;
     }

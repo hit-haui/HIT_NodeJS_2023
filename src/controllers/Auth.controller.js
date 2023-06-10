@@ -9,7 +9,7 @@ const register = async (req, res, next) => {
       err.status = 400;
       throw err;
     }
-    const existingUser = await User.findOne({userCode});
+    const existingUser = await User.findOne({ userCode });
     if (existingUser) {
       const err = new Error("User is exist");
       err.status = 400;
@@ -21,7 +21,31 @@ const register = async (req, res, next) => {
     next(error);
   }
 };
-
+const login = async (req, res, next) => {
+  const { password, userCode } = req.body;
+  try {
+    if (!password) {
+      const err = new Error("Password is require");
+      err.status = 400;
+      throw err;
+    }
+    const existingUser = await User.findOne({ userCode });
+    if (!existingUser) {
+      const err = new Error("User is not exist");
+      err.status = 400;
+      throw err;
+    }
+    const token = await jwt.sign(
+      { userId: existingUser._id },
+      process.env.SECRET_KEY,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+    res.status(201).json(token);
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   register,
+  login,
 };

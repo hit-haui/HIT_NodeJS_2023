@@ -20,6 +20,10 @@ const userSchema = new Schema({
     enum: ["user", "admin"],
     default: "user",
   },
+  userCode: {
+    type: String,
+    required: true,
+  },
 });
 userSchema.pre("save", async function (next) {
   try {

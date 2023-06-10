@@ -10,10 +10,6 @@ const blogSchema = new Schema({
   },
   author: [{ type: Schema.Types.ObjectId, ref: "User" }],
   image: [{ type: String }],
-  userCode: {
-    type: String,
-    required: true,
-  },
 });
 const Blog = mongoose.model("Blog", blogSchema);
 module.exports = Blog;

@@ -1,16 +1,17 @@
 const User = require("../model/user.model");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const Register = async (req, res, next) => {
   try {
-    const { fullName, studentCode,role } = req.body;
-    let{password}= req.body;
-    const checkUser = await User.findOne({ studentCode,password });
+    const { fullName, studentCode, role } = req.body;
+    let { password } = req.body;
+    const checkUser = await User.findOne({ studentCode, password });
     if (checkUser) {
       const err = new Error("User is exist");
-      err.status = 400
+      err.status = 400;
       throw err;
     }
-    password =await bcrypt.hash(password, 7);
+    password = await bcrypt.hash(password, 7);
     const newUser = await User.create({
       fullName,
       studentCode,
@@ -22,4 +23,36 @@ const Register = async (req, res, next) => {
     next(err);
   }
 };
-module.exports = {Register};
+const Login = async (req, res, next) => {
+  try {
+    const { studentCode, password } = req.body;
+    const user = await User.findOne({ studentCode });
+    if (!user) {
+      const err = new Error("User not found");
+      err.status = 404;
+      throw err;
+    }
+    const isPassword = await bcrypt.compare(password, user.password);
+    if (!isPassword) {
+      const err = new Error("Student code or password is incorrect");
+      err.status = 404;
+      throw err;
+    }
+    console.log(process.env.JWT_SECRET_KEY);
+    const token = await jwt.sign(
+      {
+        userId: user._id,
+      },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
+    res.json({
+      token: token,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+module.exports = { Register, Login };

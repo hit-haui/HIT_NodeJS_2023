@@ -50,7 +50,7 @@ const createBlog = async (req, res, next) => {
       throw error;
     }
 
-    blogData.image = req.file.filename;
+    // blogData.image = req.file.filename;
     const blog = await Blog.create(blogData);
     res.status(201).json({
       blog,
@@ -100,3 +100,8 @@ module.exports = {
   updateBlog,
   deleteBlog,
 };
+
+// const extractTokenFromHeader = (request) => {
+//   const [type, token] = request.headers.authorization?.split(" ") ?? [];
+//   return type === "Bearer" ? token : undefined;
+// };

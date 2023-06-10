@@ -29,12 +29,12 @@ const getUserById = async (req, res, next) => {
 const createUser = async (req, res, next) => {
     const newUser = req.body;
     try {
-        if (!newUser.userCode) {
-            const err = new Error('User code is required!');
+        if (!newUser.userName) {
+            const err = new Error('User name is required!');
             err.status = 400;
             throw err;
         }
-        const checkUser = await User.findOne({ userCode: newUser.userCode });
+        const checkUser = await User.findOne({ userName: newUser.userName });
         if (checkUser) {
             const err = new Error('User already exists!');
             err.status = 400;
@@ -52,8 +52,8 @@ const updateUserById = async (req, res, next) => {
     const { userId } = req.params;
     const newUser = req.body;
     try {
-        if (!newUser.userCode) {
-            const err = new Error('User code is required!');
+        if (!newUser.userName) {
+            const err = new Error('User name is required!');
             err.status = 400;
             throw err;
         }

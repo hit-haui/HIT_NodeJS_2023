@@ -1,6 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 
+const authMiddleware = require('../middlewares/auth.middleware');
+
 const { 
     getBlogs, 
     createBlog, 
@@ -25,11 +27,11 @@ const blogRouter = express.Router();
 
 blogRouter.route('/')
     .get(getBlogs)
-    .post(upload, createBlog)
+    .post(authMiddleware, upload, createBlog)
 
 blogRouter.route('/:blogId')
     .get(getBlog)
-    .put(updateBlog)
-    .delete(deleteBlog)
+    .put(authMiddleware, updateBlog)
+    .delete(authMiddleware, deleteBlog)
 
 module.exports = blogRouter;

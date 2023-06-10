@@ -15,12 +15,6 @@ const userSchema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
-    password: {
-      type: String,
-      default: function () {
-        return this.studentCode + "@17";
-      },
-    },
   },
   {
     timestamps: true,

@@ -8,7 +8,7 @@ const {
   updateUserById,
   deleteUserById,
 } = require("../controller/user.controller");
-userRouter.route("/").get(authMiddleware,getUsers).post(createUser);
+userRouter.route("/").get(authMiddleware,getUsers).post(authMiddleware,createUser);
 
 userRouter
   .route("/:userId")

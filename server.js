@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(blogRoute);
 app.use(userRoute);
 
+
 const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/KIEM_TRA";
 mongoose
   .connect(mongoURI)

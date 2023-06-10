@@ -27,6 +27,9 @@ const getBlog = async (req, res, next) => {
 const createBlog = async (req, res, next) => {
   try {
     const newBlog = req.body;
+    if (!newBlog.image) {
+      newBlog.image = req.file.filename;
+    }
     const blog = await Blog.create(newBlog);
     res.status(201).json({
       blog,

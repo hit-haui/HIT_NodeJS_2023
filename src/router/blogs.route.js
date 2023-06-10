@@ -1,5 +1,7 @@
 const express = require("express");
 
+const multer = require("multer");
+
 const {
   getBlogs,
   getBlog,
@@ -8,9 +10,20 @@ const {
   deleteBlog,
 } = require("../controller/blog.controller");
 
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, "uploads");
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + "-" + Date.now() + ".jpg");
+  },
+});
+
+const upload = multer({ storage: storage }).single("image");
+
 const blogRoute = express.Router();
 
-blogRoute.route("/blogs").get(getBlogs).post(createBlog);
+blogRoute.route("/blogs").get(getBlogs).post(upload, createBlog);
 
 blogRoute
   .route("/blogs/:blogId")

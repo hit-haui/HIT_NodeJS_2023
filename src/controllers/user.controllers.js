@@ -6,8 +6,8 @@ const getUsers = async (req, res, next) => {
     res.status(200).json({
       Users,
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -22,8 +22,8 @@ const getUserById = async (req, res, next) => {
     }
 
     res.status(200).json({ user });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
 const createUser = async (req, res, next) => {
@@ -40,7 +40,7 @@ const createUser = async (req, res, next) => {
       newUser,
     });
   } catch (error) {
-    next(err);
+    next(error);
   }
 };
 
@@ -58,7 +58,7 @@ const updateUserById = async (req, res) => {
       updatedUser,
     });
   } catch (error) {
-    next(err);
+    next(error);
   }
 };
 
@@ -73,7 +73,7 @@ const deleteUserById = async (req, res, next) => {
     }
     res.status(204);
   } catch (error) {
-    next(err);
+    next(error);
   }
 };
 

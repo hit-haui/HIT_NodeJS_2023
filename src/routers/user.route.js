@@ -7,7 +7,6 @@ const {
   updateUserById,
   deleteUserById,
 } = require("../controllers/User.controllers");
-
 const userRouter = express.Router();
 
 userRouter.route("/").get(getUsers).post(createUser);

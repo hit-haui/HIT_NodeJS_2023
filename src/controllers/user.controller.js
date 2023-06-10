@@ -38,11 +38,11 @@ const createUser = async (req, res, next) => {
   const { role, password } = userData;
 
   try {
-    if (!role || !password) {
-      const err = new Error("Invalid input data!");
-      err.status = 404;
-      throw err;
-    }
+      if (!role || !password) {
+        const err = new Error("Invalid input data!");
+        err.status = 404;
+        throw err;
+      }
     const user = await User.create(userData);
     res.status(201).json({
       user,

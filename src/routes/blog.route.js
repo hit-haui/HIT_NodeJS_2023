@@ -9,8 +9,10 @@ const {
   deleteBlog,
 } = require("../controllers/blog.controller");
 
-blogRouter.route("/").get(getBlogs).post(createBlog);
+const upload = require("../middlewares/upload.middleware");
 
-blogRouter.route("/blogId").get(getBlog).put(updateBlog).delete(deleteBlog);
+blogRouter.route("/").get(getBlogs).post(upload.single("image"), createBlog);
+
+blogRouter.route("/:blogId").get(getBlog).put(updateBlog).delete(deleteBlog);
 
 module.exports = blogRouter;

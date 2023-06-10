@@ -16,7 +16,10 @@ const blogSchema = new Schema(
       type: String,
       default: "Other",
     },
-    image: String,
+    image: {
+      type: String,
+      default: "https://static.dhcnhn.vn/student",
+    },
     authors: [
       {
         type: Schema.Types.ObjectId,

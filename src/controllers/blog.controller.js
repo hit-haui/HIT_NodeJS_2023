@@ -8,7 +8,10 @@ const handleNonExistBlog = () => {
 
 const getBlogs = async (req, res, next) => {
   try {
-    const blogs = await Blog.find().populate(["authors"]);
+    const blogs = await Blog.find().populate({
+      path: "authors",
+      select: "-password -createdAt -updatedAt -_id",
+    });
 
     res.status(200).json({
       blogs,
@@ -21,7 +24,10 @@ const getBlogs = async (req, res, next) => {
 const getBlog = async (req, res, next) => {
   const { blogId } = req.params;
   try {
-    const blog = await Blog.findById(blogId);
+    const blog = await Blog.findById(blogId).populate({
+      path: "authors",
+      select: "-password -createdAt -updatedAt -_id",
+    });
 
     if (!blog) return handleNonExistBlog();
 
@@ -43,6 +49,8 @@ const createBlog = async (req, res, next) => {
       error.status = 404;
       throw error;
     }
+
+    blogData.image = req.file.filename;
     const blog = await Blog.create(blogData);
     res.status(201).json({
       blog,

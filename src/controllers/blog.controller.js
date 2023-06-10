@@ -2,7 +2,7 @@ const Blog = require("../models/blog.model");
 
 const getBlogs = async (req, res, next) => {
   try {
-    const blogs = await Blog.find().populate([author]);
+    const blogs = await Blog.find();
     res.status(200).json({
       blogs,
     });
@@ -14,7 +14,10 @@ const getBlogs = async (req, res, next) => {
 const getBlog = async (req, res, next) => {
   const { blogId } = req.params;
   try {
-    const blog = await Blog.findById(blogId);
+    const blog = await Blog.findById(blogId).populate({
+      path: "author",
+      select: "name",
+    });
     if (!blog) {
       const err = new Error("Blog not found!");
       err.status = 401;
@@ -30,13 +33,17 @@ const getBlog = async (req, res, next) => {
 
 const createBlog = async (req, res, next) => {
   const newBlog = req.body;
+
   try {
     if (!newBlog.title) {
       const err = new Error("title is required");
       err.status = 400;
       throw err;
     }
+
+    newBlog.image = req.file.filename;
     const blog = await Blog.create(newBlog);
+
     res.status(201).json({
       blog,
     });

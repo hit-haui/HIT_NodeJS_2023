@@ -27,6 +27,7 @@ const getBlog = asyncHandler(async (req, res, next) => {
 const createBlog = asyncHandler(async (req, res, next) => {
     const rawBlog = req.body;
     const { title, content } = rawBlog;
+    const author = req.user.id;
     if (!title || !content) {
         throw new AppError('Title or content is required!', 400);
     }

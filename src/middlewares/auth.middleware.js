@@ -27,7 +27,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
     // check role
     if (user.role !== 'admin') return unauthorized();
-
+    req.user = user;
     next();
 });
 

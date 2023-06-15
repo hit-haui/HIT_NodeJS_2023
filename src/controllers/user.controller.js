@@ -23,12 +23,12 @@ const getUserById = asyncHandler(async (req, res, next) => {
 
 const createUser = asyncHandler(async (req, res, next) => {
     const newUser = req.body;
-    if (!newUser.userCode) {
-        throw new AppError('User code is required!', 400);
+    if (!newUser.userName) {
+        throw new AppError('Username is required!', 400);
     }
-    const checkUser = await User.findOne({ userCode: newUser.userCode });
-    if (checkUser) {
-        throw new AppError('User code is exit!', 400);
+    const existingUser = await User.findOne({ userName: newUser.userName });
+    if (existingUser) {
+        throw new AppError('Username is exit!', 400);
     }
     const user = await User.create(newUser);
     res.status(201).json({

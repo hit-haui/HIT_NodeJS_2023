@@ -7,15 +7,15 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('../middlewares/asyncHandler');
 
 const register = asyncHandler(async (req, res, next) => {
-    const { fullName, userCode, password } = req.body;
-    if (!userCode || !password) {
-        throw new AppError('Usercode or password is required!', 400);
+    const { fullName, userName, password } = req.body;
+    if (!userName || !password) {
+        throw new AppError('Username or password is required!', 400);
     }
-    const existingUser = await User.findOne({ userCode });
+    const existingUser = await User.findOne({ userName });
     if (existingUser) {
-        throw new Error('Usercode is exit!', 400);
+        throw new Error('Username is exit!', 400);
     }
-    const user = await User.create({ fullName, userCode, password });
+    const user = await User.create({ fullName, userName, password });
     res.status(201).json({
         user
     });
@@ -23,14 +23,14 @@ const register = asyncHandler(async (req, res, next) => {
 
 
 const login = asyncHandler(async (req, res, next) => {
-    const { userCode, password } = req.body;
-    const user = await User.findOne({ userCode });
+    const { userName, password } = req.body;
+    const user = await User.findOne({ userName });
     if (!user) {
-        throw new AppError('Usercode or password is incorrect!', 401);
+        throw new AppError('Username or password is incorrect!', 401);
     }
     const isPassword = await bcrypt.compare(password, user.password);
     if (!isPassword) {
-        throw new AppError('Usercode or password is incorrect!', 401);
+        throw new AppError('Username or password is incorrect!', 401);
     }
     const accessToken = jwt.sign(
         { userId: user._id },

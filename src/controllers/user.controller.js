@@ -1,102 +1,79 @@
 const User = require("../models/user.model");
+const catchAsync = require("../utils/catchAsync");
+const ApiError = require("../utils/ApiError");
 
-const getUsers = async (req, res, next) => {
-    try {
-        const users = await User.find();
-        res.status(200).json({
-            users
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+const getUsers = catchAsync(async (req, res) => {
+  const users = await User.find();
+  res.status(200).json({
+    users,
+  });
+});
 
-const getUser = async (req, res, next) => {
-    const { userId } = req.params;
-    try {
-        const user = await User.findById(userId);
+const getUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
 
-        if (!user) {
-            const err = new Error('User not found!');
-            err.status = 404;
-            throw err;
-        }
+  if (!user) {
+    throw new ApiError("User not found", 404);
+  }
 
-        res.status(200).json({
-            user
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+  res.status(200).json({
+    user,
+  });
+});
 
-const createUser = async (req, res, next) => {
-    const newUser = req.body;
-    const { email, password } = newUser;
-    try {
-        if (!email || !password) {
-            const err = new Error('Email or password is required!');
-            err.status = 400;
-            throw err;
-        }
+const createUser = catchAsync(async (req, res) => {
+  const newUser = req.body;
+  const { email, password } = newUser;
 
-        const isUserExists = await User.exists({ email });
-        if (isUserExists) {
-            const err = new Error('User is exists!');
-            err.status = 400;
-            throw err
-        }
+  console.log(newUser);
 
-        const user = await User.create(newUser);
-        res.status(201).json({
-            user
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+  if (!email || !password) {
+    throw new ApiError("Email or password is required", 400);
+  }
 
-const updateUser = async (req, res, next) => {
-    const { userId } = req.params;
-    const userRaw = req.body;
-    try {
-        const updatedUser = await User.findByIdAndUpdate(userId, userRaw, { new: true });
+  const isUserExists = await User.exists({ email });
+  if (isUserExists) {
+    throw new ApiError("User is already exists", 400);
+  }
 
-        if (!updatedUser) {
-            const err = new Error('User not found!');
-            err.status = 404;
-            throw err;
-        }
+  const user = await User.create(newUser);
+  res.status(201).json({
+    user,
+  });
+});
 
-        res.status(200).json({
-            updatedUser
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+const updateUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const userRaw = req.body;
+  const updatedUser = await User.findByIdAndUpdate(userId, userRaw, {
+    new: true,
+  });
 
-const deleteUser = async (req, res, next) => {
-    const { userId } = req.params;
-    try {
-        const deletedUser = await User.findByIdAndDelete(userId);
+  if (!updatedUser) {
+    throw new ApiError("User not found", 404);
+  }
 
-        if (!deletedUser) {
-            const err = new Error('User not found!');
-            err.status = 404;
-            throw err;
-        }
+  res.status(200).json({
+    updatedUser,
+  });
+});
 
-        res.status(204).json();
-    } catch (error) {
-        next(error);
-    }
-};
+const deleteUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const deletedUser = await User.findByIdAndDelete(userId);
+
+  if (!deletedUser) {
+    throw new ApiError("User not found", 404);
+  }
+
+  res.status(204).json();
+});
 
 module.exports = {
-    getUsers,
-    getUser,
-    createUser,
-    updateUser,
-    deleteUser,
+  getUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser,
 };

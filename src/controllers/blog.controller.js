@@ -1,101 +1,78 @@
 const Blog = require("../models/blog.model");
+const ApiError = require("../utils/ApiError");
+const catchAsync = require("../utils/catchAsync");
 
-const getBlogs = async (req, res, next) => {
-    try {
-        const blogs = await Blog.find().populate('author');
-        res.status(200).json({
-            blogs
-        });
-    } catch (error) {
-        next(error);
-    }
-}
+const getBlogs = catchAsync(async (req, res) => {
+  const blogs = await Blog.find().populate("author");
+  res.status(200).json({
+    blogs,
+  });
+});
 
-const getBlog = async (req, res, next) => {
-    const { blogId } = req.params;
+const getBlog = catchAsync(async (req, res) => {
+  const { blogId } = req.params;
 
-    try {
-        const blog = await Blog.findById(blogId).populate('author');
+  const blog = await Blog.findById(blogId).populate("author");
 
-        if (!blog) {
-            const err = new Error('Blog not found!');
-            err.status = 404;
-            throw err;
-        }
-        res.status(200).json({
-            blog
-        });
-    } catch (error) {
-        next(error);
-    }
-}
+  if (!blog) {
+    throw new ApiError("Blog not found!", 404);
+  }
 
-const createBlog = async (req, res, next) => {
-    const rawBlog = req.body;
-    const { title, content, author } = rawBlog;
+  res.status(200).json({
+    blog,
+  });
+});
 
-    try {
-        if (!title || !content || !author) {
-            const err = new Error('Title or content or author is required!');
-            err.status = 400;
-            throw err;
-        }
+const createBlog = catchAsync(async (req, res) => {
+  const rawBlog = req.body;
+  const { title, content, author } = rawBlog;
 
-        rawBlog.image = req.file?.filename;
+  if (!title || !content || !author) {
+    throw new ApiError("Tile or content author is required", 400);
+  }
 
-        const newBlog = await Blog.create(rawBlog);
+  rawBlog.image = req.file?.filename;
 
-        res.status(201).json({
-            newBlog
-        });
-    } catch (error) {
-        next(error);
-    }
-}
+  const newBlog = await Blog.create(rawBlog);
 
-const updateBlog = async (req, res, next) => {
-    const { blogId } = req.params;
-    const rawBlog = req.body;
+  res.status(201).json({
+    newBlog,
+  });
+});
 
-    try {
-        const updatedBlog = await Blog.findByIdAndUpdate(blogId, rawBlog, { new: true });
+const updateBlog = catchAsync(async (req, res) => {
+  const { blogId } = req.params;
+  const rawBlog = req.body;
 
-        if (!updatedBlog) {
-            const err = new Error('Blog not found!');
-            err.status = 404;
-            throw err;
-        }
+  const updatedBlog = await Blog.findByIdAndUpdate(blogId, rawBlog, {
+    new: true,
+  });
 
-        res.status(200).json({
-            updatedBlog
-        });
-    } catch (error) {
-        next(error);
-    }
-}
+  if (!updatedBlog) {
+    throw new ApiError("Blog not found", 404);
+  }
 
-const deleteBlog = async (req, res, next) => {
-    const { blogId } = req.params;
+  res.status(200).json({
+    updatedBlog,
+  });
+});
 
-    try {
-        const deletedBlog = await Blog.findByIdAndDelete(blogId);
+const deleteBlog = catchAsync(async (req, res) => {
+  const { blogId } = req.params;
 
-        if (!deletedBlog) {
-            const err = new Error('Blog not found!');
-            err.status = 404;
-            throw err;
-        }
+  const deletedBlog = await Blog.findByIdAndDelete(blogId);
 
-        res.status(204).json();
-    } catch (error) {
-        next(error);
-    }
-}
+  if (!deletedBlog) {
+    throw new ApiError("Blog not found!", 404);
+  }
+
+  res.status(204).json();
+});
 
 module.exports = {
-    getBlogs,
-    getBlog,
-    createBlog,
-    updateBlog,
-    deleteBlog
-}
+  getBlogs,
+  getBlog,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+};

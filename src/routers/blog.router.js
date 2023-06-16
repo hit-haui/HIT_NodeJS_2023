@@ -1,18 +1,18 @@
 const express = require("express");
 
-const { getBlogs, createBlog, getBlog, updateBlog, deleteBlog } = require("../controllers/blog.controller");
+const {
+  getBlogs,
+  createBlog,
+  getBlog,
+  updateBlog,
+  deleteBlog,
+} = require("../controllers/blog.controller")
 const upload = require("../middlewares/upload.middleware");
-const authMiddleware = require("../middlewares/auth.middleware");
 
 const blogRouter = express.Router();
 
-blogRouter.route('/')
-    .get(getBlogs)
-    .post([authMiddleware, upload.single('image')], createBlog)
+blogRouter.route("/").get(getBlogs).post(upload.single("image"), createBlog);
 
-blogRouter.route('/:blogId')
-    .get(getBlog)
-    .put(authMiddleware, updateBlog)
-    .delete(authMiddleware, deleteBlog)
+blogRouter.route("/:blogId").get(getBlog).put(updateBlog).delete(deleteBlog);
 
 module.exports = blogRouter;

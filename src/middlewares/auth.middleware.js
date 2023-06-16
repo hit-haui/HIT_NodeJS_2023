@@ -14,19 +14,16 @@ const unauthorized = () => {
     throw new AppError('Unauthorized', 401);
 }
 
-const authMiddleware = asyncHandler(async (req, res, next) => {
+const authMiddleware = (allowedRoles) => asyncHandler(async (req, res, next) => {
     const token = extractTokenFromHeader(req);
     if (!token) return unauthorized();
 
-    // verify token
     const payload = jwt.verify(token, process.env.SECRET_KEY);
 
-    // check user
-    const user = await User.findById(payload.userId)
+    const user = await User.findById(payload.userId);
     if (!user) return unauthorized();
 
-    // check role
-    if (user.role !== 'admin') return unauthorized();
+    if (!allowedRoles.includes(user.role)) return unauthorized();
     req.user = user;
     next();
 });

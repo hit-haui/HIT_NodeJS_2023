@@ -13,13 +13,13 @@ const userRouter = express.Router();
 
 userRouter
   .route('/')
-  .get(authMiddleware, getUsers)
-  .post(authMiddleware, createUser);
+  .get(getUsers)
+  .post(authMiddleware(['admin']), createUser);
 
 userRouter
   .route('/:userId')
   .get(getUserById)
-  .put(updateUserById)
-  .delete(deleteUserById);
+  .put(authMiddleware(['user', 'admin']), updateUserById)
+  .delete(authMiddleware(['user', 'admin']), deleteUserById);
 
 module.exports = userRouter;

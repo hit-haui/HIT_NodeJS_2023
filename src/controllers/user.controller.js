@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const asyncHandler = require("../middlewares/asyncHandle.middleware");
 
 const handleNonExistUser = () => {
   const error = new Error("User not found!!!");
@@ -6,84 +7,65 @@ const handleNonExistUser = () => {
   throw error;
 };
 
-const getUsers = async (req, res, next) => {
-  try {
-    const users = await User.find();
+const getUsers = asyncHandler(async (req, res, next) => {
+  const users = await User.find();
 
-    res.status(200).json({
-      users,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  res.status(200).json({
+    users,
+  });
+});
 
-const getUser = async (req, res, next) => {
-  const { userId } = req.params;
-  try {
-    const user = await User.findById(userId);
+const getUser = asyncHandler(async (req, res, next) => {
+  const userId = req.params.userId || req.user.id;
+  const user = await User.findById(userId).select("+password");
 
-    if (!user) return handleNonExistUser();
+  if (!user) return handleNonExistUser();
 
-    res.status(200).json({
-      user,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  res.status(200).json({
+    user,
+  });
+});
 
-const createUser = async (req, res, next) => {
+const createUser = asyncHandler(async (req, res, next) => {
   const userData = req.body;
   const { role, password } = userData;
 
-  try {
-      if (!role || !password) {
-        const err = new Error("Invalid input data!");
-        err.status = 404;
-        throw err;
-      }
-    const user = await User.create(userData);
-    res.status(201).json({
-      user,
-    });
-  } catch (error) {
-    next(error);
+  if (!role || !password) {
+    const err = new Error("Invalid input data!");
+    err.status = 404;
+    throw err;
   }
-};
-const updateUser = async (req, res, next) => {
+  const user = await User.create(userData);
+  res.status(201).json({
+    user,
+  });
+});
+
+const updateUser = asyncHandler(async (req, res, next) => {
   const { userId } = req.params;
   const updatedData = req.body;
 
-  try {
-    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
-      new: true,
-    });
+  const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
+    new: true,
+  });
 
-    if (!updatedUser) return handleNonExistUser();
+  if (!updatedUser) return handleNonExistUser();
 
-    res.status(200).json({
-      updatedUser,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-const deleteUser = async (req, res, next) => {
+  res.status(200).json({
+    updatedUser,
+  });
+});
+
+const deleteUser = asyncHandler(async (req, res, next) => {
   const { userId } = req.params;
+  const deletedUser = await User.findByIdAndDelete(userId);
 
-  try {
-    const deletedUser = await User.findByIdAndDelete(userId);
+  if (!deletedUser) return handleNonExistUser();
 
-    if (!deletedUser) return handleNonExistUser();
-
-    res.status(200).json({
-      deletedUser,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  res.status(200).json({
+    deletedUser,
+  });
+});
 
 module.exports = {
   getUsers,

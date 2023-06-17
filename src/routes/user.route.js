@@ -11,12 +11,13 @@ const {
 
 const authMiddleware = require("../middlewares/auth.middleware");
 
-userRouter.route("/").get(getUsers).post(authMiddleware, createUser);
+const roles = require("../middlewares/role.middleware");
 
-userRouter
-  .route("/:userId")
-  .get(getUser)
-  .put(authMiddleware, updateUser)
-  .delete(authMiddleware, deleteUser);
+userRouter.use(authMiddleware);
+userRouter.use(roles("admin"));
+
+userRouter.route("/").get(getUsers).post(createUser);
+
+userRouter.route("/:userId").get(getUser).put(updateUser).delete(deleteUser);
 
 module.exports = userRouter;

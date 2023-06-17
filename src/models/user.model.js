@@ -7,12 +7,17 @@ const userSchema = new Schema(
     name: String,
     role: {
       type: String,
-      required: [true, "Please provide your role!"],
+      defaut: "user",
+      enum: ["admin", "user"],
     },
     age: Number,
-    email: String,
+    email: {
+      type: String,
+      unique: true,
+    },
     password: {
       type: String,
+      select: false,
       required: [true, "Please provide your password!"],
     },
   },

@@ -19,7 +19,7 @@ const register = async (req, res, next) => {
       throw err;
     }
 
-    const user = User.create({ role, password, email });
+    const user = User.create({ role: "user", password, email });
 
     res.status(201).json({
       user,

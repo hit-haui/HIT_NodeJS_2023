@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Register = async (req, res, next) => {
   try {
-    const { fullName, studentCode, role } = req.body;
+    const { fullName, studentCode} = req.body;
     let { password } = req.body;
     const checkUser = await User.findOne({ studentCode, password });
     if (checkUser) {
@@ -16,7 +16,6 @@ const Register = async (req, res, next) => {
       fullName,
       studentCode,
       password,
-      role,
     });
     res.status(201).json(newUser);
   } catch (err) {
@@ -35,7 +34,7 @@ const Login = async (req, res, next) => {
     const isPassword = await bcrypt.compare(password, user.password);
     if (!isPassword) {
       const err = new Error("Student code or password is incorrect");
-      err.status = 404;
+      err.status = 401;
       throw err;
     }
     const token = await jwt.sign(
@@ -48,7 +47,7 @@ const Login = async (req, res, next) => {
       }
     );
     res.json({
-      token: token,
+      accessToken: token,
     });
   } catch (err) {
     next(err);

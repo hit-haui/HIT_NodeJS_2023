@@ -10,12 +10,17 @@ const authMiddleware = async (req, res, next) => {
   }
   try {
     const token = authorization.split(" ")[1];
+    if(!token){
+      const err = new Error("Token is not exist");
+      err.status = 401;
+      throw err;
+    }
     const payload = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const userId = payload.userId;
-    const user = await User.findById(userId);
+    const userID = payload.userId;
+    const user = await User.findById(userID);
     if (!user) {
       const err = new Error("User not found");
-      err.status = 404;
+      err.status = 401;
       throw err;
     }
     if (user.role !== "admin") {

@@ -5,7 +5,7 @@ const register = async (req, res, next) => {
   const { name, userCode, password } = req.body;
   try {
     if (!name || !password) {
-      const err = new Error("Name or password is require");
+      const err = new Error("Name or password is required");
       err.status = 400;
       throw err;
     }
@@ -25,7 +25,7 @@ const login = async (req, res, next) => {
   const { password, userCode } = req.body;
   try {
     if (!password) {
-      const err = new Error("Password is require");
+      const err = new Error("Password is required");
       err.status = 400;
       throw err;
     }
@@ -33,6 +33,12 @@ const login = async (req, res, next) => {
     if (!existingUser) {
       const err = new Error("User is not exist");
       err.status = 400;
+      throw err;
+    }
+    const isPassword = await bcrypt.compare(password, existingUser.password);
+    if (!isPassword) {
+      const err = new Error("password is incorrect!");
+      err.status = 401;
       throw err;
     }
     const token = await jwt.sign(

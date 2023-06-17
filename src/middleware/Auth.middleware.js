@@ -14,7 +14,7 @@ const authMiddleware = async (req, res, next) =>{
         const userId = payload.userId
         const user = await User.findById(userId)
         if(!user) {
-            const err = new Error("User not exist")
+            const err = new Error("Unauthorizator")
             err.status = 404
             throw(err)
         }

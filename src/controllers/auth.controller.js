@@ -29,7 +29,7 @@ const login = async (req, res, next) => {
     const { userCode, password } = req.body;
     const user = await User.findOne({ userCode });
     if (!user) {
-      const err = new Error("blog not found");
+      const err = new Error("userCode or password is incorrect");
       err.status = 400;
       throw err;
     }

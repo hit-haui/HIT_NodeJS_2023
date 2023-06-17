@@ -5,7 +5,7 @@ const authMiddleware = async (req, res, next) => {
   const authorization = req.headers.authorization;
   if (!authorization) {
     const err = new Error("Unauthorized");
-    err.status = 404;
+    err.status = 401;
     return next(err);
   }
   const token = authorization.split(" ")[1];
@@ -19,6 +19,7 @@ const authMiddleware = async (req, res, next) => {
       throw new Error("User not found");
     }
     if (user.role !== "admin") {
+      req.user = user;
       throw new Error("Forbidden");
     }
     return next();

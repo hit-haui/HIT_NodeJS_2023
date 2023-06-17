@@ -15,6 +15,10 @@ userRouter
   .get(authMiddleware, getUsers)
   .post(authMiddleware, createUser);
 
-userRouter.route("/:userId").get(getUser).put(updateUser).delete(deleteUser);
+userRouter
+  .route("/:userId")
+  .get(authMiddleware, getUser)
+  .put(authMiddleware, updateUser)
+  .delete(authMiddleware, deleteUser);
 
 module.exports = userRouter;

@@ -19,6 +19,8 @@ const register = catchAsync(async (req, res) => {
 
   const user = await User.create({ avatar, fullName, email, password });
 
+  user.password = undefined;
+
   res.status(201).json({
     user,
   });
@@ -27,7 +29,7 @@ const register = catchAsync(async (req, res) => {
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+password');
   if (!user) {
     throw new ApiError("Email or password is incorrect", 400);
   }
@@ -37,7 +39,7 @@ const login = catchAsync(async (req, res) => {
     throw new ApiError("Email or password is incorrect", 400);
   }
 
-  const token = jwt.sign(
+  const accessToken = jwt.sign(
     {
       userId: user.id,
     },
@@ -48,7 +50,7 @@ const login = catchAsync(async (req, res) => {
   );
 
   res.status(200).json({
-    token,
+    accessToken,
   });
 });
 

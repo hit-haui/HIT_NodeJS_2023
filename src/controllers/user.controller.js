@@ -10,7 +10,7 @@ const getUsers = catchAsync(async (req, res) => {
 });
 
 const getUser = catchAsync(async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.params.userId || req.user.id;
   const user = await User.findById(userId);
 
   if (!user) {
@@ -25,8 +25,6 @@ const getUser = catchAsync(async (req, res) => {
 const createUser = catchAsync(async (req, res) => {
   const newUser = req.body;
   const { email, password } = newUser;
-
-  console.log(newUser);
 
   if (!email || !password) {
     throw new ApiError("Email or password is required", 400);

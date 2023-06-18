@@ -15,11 +15,11 @@ const blogRouter = express.Router();
 
 blogRouter.route('/')
     .get(getBlogs)
-    .post(authMiddleware(['user', 'admin']), upload, createBlog)
+    .post(authMiddleware, upload, createBlog)
 
 blogRouter.route('/:blogId')
     .get(getBlog)
-    .put(authMiddleware(['user', 'admin']), updateBlog)
-    .delete(authMiddleware(['user', 'admin']), deleteBlog)
+    .put(authMiddleware, updateBlog)
+    .delete(authMiddleware, deleteBlog)
 
 module.exports = blogRouter;

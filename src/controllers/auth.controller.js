@@ -10,10 +10,11 @@ const register = asyncHandler(async (req, res, next) => {
     const { fullName, userName, password } = req.body;
     if (!userName || !password) {
         throw new AppError('Username or password is required!', 400);
+        //return next(.....)
     }
     const existingUser = await User.findOne({ userName });
     if (existingUser) {
-        throw new Error('Username is exit!', 400);
+        throw new AppError('Username is exit!', 400);
     }
     const user = await User.create({ fullName, userName, password });
     res.status(201).json({
@@ -24,7 +25,7 @@ const register = asyncHandler(async (req, res, next) => {
 
 const login = asyncHandler(async (req, res, next) => {
     const { userName, password } = req.body;
-    const user = await User.findOne({ userName });
+    const user = await User.findOne({ userName }).select('+password');
     if (!user) {
         throw new AppError('Username or password is incorrect!', 401);
     }

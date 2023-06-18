@@ -14,7 +14,7 @@ const unauthorized = () => {
     throw new AppError('Unauthorized', 401);
 }
 
-const authMiddleware = (allowedRoles) => asyncHandler(async (req, res, next) => {
+const authMiddleware = asyncHandler(async (req, res, next) => {
     const token = extractTokenFromHeader(req);
     if (!token) return unauthorized();
 
@@ -22,8 +22,6 @@ const authMiddleware = (allowedRoles) => asyncHandler(async (req, res, next) => 
 
     const user = await User.findById(payload.userId);
     if (!user) return unauthorized();
-
-    if (!allowedRoles.includes(user.role)) return unauthorized();
     req.user = user;
     next();
 });

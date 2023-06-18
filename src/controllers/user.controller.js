@@ -11,7 +11,7 @@ const getUsers = asyncHandler(async (req, res, next) => {
 });
 
 const getUserById = asyncHandler(async (req, res, next) => {
-    const { userId } = req.params;
+    const userId = req.params.userId || req.user.id;
     const user = await User.findById(userId);
     if (!user) {
         throw new AppError('User not found!', 404);
@@ -39,32 +39,24 @@ const createUser = asyncHandler(async (req, res, next) => {
 const updateUserById = asyncHandler(async (req, res, next) => {
     const { userId } = req.params;
     const newUser = req.body;
-    if (req.user.role === 'admin' || req.user.id === userId) {
-        const updatedUser = await User.findByIdAndUpdate(userId, newUser);
-        if (!updatedUser) {
-            throw new AppError('User not found!', 404);
-        }
-        res.status(200).json({
-            updatedUser
-        });
-    } else {
-        throw new AppError('You are not authorized to update this user!', 401);
+    const updatedUser = await User.findByIdAndUpdate(userId, newUser);
+    if (!updatedUser) {
+        throw new AppError('User not found!', 404);
     }
+    res.status(200).json({
+        updatedUser
+    });
 });
 
 const deleteUserById = asyncHandler(async (req, res, next) => {
     const { userId } = req.params;
-    if (req.user.role === 'admin' || req.user.id === userId) {
-        const deletedUser = await User.findByIdAndDelete(userId);
-        if (!deletedUser) {
-            throw new AppError('User not found!', 404);
-        }
-        res.status(200).json({
-            deletedUser
-        });
-    } else {
-        throw new AppError('You are not authorized to delete this user!', 401);
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+        throw new AppError('User not found!', 404);
     }
+    res.status(200).json({
+        deletedUser
+    });
 });
 
 module.exports = {

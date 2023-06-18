@@ -1,11 +1,12 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
     {
         avatar: {
             type: String,
-            default: "https://static.dhcnhn.vn/student"
+            default: '/images/user-default.png'
         },
         fullName: {
             type: String,
@@ -13,34 +14,39 @@ const userSchema = new Schema(
         },
         dateOfBirth: {
             type: Date,
-            default: "01-01-1970"
+            default: '01-01-1970'
         },
         password: {
             type: String,
-            default: function () {
-                return this.studentCode + "@17"
-            }
+            required: [true, "Password required"],
+            select: false
         },
-        studentCode: {
-            type: Number,
+        userName: {
+            type: String,
             required: true,
         },
-        className: {
+        role: {
             type: String,
-            default: null
-        },
-        schoolYear: {
-            type: Number,
-            default: null
-        },
-        clubYear: {
-            type: Number,
-            default: null
+            enum: ['user', 'admin'],
+            default: 'user'
         }
     },
     {
         timestamps: true,
     }
 );
-const User = mongoose.model("User", userSchema);
+
+userSchema.pre('save', async function (next) {
+    try {
+        const user = this;
+        if (user.isModified('password')) {
+            user.password = await bcrypt.hash(user.password, 8);
+        }
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
+const User = mongoose.model('User', userSchema);
 module.exports = User;

@@ -1,104 +1,63 @@
-const User = require("../models/user.model");
+const User = require('../models/user.model');
+const AppError = require('../middlewares/appError');
 
-// get users
-const getUsers = async (req, res, next) => {
-    try {
-        const users = await User.find();
-        res.status(200).json({
-            users
-        });
-    } catch (err) {
-        next(err);
+const asyncHandler = require('../middlewares/asyncHandler');
+
+const getUsers = asyncHandler(async (req, res, next) => {
+    const users = await User.find();
+    res.status(200).json({
+        users
+    });
+});
+
+const getUserById = asyncHandler(async (req, res, next) => {
+    const userId = req.params.userId || req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new AppError('User not found!', 404);
     }
-};
+    res.status(200).json({
+        user
+    });
+});
 
-
-// get user by id
-const getUserById = async (req, res, next) => {
-    const { userId } = req.params;
-    try {
-        const user = await User.findById(userId);
-        // Check user
-        if (!user) {
-            const err = new Error('User not found!');
-            err.status = 404;
-            throw err;
-        }
-        // Return result
-        res.status(200).json({
-            user
-        });
-    } catch (err) {
-        next(err);
-    }
-};
-
-
-// create user
-const createUser = async (req, res, next) => {
-    // New user
+const createUser = asyncHandler(async (req, res, next) => {
     const newUser = req.body;
-    try {
-        // Check if there is a required field
-        if (!newUser.studentCode) {
-            const err = new Error('Student code is required!');
-            err.status = 400;
-            throw err;
-        }
-        // Add new user to database
-        const user = await User.create(newUser);
-        res.status(201).json({
-            user
-        });
-    } catch (err) {
-        next(err);
+    if (!newUser.userName) {
+        throw new AppError('Username is required!', 400);
     }
-};
+    const existingUser = await User.findOne({ userName: newUser.userName });
+    if (existingUser) {
+        throw new AppError('Username is exit!', 400);
+    }
+    const user = await User.create(newUser);
+    res.status(201).json({
+        user
+    });
+});
 
-
-// update user by id
-const updateUserById = async (req, res, next) => {
+const updateUserById = asyncHandler(async (req, res, next) => {
     const { userId } = req.params;
-    try {
-        const userRaw = req.body;
-        // Update user
-        const updatedUser = await User.findByIdAndUpdate(userId, userRaw, { new: true });
-        // Check user
-        if (!updatedUser) {
-            const err = new Error('User not found!');
-            err.status = 404;
-            throw err;
-        }
-        // Send back the updated user info to client
-        res.status(200).json({
-            updatedUser
-        });
-    } catch (err) {
-        next(err);
+    const newUser = req.body;
+    const updatedUser = await User.findByIdAndUpdate(userId, newUser);
+    if (!updatedUser) {
+        throw new AppError('User not found!', 404);
     }
-};
+    res.status(200).json({
+        updatedUser
+    });
+});
 
-
-// delete user by id
-const deleteUserById = async (req, res, next) => {
+const deleteUserById = asyncHandler(async (req, res, next) => {
     const { userId } = req.params;
-    try {
-        // Delete user
-        const deletedUser = await User.findByIdAndDelete(userId);
-        // Check user
-        if (!deletedUser) {
-            const err = new Error('User not found!');
-            err.status = 404;
-            throw err;
-        }
-        // Send back the deleted user info to client
-        res.status(200).json({
-            deletedUser
-        });
-    } catch (err) {
-        next(err);
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+        throw new AppError('User not found!', 404);
     }
-};
+    res.status(200).json({
+        deletedUser
+    });
+});
 
 module.exports = {
     getUsers,

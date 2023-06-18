@@ -1,12 +1,29 @@
-const authMiddleware = (req, res, next) => {
-    // In Postman use Query Params: [key, value] = [permission, admin]
-    let { permission } = req.query;
-    if (permission !== 'admin') {
-        const err = new Error('Unauthorized');
-        err.status = 401;
-        throw err;
-    }
-    next();
+const jwt = require('jsonwebtoken');
+
+const User = require('../models/user.model');
+const asyncHandler = require('./asyncHandler');
+const AppError = require('./appError');
+
+
+const extractTokenFromHeader = (request) => {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
 }
+
+const unauthorized = () => {
+    throw new AppError('Unauthorized', 401);
+}
+
+const authMiddleware = asyncHandler(async (req, res, next) => {
+    const token = extractTokenFromHeader(req);
+    if (!token) return unauthorized();
+
+    const payload = jwt.verify(token, process.env.SECRET_KEY);
+
+    const user = await User.findById(payload.userId);
+    if (!user) return unauthorized();
+    req.user = user;
+    next();
+});
 
 module.exports = authMiddleware;

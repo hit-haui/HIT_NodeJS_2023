@@ -19,11 +19,15 @@
   },
   "homepage": "https://github.com/hit-haui/HIT_NodeJS_2023#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.2.1",
-    "nodemon": "^2.0.22",
+    "multer": "^1.4.5-lts.1",
     "schema": "^0.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }

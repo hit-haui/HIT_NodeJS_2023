@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken");
 
+
 const Register = async (req, res, next) => {
   try {
     const { avatar, name, birth, password } = req.body;
@@ -36,7 +37,7 @@ const Login = async (req, res, next) => {
     const checkUser = await User.findOne({ name });
     const isPassword = await bcrypt.compare(password, checkUser.password);
     if (!isPassword) {
-      const err = new Error("Password is incorrect");
+      const err = new Error("Username or Password is incorrect");
       err.status(401);
       throw err;
     }
@@ -53,6 +54,7 @@ const Login = async (req, res, next) => {
     next(err);
   }
 };
+
 
 module.exports = {
   Register,

@@ -11,7 +11,7 @@ const getUsers = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   try {
-    const { userId } = req.params;
+    const userId = req.params.userId || req.user.id;
     const user = await User.findById(userId);
     if (!user) {
       const err = new Error("User cannot found");

@@ -1,8 +1,9 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+//const getById = require("./user.controller/getUser")
 const register = async (req, res, next) => {
-  const { name, password, userCode } = req.body;
+  const { name, password, userCode, role } = req.body;
   try {
     if (!userCode) {
       const err = new Error("User code is required!");
@@ -15,7 +16,7 @@ const register = async (req, res, next) => {
       err.status = 400;
       throw err;
     }
-    const user = await User.create({ name, password, userCode });
+    const user = await User.create({ name, password, userCode, role });
     res.status(201).json({
       user,
     });
@@ -23,7 +24,6 @@ const register = async (req, res, next) => {
     next(err);
   }
 };
-
 const login = async (req, res, next) => {
   try {
     const { userCode, password } = req.body;
@@ -54,5 +54,9 @@ const login = async (req, res, next) => {
     next(err);
   }
 };
+
+// const getMe = async (req, res, next) => {
+
+// }
 
 module.exports = { register, login };

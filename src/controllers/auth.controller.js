@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const Register = async (req, res, next) => {
   try {
     const { userCode, password, name } = req.body;
-    console.log(req.body);
     if (!userCode || !password) {
       const err = new Error("userCode or password is not required");
       err.status = 400;
@@ -53,6 +52,7 @@ const Login = async (req, res, next) => {
     next(err);
   }
 };
+
 module.exports = {
   Register,
   Login,

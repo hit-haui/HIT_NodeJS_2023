@@ -4,10 +4,27 @@ const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 
 const getBlogs = catchAsync(async (req, res) => {
+	const { page } = req.query;
+
+	// pagination
+	const limit = 2;
+	const skip = (page - 1) * limit ;
+
+	// return instance of Blog
+	// const normalBlogs = await Blog.find().populate({
+	// 	path: 'author',
+	// 	select: '-createdAt -updatedAt -__v',
+	// })
+
+	// plain JS object
 	const blogs = await Blog.find().populate({
 		path: 'author',
 		select: '-createdAt -updatedAt -__v',
-	});
+	})
+	.limit(limit)
+	.skip(skip)
+	.lean();
+
 	res.status(httpStatus.OK).json({ blogs });
 });
 
@@ -27,9 +44,10 @@ const createBlog = catchAsync(async (req, res) => {
 	if (!title || !content) {
 		throw new ApiError(httpStatus.BAD_REQUEST, 'Title or content is required!');
 	}
-	if (!newBlog.author) {
+	if (!req.user.id) {
 		throw new ApiError(httpStatus.BAD_REQUEST, 'Author is required!');
 	}
+	newBlog['author'] = req.user._id;
 	const blog = await Blog.create(newBlog);
 	if (!blog.image) blog.image = req.file.filename;
 	res.status(httpStatus.CREATED).json({ blog });

@@ -19,14 +19,15 @@ const register = catchAsync(async (req, res) => {
 });
 
 const login = catchAsync(async (req, res) => {
+	console.log(req.body)
 	const { userName, password } = req.body;
 	const user = await User.findOne({ userName });
 	if (!user || !(await bcrypt.compare(password, user.password))) {
 		throw new ApiError(httpStatus.UNAUTHORIZED, 'User name or password is incorrect!');
 	}
 
-	const accessToken = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-		expiresIn: process.env.JWT_EXPIRES_IN,
+	const accessToken = jwt.sign({ userId: user._id }, process.env.SECRET_KEY || 'super_secert', {
+		expiresIn: process.env.JWT_EXPIRES_IN || '1h',
 	});
 	res.status(httpStatus.OK).json({ accessToken });
 });

@@ -14,7 +14,7 @@ const authMiddleware = catchAsync(async (req, res, next) => {
 	if (!accessToken) {
 		throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
 	}
-	const payload = jwt.verify(accessToken, process.env.SECRET_KEY);
+	const payload = jwt.verify(accessToken, process.env.SECRET_KEY || 'super_secert');
 	const { userId } = payload;
 	const user = await User.findById(userId);
 	if (!user) {

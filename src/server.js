@@ -1,28 +1,28 @@
 const express = require("express");
-const router = require("./routes");
-const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const errorMiddeware = require("./middlewares/error.middleware");
-
-const app = express();
-
-app.use(express.json());
-app.use(router);
-
+const mongoose = require("mongoose");
+const route = require("./routes");
+const errorMiddleware = require("./middlewares/error.middleware");
 dotenv.config();
 
-const port = process.env.PORT || 3000;
-const mongoURI = process.env.DB_URL || "mongodb://127.0.0.1:27017/UserDefault";
+const app = express();
+app.use(express.json());
 
+app.use("/uploads", express.static("uploads"));
+
+const port = process.env.PORT || 5000;
+
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/nodejs";
 mongoose
-  .connect(mongoURI)
-  .then(() => console.log("Connect database successfully!"))
-  .catch((err) => {
-    console.log(err);
-  });
+  .connect(MONGODB_URI)
+  .then(() => console.log("Connected!"))
+  .catch((err) => console.log(err));
 
-app.use(errorMiddeware);
+app.use(route);
+
+app.use(errorMiddleware);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log("Example app listening on port", `${port}`);
 });

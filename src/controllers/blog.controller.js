@@ -1,108 +1,63 @@
 const Blog = require('../models/blog.model');
+const catchAsync = require('../utils/catchAsync');
+const ApiError = require('../utils/ApiError');
+const httpStatus = require('http-status');
 
-const getBlogs = async (req, res, next) => {
-    try {
-        const blogs = await Blog.find().populate({
-			path: 'author',
-			select: '-createdAt -updatedAt -__v',
-		});
-        res.status(200).json({ blogs });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const getBlogs = catchAsync(async (req, res) => {
+	const blogs = await Blog.find().populate({
+		path: 'author',
+		select: '-createdAt -updatedAt -__v',
+	});
+	res.status(httpStatus.OK).json({ blogs });
+});
 
-const getBlog = async (req, res, next) => {
-    const { blogId } = req.params;
-    try {
-        const blog = await Blog.findById(blogId).populate({
-			path: 'author',
-			select: '-createdAt -updatedAt -__v',
-		});
-        if (!blog) {
-            const err = new Error('Blog not found!');
-            err.status = 404;
-            throw err;
-        }
-        res.status(200).json({ blog });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const getBlog = catchAsync(async (req, res) => {
+	const { blogId } = req.params;
+	const blog = await Blog.findById(blogId).populate({
+		path: 'author',
+		select: '-createdAt -updatedAt -__v',
+	});
+	if (!blog) throw new ApiError(httpStatus.NOT_FOUND, 'Blog not found!');
+	res.status(httpStatus.OK).json({ blog });
+});
 
-const createBlog = async (req, res, next) => {
-    const newBlog = req.body;
-    try {
-        const { title, content } = newBlog;
-        if (!title || !content) {
-            const err = new Error('Title or content is required!');
-			err.status = 400;
-			throw err;
-        }
-        if (!newBlog.author) {
-            const err = new Error('Author is required!');
-            err.status = 400;
-            throw err;
-        }
-        const blog = await Blog.create(newBlog);
-        if (!blog.image) blog.image = req.file.filename;
-        res.status(201).json({ blog });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const createBlog = catchAsync(async (req, res) => {
+	const newBlog = req.body;
+	const { title, content } = newBlog;
+	if (!title || !content) {
+		throw new ApiError(httpStatus.BAD_REQUEST, 'Title or content is required!');
+	}
+	if (!newBlog.author) {
+		throw new ApiError(httpStatus.BAD_REQUEST, 'Author is required!');
+	}
+	const blog = await Blog.create(newBlog);
+	if (!blog.image) blog.image = req.file.filename;
+	res.status(httpStatus.CREATED).json({ blog });
+});
 
-const updateBlogById = async (req, res, next) => {
-    const { blogId } = req.params;
-    const newBlog = req.body;
-    try {
-        const { title, content } = newBlog;
-		if (!title || !content) {
-			const err = new Error('Title or content is required!');
-			err.status = 400;
-			throw err;
-		}
-        if (!newBlog.author) {
-            const err = new Error('Author is required!');
-            err.status = 400;
-            throw err;
-        }
-        const blog = await Blog.findByIdAndUpdate(blogId, newBlog);
-        if (!blog) {
-            const err = new Error('Blog not found!');
-            err.status = 404;
-            throw err;
-        }
-        res.status(200).json({ blog });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const updateBlog = catchAsync(async (req, res) => {
+	const { blogId } = req.params;
+	const newBlog = req.body;
+	const blog = await Blog.findByIdAndUpdate(blogId, newBlog);
+	if (!blog) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'Blog not found!');
+	}
+	res.status(httpStatus.OK).json({ user });
+});
 
-const deleteBlogById = async (req, res, next) => {
-    const { blogId } = req.params;
-    try {
-        const blog = await Blog.findByIdAndDelete(blogId);
-        if (!blog) {
-            const err = new Error('Blog not found!');
-            err.status = 404;
-            throw err;
-        }
-        res.status(200).json({ blog });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const deleteBlog = catchAsync(async (req, res) => {
+	const { blogId } = req.params;
+	const blog = await Blog.finByIdAndDelete(blogId);
+	if (!blog) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'Blog not found!');
+	}
+	res.status(httpStatus.OK).json({ user });
+});
 
 module.exports = {
-    getBlogs,
-    getBlog,
-    createBlog,
-    updateBlogById,
-    deleteBlogById
+	getBlogs,
+	getBlog,
+	createBlog,
+	updateBlog,
+	deleteBlog,
 };

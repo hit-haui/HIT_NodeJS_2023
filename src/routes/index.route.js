@@ -1,8 +1,8 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const blogRouter = require("./blog.route");
-const userRouter = require("./user.route");
-const authRouter = require("./auth.route");
+const blogRouter = require('./blog.route');
+const userRouter = require('./user.route');
+const authRouter = require('./auth.route');
 
 const routes = [
 	{
@@ -20,7 +20,7 @@ const routes = [
 ];
 
 routes.map((route) => {
-    router.use(route.path, route.route);
+	router.use(route.path, route.route);
 });
 
 module.exports = router;

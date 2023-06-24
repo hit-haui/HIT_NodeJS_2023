@@ -10,9 +10,7 @@ const userSchema = new Schema(
 		},
 		password: {
 			type: String,
-			default: function () {
-				return this.userName + '@123';
-			},
+			required: true,
 		},
 		avatar: {
 			type: String,

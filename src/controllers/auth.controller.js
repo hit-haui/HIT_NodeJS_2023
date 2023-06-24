@@ -1,48 +1,34 @@
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const catchAsync = require('../utils/catchAsync');
+const ApiError = require('../utils/ApiError');
+const httpStatus = require('http-status');
 
-const register = async (req, res, next) => {
+const register = catchAsync(async (req, res) => {
 	const { userName, password, fullName } = req.body;
-	try {
-		if (!userName) {
-			const err = new Error('User name is required!');
-			err.status = 400;
-			throw err;
-		}
-
-		const existingUser = await User.findOne({ userName });
-		if (existingUser) {
-			const err = new Error('User already exists!');
-			err.status = 400;
-			throw err;
-		}
-
-		const user = await User.create({ userName, password, fullName });
-		res.status(201).json({ user });
-	} catch (err) {
-		next(err);
+	if (!userName || !password) {
+		throw new ApiError(httpStatus.BAD_REQUEST, 'Username or password is required!');
 	}
-};
-
-const login = async (req, res, next) => {
-	try {
-		const { userName, password } = req.body;
-		const user = await User.findOne({ userName });
-
-		if (!user || !(await bcrypt.compare(password, user.password))) {
-			const err = new Error('User name or password is incorrect!');
-			err.status = 401;
-			throw err;
-		}
-
-		const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-			expiresIn: process.env.JWT_EXPIRES_IN,
-		});
-		res.status(200).json({ token });
-	} catch (err) {
-		next(err);
+	const existingUser = await User.findOne({ userName });
+	if (existingUser) {
+		throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists!');
 	}
-};
+	const user = await User.create({ userName, password, fullName });
+	res.status(httpStatus.CREATED).json({ user });
+});
+
+const login = catchAsync(async (req, res) => {
+	const { userName, password } = req.body;
+	const user = await User.findOne({ userName });
+	if (!user || !(await bcrypt.compare(password, user.password))) {
+		throw new ApiError(httpStatus.UNAUTHORIZED, 'User name or password is incorrect!');
+	}
+
+	const accessToken = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+		expiresIn: process.env.JWT_EXPIRES_IN,
+	});
+	res.status(httpStatus.OK).json({ accessToken });
+});
 
 module.exports = { register, login };

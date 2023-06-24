@@ -1,95 +1,60 @@
-const User = require("../models/user.model");
+const User = require('../models/user.model');
+const catchAsync = require('../utils/catchAsync');
+const ApiError = require('../utils/ApiError');
+const httpStatus = require('http-status');
 
-const getUsers = async (req, res, next) => {
-    try {
-        const users = await User.find();
-        res.status(200).json({ users });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const getUsers = catchAsync(async (req, res) => {
+	const users = await User.find();
+	res.status(httpStatus.OK).json({ users });
+});
 
-const getUserById = async (req, res, next) => {
-    const { userId } = req.params;
-    try {
-        const user = await User.findById(userId);
-        if (!user) {
-            const err = new Error('User not found!');
-            err.status = 404;
-            throw err;
-        }
-        res.status(200).json({ user });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const getUser = catchAsync(async (req, res) => {
+	const userId = req.params.userId || req.user.id;
+	const user = await User.findById(userId);
+	if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found!');
+	res.status(httpStatus.OK).json({ user });
+});
 
-const createUser = async (req, res, next) => {
-    const newUser = req.body;
-    try {
-        if (!newUser.userName) {
-            const err = new Error('User name is required!');
-            err.status = 400;
-            throw err;
-        }
-        const checkUser = await User.findOne({ userName: newUser.userName });
-        if (checkUser) {
-            const err = new Error('User already exists!');
-            err.status = 400;
-            throw err;
-        }
-        const user = await User.create(newUser);
-        res.status(201).json({ user });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const createUser = catchAsync(async (req, res) => {
+	const newUser = req.body;
+	const { userName, password } = newUser;
+	if (!userName || !password) {
+		throw new ApiError(
+			httpStatus.BAD_REQUEST,
+			'Username or password is required!',
+		);
+	}
+	const checkUser = await User.findOne({ userName: newUser.userName });
+	if (checkUser) {
+		throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists!');
+	}
+	const user = await User.create(newUser);
+	res.status(httpStatus.CREATED).json({ user });
+});
 
-const updateUserById = async (req, res, next) => {
-    const { userId } = req.params;
-    const newUser = req.body;
-    try {
-        if (!newUser.userName) {
-            const err = new Error('User name is required!');
-            err.status = 400;
-            throw err;
-        }
-        const user = await User.findByIdAndUpdate(userId, newUser);
-        if (!user) {
-            const err = new Error('User not found!');
-            err.status = 404;
-            throw err;
-        }
-        res.status(200).json({ user });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const updateUser = catchAsync(async (req, res) => {
+	const { userId } = req.params;
+	const newUser = req.body;
+	const user = await User.findByIdAndUpdate(userId, newUser);
+	if (!user) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'User not found!');
+	}
+	res.status(httpStatus.OK).json({ user });
+});
 
-const deleteUserById = async (req, res, next) => {
-    const { userId } = req.params;
-    try {
-        const user = await User.findByIdAndDelete(userId);
-        if (!user) {
-            const err = new Error('User not found!');
-            err.status = 404;
-            throw err;
-        }
-        res.status(200).json({ user });
-    }
-    catch (err) {
-        next(err);
-    };
-};
+const deleteUser = catchAsync(async (req, res) => {
+	const { userId } = req.params;
+	const user = await User.findByIdAndDelete(userId);
+	if (!user) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'User not found!');
+	}
+	res.status(httpStatus.OK).json({ user });
+});
 
 module.exports = {
-    getUsers,
-    getUserById,
-    createUser,
-    updateUserById,
-    deleteUserById,
+	getUsers,
+	getUser,
+	createUser,
+	updateUser,
+	deleteUser,
 };

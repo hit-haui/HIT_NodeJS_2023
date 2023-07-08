@@ -6,6 +6,7 @@ const {
 	createUser,
 	updateUser,
 	deleteUser,
+	exportUsersToExcel,
 } = require('../controllers/user.controller');
 
 const authMiddleware = require('../middlewares/auth.middleware');
@@ -17,6 +18,7 @@ const userRouter = express.Router();
 // userRouter.use(roleMiddleware(['admin', 'user']));
 
 userRouter.route('/').get(getUsers).post(createUser);
+userRouter.route('/excel').get(exportUsersToExcel);
 
 userRouter.route('/:userId').get(getUser).put(updateUser).delete(deleteUser);
 

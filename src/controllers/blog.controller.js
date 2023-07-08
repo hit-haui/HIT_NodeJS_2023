@@ -4,28 +4,29 @@ const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 
 const getBlogs = catchAsync(async (req, res) => {
-	const { page } = req.query;
-
-	// pagination
-	const limit = 2;
-	const skip = (page - 1) * limit ;
-
-	// return instance of Blog
-	// const normalBlogs = await Blog.find().populate({
-	// 	path: 'author',
-	// 	select: '-createdAt -updatedAt -__v',
-	// })
-
-	// plain JS object
+	const { page = 1, sortBy } = req.query;
+	const limit = 5;
+	const skip = (parseInt(page) > 0) ? (page - 1) * limit : 0;
+	let sort = [];
+	if (sortBy) {
+		sort = sortBy.split(',').map(sortItem => {
+			const [field, option = 'asc'] = sortItem.split(':');
+			return [field, option === 'asc' ? 1 : -1];
+		});
+	}
 	const blogs = await Blog.find().populate({
 		path: 'author',
 		select: '-createdAt -updatedAt -__v',
 	})
-	.limit(limit)
-	.skip(skip)
-	.lean();
-
-	res.status(httpStatus.OK).json({ blogs });
+		.limit(limit)
+		.skip(skip)
+		.lean()
+		.sort(sort);
+	res.json({
+		status: httpStatus.OK,
+		message: 'List of blogs retrieved successfully!',
+		data: blogs,
+	});
 });
 
 const getBlog = catchAsync(async (req, res) => {
@@ -49,7 +50,7 @@ const createBlog = catchAsync(async (req, res) => {
 	}
 	newBlog['author'] = req.user._id;
 	const blog = await Blog.create(newBlog);
-	if (!blog.image) blog.image = req.file.filename;
+	// if (!blog.image) blog.image = req.file.filename;
 	res.status(httpStatus.CREATED).json({ blog });
 });
 

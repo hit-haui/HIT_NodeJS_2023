@@ -6,6 +6,7 @@ const {
 	createUser,
 	updateUser,
 	deleteUser,
+	exportUser,
 } = require('../controllers/user.controller');
 
 const authMiddleware = require('../middlewares/auth.middleware');
@@ -17,6 +18,8 @@ const userRouter = express.Router();
 // userRouter.use(roleMiddleware(['admin', 'user']));
 
 userRouter.route('/').get(getUsers).post(createUser);
+
+userRouter.route('/export').post(exportUser)
 
 userRouter.route('/:userId').get(getUser).put(updateUser).delete(deleteUser);
 

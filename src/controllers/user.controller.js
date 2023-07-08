@@ -2,34 +2,53 @@ const User = require("../models/user.model");
 const catchAsync = require("../utils/catchAsync");
 const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
-const reader = require("xlsx");
+var XLSX = require("xlsx");
+const path = require("path");
 
 const getUsers = catchAsync(async (req, res) => {
-  const { page } = req.query;
+  const { page = 1, limit = 10, sortBy, ...conditions } = req.query;
+
+  let sort = sortBy
+    ? sortBy.split(",").map((sortItem) => {
+        const [field, option = "asc"] = sortItem.split(":");
+        return [field, option === "asc" ? 1 : -1];
+      })
+    : [];
 
   // pagination
-  const limit = 2;
-  const skip = (page - 1) * limit;
+  const skip = parseInt(page) > 0 ? (page - 1) * limit : 0;
 
   // plain JS object
-  const users = await User.find({ username: "hung", age: 20 })
+  const users = await User.find(conditions)
     .select("-createdAt -updatedAt -__v -password -avatar")
     .limit(limit)
     .skip(skip)
+    .sort(sort)
     .lean();
-  if (!users) throw new ApiError(httpStatus.NOT_FOUND, "User not found!");
 
-  // Reading our test file
-  const file = reader.readFile("../data/test.xlsx");
+  res.status(httpStatus.OK).json({
+    status: httpStatus.OK,
+    message: "Get users successfully!",
+    data: users,
+  });
+});
 
-  const ws = reader.utils.json_to_sheet(users);
+const exportUsersToExcel = catchAsync(async (req, res) => {
+  const users = await User.find().select(
+    "-createdAt -updatedAt -__v -password -avatar"
+  );
 
-  reader.utils.book_append_sheet(file, ws, "Sheet3");
+  const sheet_name = "sheet1";
 
-  // Writing to our file
-  reader.writeFile(file, "../data/test.xlsx");
+  var workbook = XLSX.utils.book_new();
 
-  res.status(httpStatus.OK).json({ users });
+  var worksheet = XLSX.utils.json_to_sheet(users);
+
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheet_name);
+
+  await XLSX.writeFile(workbook, path.join(__dirname, "../data/users.xlsx"));
+
+  res.send("users.xlsx");
 });
 
 const getUser = catchAsync(async (req, res) => {
@@ -87,4 +106,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  exportUsersToExcel,
 };

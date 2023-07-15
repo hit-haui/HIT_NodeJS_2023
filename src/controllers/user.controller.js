@@ -6,20 +6,15 @@ const ExcelJS = require('exceljs');
 
 // http://localhost:3000/api/v1/users?fullName=Admin2
 const getUsers = catchAsync(async (req, res) => {
-  const { page = 1, sortBy, userName, age, fullName } = req.query;
-  const limit = 5;
+  const { page = 1, sortBy, ...conditions } = req.query;
+  const limit = 10;
   const skip = (parseInt(page) > 0) ? (page - 1) * limit : 0;
-
-  const query = {};
-  if (userName) query.userName = userName;
-  if (fullName) query.fullName = fullName;
-  if (age) query.age = age;
-
   let sort = sortBy ? sortBy.split(',').map(sortItem => {
     const [field, option = 'asc'] = sortItem.split(':');
     return [field, option === 'asc' ? 1 : -1];
   }) : [];
-  const users = await User.find(query)
+  const users = await User.find(conditions)
+    .select('-__v -createdAt -updatedAt')
     .limit(limit)
     .skip(skip)
     .sort(sort);

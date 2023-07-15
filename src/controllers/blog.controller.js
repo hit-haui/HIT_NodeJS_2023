@@ -4,17 +4,14 @@ const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 
 const getBlogs = catchAsync(async (req, res) => {
-	const { page = 1, sortBy } = req.query;
-	const limit = 5;
-	const skip = (parseInt(page) > 0) ? (page - 1) * limit : 0;
-	let sort = [];
-	if (sortBy) {
-		sort = sortBy.split(',').map(sortItem => {
-			const [field, option = 'asc'] = sortItem.split(':');
-			return [field, option === 'asc' ? 1 : -1];
-		});
-	}
-	const blogs = await Blog.find().populate({
+	const { page = 1, sortBy, ...conditions } = req.query;
+    const limit = 10;
+    const skip = (parseInt(page) > 0) ? (page - 1) * limit : 0;
+    let sort = sortBy ? sortBy.split(',').map(sortItem => {
+        const [field, option = 'asc'] = sortItem.split(':');
+        return [field, option === 'asc' ? 1 : -1];
+    }) : [];
+	const blogs = await Blog.find(conditions).populate({
 		path: 'author',
 		select: '-createdAt -updatedAt -__v',
 	})
